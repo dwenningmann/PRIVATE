@@ -1,0 +1,112 @@
+<!DOCTYPE html>
+<html lang="de">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+    <title>LinkedIn Connector // Leader Edition</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <style>
+        @import url('https://fonts.googleapis.com/css2?family=Inter:wght@400;900&display=swap');
+        body { background: #050505; color: #fff; font-family: 'Inter', sans-serif; }
+        .card { background: #0c0c0c; border: 1px solid rgba(255,255,255,0.05); border-radius: 24px; }
+        .badge { font-size: 9px; font-weight: 900; padding: 4px 8px; border-radius: 6px; text-transform: uppercase; letter-spacing: 0.1em; }
+        .btn-copy { background: #f59e0b; color: #000; font-weight: 900; text-transform: uppercase; font-size: 10px; letter-spacing: 0.1em; cursor: pointer; }
+        input { background: #111; border: 1px solid #222; border-radius: 12px; color: #fff; outline: none; }
+        input:focus { border-color: #f59e0b; }
+    </style>
+</head>
+<body class="p-6 md:p-12 flex flex-col items-center min-h-screen">
+
+    <header class="w-full max-w-md mb-8 flex justify-between items-end">
+        <div>
+            <div class="h-1 w-12 bg-amber-500 mb-4"></div>
+            <h1 class="text-3xl font-black italic uppercase tracking-tighter">Network <span class="text-amber-500">Accelerator</span></h1>
+        </div>
+        <a href="index.html" class="text-[10px] text-gray-500 underline mb-1">Exit</a>
+    </header>
+
+    <main class="w-full max-w-md space-y-6">
+        
+        <section class="card p-5 border-amber-500/20">
+            <label class="block text-[10px] font-black uppercase tracking-widest text-gray-500 mb-2">Vorname des Kontakts</label>
+            <input type="text" id="contact-name" placeholder="z.B. Thomas" oninput="updateTexts()" class="w-full p-4 text-lg font-bold">
+        </section>
+        
+        <section class="card p-6 space-y-4">
+            <div class="flex justify-between items-center">
+                <span class="badge bg-amber-500/10 text-amber-500">Outbound // Request</span>
+                <span class="text-[10px] text-gray-600">Fokus: Hebel & People</span>
+            </div>
+            <div id="outbound-display" class="text-sm text-gray-300 leading-relaxed italic">
+                Bitte Namen eingeben...
+            </div>
+            <button onclick="copyToClipboard('outbound-display')" class="btn-copy w-full py-3 rounded-xl">Copy Request</button>
+        </section>
+
+        <section class="card p-6 space-y-4">
+            <div class="flex justify-between items-center">
+                <span class="badge bg-blue-500/10 text-blue-500">Inbound // Welcome</span>
+                <span class="text-[10px] text-gray-600">Fokus: Austausch</span>
+            </div>
+            <div id="inbound-display" class="text-sm text-gray-300 leading-relaxed italic">
+                Bitte Namen eingeben...
+            </div>
+            <button onclick="copyToClipboard('inbound-display')" class="btn-copy w-full py-3 rounded-xl" style="background: #3b82f6;">Copy Welcome</button>
+        </section>
+
+        <div class="text-center pt-2">
+            <button onclick="shuffleVariants()" class="text-[10px] font-bold text-gray-500 uppercase tracking-widest border border-gray-800 px-4 py-2 rounded-full hover:border-amber-500 transition-all">
+                Anderer Fokus laden
+            </button>
+        </div>
+
+    </main>
+
+    <script>
+        let currentOutIndex = 0;
+        let currentInIndex = 0;
+
+        const variants = {
+            outbound: [
+                "Hallo [NAME], bin über Ihr Profil gestolpert. Als Führungskraft an der Schnittstelle von Leadership und Tech-Hebel schätze ich den Austausch mit Leadern, die Effizienz steigern und dabei 'People First' bleiben. Beste Grüße, David Wenningmann",
+                "Moin [NAME], spannender Fokus. Ich vernetze mich gezielt mit Leadern, die KI und Technik nutzen, um Strukturen zu verschlanken und gleichzeitig den Menschen Raum für echtes Wachstum zu geben. Beste Grüße, David",
+                "Hallo [NAME], Ihr Hintergrund hat mein Interesse geweckt. Ich beschäftige mich intensiv damit, wie moderne Führung durch Technologie den Headcount optimiert, ohne die Kultur zu verlieren. Würde mich gern vernetzen. Gruß, David"
+            ],
+            inbound: [
+                "Hallo [NAME], danke für die Vernetzung. Mein Fokus liegt darauf, Leadership durch Technik zu skalieren – hocheffizient, aber immer mit dem Menschen im Zentrum. Freue mich auf den Austausch in der Timeline! Gruß, David",
+                "Danke für die Anfrage, [NAME]! Ich teile hier regelmäßig Insights dazu, wie wir durch kluge System-Architektur Teams entlasten und Marktwert steigern. Schön, Sie im Netzwerk zu haben. Beste Grüße, David",
+                "Hallo [NAME], willkommen im Netzwerk. Bin gespannt auf Ihre Impulse zu moderner Führung. Wenn Sie Austausch zu KI-Hebel oder schlanken Strukturen suchen – jederzeit gern. Beste Grüße, David"
+            ]
+        };
+
+        function updateTexts() {
+            const name = document.getElementById('contact-name').value || "[Name]";
+            const outText = variants.outbound[currentOutIndex].replace("[NAME]", name);
+            const inText = variants.inbound[currentInIndex].replace("[NAME]", name);
+            document.getElementById('outbound-display').innerText = outText;
+            document.getElementById('inbound-display').innerText = inText;
+        }
+
+        function shuffleVariants() {
+            currentOutIndex = (currentOutIndex + 1) % variants.outbound.length;
+            currentInIndex = (currentInIndex + 1) % variants.inbound.length;
+            updateTexts();
+        }
+
+        function copyToClipboard(id) {
+            const text = document.getElementById(id).innerText;
+            navigator.clipboard.writeText(text).then(() => {
+                const btn = event.target;
+                const originalText = btn.innerText;
+                btn.innerText = "Copied!";
+                btn.style.background = "#10b981";
+                setTimeout(() => {
+                    btn.innerText = originalText;
+                    btn.style.background = id === 'outbound-display' ? "#f59e0b" : "#3b82f6";
+                }, 1000);
+            });
+        }
+        updateTexts();
+    </script>
+</body>
+</html>
