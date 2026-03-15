@@ -1,0 +1,97 @@
+<!DOCTYPE html>
+<html lang="de">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+    <title>My App Cloud</title>
+    <style>
+        :root {
+            --bg: #121212;
+            --card-bg: #1e1e1e;
+            --text: #ffffff;
+            --accent: #bb86fc;
+        }
+
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
+            background-color: var(--bg);
+            color: var(--text);
+            margin: 0;
+            padding: 20px;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            min-height: 100vh;
+        }
+
+        header {
+            text-align: center;
+            margin-bottom: 40px;
+            margin-top: 20px;
+        }
+
+        h1 { font-size: 2rem; margin-bottom: 5px; letter-spacing: -1px; }
+        .status { color: #03dac6; font-size: 0.8rem; font-weight: bold; text-transform: uppercase; }
+
+        .app-grid {
+            display: grid;
+            grid-template-columns: repeat(2, 1fr);
+            gap: 20px;
+            width: 100%;
+            max-width: 400px;
+        }
+
+        .app-item {
+            background: var(--card-bg);
+            aspect-ratio: 1 / 1;
+            border-radius: 24px;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            text-decoration: none;
+            color: var(--text);
+            transition: transform 0.1s;
+            border: 1px solid rgba(255,255,255,0.05);
+            box-shadow: 0 10px 20px rgba(0,0,0,0.3);
+        }
+
+        .app-item:active { transform: scale(0.95); background: #2c2c2c; }
+
+        .icon { font-size: 3rem; margin-bottom: 10px; }
+        .label { font-size: 0.9rem; font-weight: 500; }
+
+        .coming-soon { opacity: 0.2; filter: grayscale(1); }
+    </style>
+</head>
+<body>
+
+    <header>
+        <div class="status">● System Online</div>
+        <h1>Personal Apps</h1>
+    </header>
+
+    <div class="app-grid">
+        <a href="sodoku.html" class="app-item">
+            <div class="icon">🧩</div>
+            <div class="label">Sudoku</div>
+        </a>
+
+        <div class="app-item coming-soon">
+            <div class="icon">🛒</div>
+            <div class="label">Einkauf</div>
+        </div>
+
+        <div class="app-item coming-soon">
+            <div class="icon">📊</div>
+            <div class="label">Sprit</div>
+        </div>
+
+        <div class="app-item coming-soon">
+            <div class="icon">📝</div>
+            <div class="label">Safe Notes</div>
+        </div>
+    </div>
+
+</body>
+</html>
