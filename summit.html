@@ -1,0 +1,111 @@
+<!DOCTYPE html>
+<html lang="de">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+    <title>up2summit // Growth Terminal</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <style>
+        @import url('https://fonts.googleapis.com/css2?family=Inter:wght@400;900&display=swap');
+        body { background: #040404; color: #fff; font-family: 'Inter', sans-serif; }
+        .summit-card { 
+            background: #0a0a0a; 
+            border: 1px solid rgba(16, 185, 129, 0.1); 
+            border-radius: 20px;
+            position: relative;
+            overflow: hidden;
+        }
+        .summit-card::before {
+            content: ""; position: absolute; top: 0; left: 0; width: 100%; height: 2px;
+            background: linear-gradient(90deg, transparent, #10b981, transparent);
+        }
+        .btn-summit { 
+            background: #10b981; color: #000; font-weight: 900; 
+            text-transform: uppercase; font-size: 10px; letter-spacing: 0.1em; 
+            transition: all 0.2s; cursor: pointer;
+        }
+        input { background: #111; border: 1px solid #1a1a1a; border-radius: 12px; color: #fff; outline: none; }
+        input:focus { border-color: #10b981; }
+        .glow-green { text-shadow: 0 0 15px rgba(16, 185, 129, 0.4); }
+    </style>
+</head>
+<body class="p-6 md:p-12 flex flex-col items-center min-h-screen">
+
+    <header class="w-full max-w-md mb-8 flex justify-between items-start">
+        <div>
+            <div class="flex items-center gap-2 mb-2">
+                <span class="w-3 h-3 bg-emerald-500 rounded-full animate-pulse"></span>
+                <span class="text-[9px] font-black uppercase tracking-[0.4em] text-emerald-500">Agency Division</span>
+            </div>
+            <h1 class="text-3xl font-black italic uppercase tracking-tighter glow-green">up2<span class="text-emerald-500">summit</span></h1>
+        </div>
+        <a href="index.html" class="text-[10px] text-gray-600 border border-gray-900 px-3 py-1 rounded-full">Dashboard</a>
+    </header>
+
+    <main class="w-full max-w-md space-y-6">
+        
+        <section class="summit-card p-6">
+            <label class="block text-[10px] font-black uppercase tracking-widest text-emerald-900 mb-2">Target Profile Name</label>
+            <input type="text" id="target-name" placeholder="Name des Entscheiders..." oninput="syncMessages()" class="w-full p-4 text-lg font-bold">
+        </section>
+
+        <div class="space-y-4">
+            <div class="text-[10px] font-black text-gray-600 uppercase tracking-widest ml-2">Phase 01: Cold Outreach</div>
+            
+            <section class="summit-card p-6 space-y-4">
+                <div class="flex justify-between items-center">
+                    <span class="text-[9px] font-bold text-emerald-500 uppercase">Process Optimization Focus</span>
+                    <span class="text-[9px] text-gray-700">300 Char Limit</span>
+                </div>
+                <div id="msg-process" class="text-sm text-gray-400 italic leading-relaxed">Bitte Namen eingeben...</div>
+                <button onclick="copyMsg('msg-process')" class="btn-summit w-full py-4 rounded-xl">Copy Pitch</button>
+            </section>
+
+            <section class="summit-card p-6 space-y-4 opacity-70">
+                <div class="flex justify-between items-center">
+                    <span class="text-[9px] font-bold text-emerald-500 uppercase">Marketing ROI Focus</span>
+                </div>
+                <div id="msg-marketing" class="text-sm text-gray-400 italic leading-relaxed">Bitte Namen eingeben...</div>
+                <button onclick="copyMsg('msg-marketing')" class="btn-summit w-full py-4 rounded-xl" style="background:#065f46; color:#10b981">Copy Pitch</button>
+            </section>
+        </div>
+
+        <div class="space-y-4">
+            <div class="text-[10px] font-black text-gray-600 uppercase tracking-widest ml-2">Phase 02: Bridge Building</div>
+            <section class="summit-card p-6 space-y-4" style="border-color: rgba(255,255,255,0.05)">
+                <div class="text-[9px] font-bold text-white uppercase">The "No-Pressure" Follow Up</div>
+                <div id="msg-follow" class="text-sm text-gray-500 italic leading-relaxed">Bitte Namen eingeben...</div>
+                <button onclick="copyMsg('msg-follow')" class="w-full py-3 bg-white/5 border border-white/10 text-white text-[10px] font-bold uppercase rounded-xl">Copy Follow-Up</button>
+            </section>
+        </div>
+
+    </main>
+
+    <script>
+        const scripts = {
+            process: "Hallo [NAME], wir unterstützen mit up2summit Unternehmen dabei, manuelle Reibungsverluste durch KI-basierte Prozessoptimierung zu eliminieren. Wäre ein kurzer Austausch dazu für Sie als Entscheider aktuell von Interesse? Beste Grüße, David Wenningmann",
+            marketing: "Moin [NAME], oft verbrennt Marketing Budget durch mangelnde System-Anbindung. Wir von up2summit optimieren Ihren ROI durch digitale Architektur. Hätten Sie 5 Minuten für einen Impuls dazu? Beste Grüße, David",
+            follow: "Hallo [NAME], ich wollte das Thema Prozess-Effizienz bei Ihnen nochmal kurz auf den Schirm bringen. Falls Sie aktuell Engpässe in der Skalierung haben, freue ich mich über einen kurzen Austausch. Gruß, David"
+        };
+
+        function syncMessages() {
+            const name = document.getElementById('target-name').value || "[Name]";
+            document.getElementById('msg-process').innerText = scripts.process.replace("[NAME]", name);
+            document.getElementById('msg-marketing').innerText = scripts.marketing.replace("[NAME]", name);
+            document.getElementById('msg-follow').innerText = scripts.follow.replace("[NAME]", name);
+        }
+
+        function copyMsg(id) {
+            const text = document.getElementById(id).innerText;
+            navigator.clipboard.writeText(text).then(() => {
+                const btn = event.target;
+                const old = btn.innerText;
+                btn.innerText = "COPIED TO CLIPBOARD";
+                btn.style.background = "#fff";
+                setTimeout(() => { btn.innerText = old; btn.style.background = ""; }, 1200);
+            });
+        }
+        syncMessages();
+    </script>
+</body>
+</html>
