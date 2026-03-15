@@ -1,0 +1,113 @@
+<!DOCTYPE html>
+<html lang="de">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+    <title>Breathe Tech</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <style>
+        body { background: #050505; color: #fff; font-family: sans-serif; overflow: hidden; }
+        .circle-outer {
+            width: 280px; height: 280px; border-radius: 50%;
+            border: 1px solid rgba(255,255,255,0.1);
+            display: flex; align-items: center; justify-content: center;
+            position: relative;
+        }
+        .circle-inner {
+            width: 100px; height: 100px; border-radius: 50%;
+            background: radial-gradient(circle, #fbbf24 0%, #d97706 100%);
+            box-shadow: 0 0 50px rgba(251, 191, 36, 0.3);
+            transition: all cubic-bezier(0.4, 0, 0.2, 1);
+        }
+        .instruction { text-transform: uppercase; letter-spacing: 0.2em; font-weight: 900; font-size: 0.8rem; }
+        .mode-btn { border: 1px solid rgba(255,255,255,0.1); padding: 10px 15px; border-radius: 12px; font-size: 0.7rem; font-weight: bold; transition: 0.3s; }
+        .mode-btn.active { background: #fff; color: #000; border-color: #fff; }
+    </style>
+</head>
+<body class="flex flex-col items-center justify-between min-h-screen p-8">
+
+    <header class="w-full flex justify-between items-center">
+        <a href="index.html" class="text-xs opacity-50 uppercase tracking-widest">✕ Close</a>
+        <div class="instruction text-amber-500" id="phase-text">Bereit?</div>
+    </header>
+
+    <div class="circle-outer">
+        <div id="ball" class="circle-inner"></div>
+        <div class="absolute text-2xl font-black" id="timer-num"></div>
+    </div>
+
+    <div class="w-full space-y-4 mb-12">
+        <div class="flex justify-center gap-2">
+            <button onclick="setMode('box', this)" class="mode-btn active">BOX (FOKUS)</button>
+            <button onclick="setMode('sleep', this)" class="mode-btn">4-7-8 (SCHLAF)</button>
+            <button onclick="setMode('relax', this)" class="mode-btn">COHERENT</button>
+        </div>
+        <button id="start-btn" onclick="toggleBreath()" class="w-full py-4 bg-white text-black font-black uppercase italic tracking-widest rounded-2xl">Start Session</button>
+    </div>
+
+    <script>
+        let isRunning = false;
+        let mode = 'box';
+        let step = 0;
+        let interval;
+
+        const config = {
+            box: [ { t: 'Ein', s: 4, z: 2.5 }, { t: 'Halten', s: 4, z: 2.5 }, { t: 'Aus', s: 4, z: 1 }, { t: 'Halten', s: 4, z: 1 } ],
+            sleep: [ { t: 'Ein', s: 4, z: 2.5 }, { t: 'Halten', s: 7, z: 2.5 }, { t: 'Aus', s: 8, z: 1 } ],
+            relax: [ { t: 'Ein', s: 5, z: 2.5 }, { t: 'Aus', s: 5, z: 1 } ]
+        };
+
+        function setMode(m, btn) {
+            mode = m;
+            document.querySelectorAll('.mode-btn').forEach(b => b.classList.remove('active'));
+            btn.classList.add('active');
+            stopBreath();
+        }
+
+        function toggleBreath() {
+            isRunning ? stopBreath() : startBreath();
+        }
+
+        function startBreath() {
+            isRunning = true;
+            document.getElementById('start-btn').innerText = "Stop";
+            runStep();
+        }
+
+        function stopBreath() {
+            isRunning = false;
+            clearInterval(interval);
+            document.getElementById('start-btn').innerText = "Start Session";
+            document.getElementById('ball').style.transform = "scale(1)";
+            document.getElementById('phase-text').innerText = "Bereit?";
+            document.getElementById('timer-num').innerText = "";
+            step = 0;
+        }
+
+        function runStep() {
+            if(!isRunning) return;
+            const current = config[mode][step];
+            const ball = document.getElementById('ball');
+            const phaseText = document.getElementById('phase-text');
+            const timerNum = document.getElementById('timer-num');
+            
+            phaseText.innerText = current.t;
+            ball.style.transform = `scale(${current.z})`;
+            ball.style.transitionDuration = `${current.s}s`;
+
+            let timeLeft = current.s;
+            timerNum.innerText = timeLeft;
+
+            interval = setInterval(() => {
+                timeLeft--;
+                timerNum.innerText = timeLeft > 0 ? timeLeft : "";
+                if(timeLeft <= 0) {
+                    clearInterval(interval);
+                    step = (step + 1) % config[mode].length;
+                    runStep();
+                }
+            }, 1000);
+        }
+    </script>
+</body>
+</html>
