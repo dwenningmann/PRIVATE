@@ -10,6 +10,7 @@
             --card-bg: #1e1e1e;
             --text: #ffffff;
             --accent: #bb86fc;
+            --gold: #f59e0b;
         }
 
         body {
@@ -54,12 +55,22 @@
             transition: transform 0.1s;
             border: 1px solid rgba(255,255,255,0.05);
             box-shadow: 0 10px 20px rgba(0,0,0,0.3);
+            text-align: center;
+            padding: 10px;
+            box-sizing: border-box;
         }
 
         .app-item:active { transform: scale(0.95); background: #2c2c2c; }
 
-        .icon { font-size: 3rem; margin-bottom: 10px; }
-        .label { font-size: 0.9rem; font-weight: 500; }
+        /* Spezial-Style für die 150k Doctrine */
+        .app-item.doctrine {
+            border: 1px solid rgba(245, 158, 11, 0.3);
+            background: linear-gradient(145deg, #1e1e1e, #261a05);
+        }
+
+        .icon { font-size: 2.5rem; margin-bottom: 10px; }
+        .label { font-size: 0.85rem; font-weight: 600; line-height: 1.2; }
+        .desc { font-size: 0.65rem; color: #94a3b8; margin-top: 4px; font-weight: 400; }
 
         .coming-soon { opacity: 0.2; filter: grayscale(1); }
     </style>
@@ -75,21 +86,25 @@
         <a href="sodoku.html" class="app-item">
             <div class="icon">🧩</div>
             <div class="label">Sudoku</div>
+            <div class="desc">Werbefreies Zen</div>
+        </a>
+
+        <a href="150k.html" class="app-item doctrine">
+            <div class="icon" style="text-shadow: 0 0 10px rgba(245,158,11,0.5)">📜</div>
+            <div class="label" style="color: var(--gold)">150k Doctrine</div>
+            <div class="desc" style="color: rgba(245,158,11,0.6)">The Market Value</div>
         </a>
 
         <div class="app-item coming-soon">
             <div class="icon">🛒</div>
             <div class="label">Einkauf</div>
+            <div class="desc">Lokal gespeichert</div>
         </div>
 
         <div class="app-item coming-soon">
             <div class="icon">📊</div>
             <div class="label">Sprit</div>
-        </div>
-
-        <div class="app-item coming-soon">
-            <div class="icon">📝</div>
-            <div class="label">Safe Notes</div>
+            <div class="desc">Verbrauchs-Log</div>
         </div>
     </div>
 
