@@ -1,0 +1,88 @@
+<!DOCTYPE html>
+<html lang="de">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+    <title>LinkedIn Sniper // Private</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <style>
+        @import url('https://fonts.googleapis.com/css2?family=Inter:wght@400;900&display=swap');
+        body { background: #050505; color: #fff; font-family: 'Inter', sans-serif; }
+        .card { background: #0c0c0c; border: 1px solid rgba(255,255,255,0.05); border-radius: 20px; transition: 0.2s; cursor: pointer; }
+        .card:active { border-color: #f59e0b; background: #151515; transform: scale(0.98); }
+        .label-tag { font-size: 8px; font-weight: 900; text-transform: uppercase; letter-spacing: 0.1em; padding: 2px 6px; border-radius: 4px; }
+    </style>
+</head>
+<body class="p-6 md:p-12 flex flex-col items-center min-h-screen">
+
+    <header class="w-full max-w-md mb-8">
+        <div class="h-1 w-12 bg-amber-500 mb-4"></div>
+        <h1 class="text-3xl font-black italic uppercase tracking-tighter text-white">Leader <span class="text-amber-500">Sniper</span></h1>
+        <p class="text-[10px] text-gray-500 mt-2 uppercase tracking-widest">Personal Brand Accelerant.</p>
+    </header>
+
+    <main class="w-full max-w-md space-y-4">
+        
+        <section class="card p-5 space-y-3" onclick="copySnippet('snippet-1')">
+            <div class="flex justify-between items-center">
+                <span class="label-tag bg-amber-500/10 text-amber-500">Mindset / Systemik</span>
+                <span class="text-[9px] text-gray-700 font-bold uppercase">Tap to Copy</span>
+            </div>
+            <p id="snippet-1" class="text-sm text-gray-400 leading-relaxed italic">
+                "Spannender Punkt. Ich sehe oft, dass an den Symptomen gearbeitet wird, statt die zugrunde liegende Architektur zu hinterfragen. Echte Leadership-Effizienz entsteht erst, wenn das System für die Menschen arbeitet, nicht umgekehrt."
+            </p>
+        </section>
+
+        <section class="card p-5 space-y-3" onclick="copySnippet('snippet-2')">
+            <div class="flex justify-between items-center">
+                <span class="label-tag bg-blue-500/10 text-blue-500">Leadership / People First</span>
+                <span class="text-[9px] text-gray-700 font-bold uppercase">Tap to Copy</span>
+            </div>
+            <p id="snippet-2" class="text-sm text-gray-400 leading-relaxed italic">
+                "Absolut d'accord. Headcount-Optimierung sollte nie zu Lasten der Kultur gehen. Mein Ansatz ist es, Technik so einzusetzen, dass das Team von repetitiver Last befreit wird. Nur so entsteht Raum für echte Innovation und Führung."
+            </p>
+        </section>
+
+        <section class="card p-5 space-y-3" onclick="copySnippet('snippet-3')">
+            <div class="flex justify-between items-center">
+                <span class="label-tag bg-purple-500/10 text-purple-500">Strategie / Tech</span>
+                <span class="text-[9px] text-gray-700 font-bold uppercase">Tap to Copy</span>
+            </div>
+            <p id="snippet-3" class="text-sm text-gray-400 leading-relaxed italic">
+                "Starker Impuls. Die größte Herausforderung für Leader heute ist es, die Balance zwischen radikaler Effizienz durch KI und menschlicher Führung zu halten. Wer diese Architektur beherrscht, hat einen massiven Marktwert-Vorteil."
+            </p>
+        </section>
+
+        <section class="card p-5 space-y-3" onclick="copySnippet('snippet-4')">
+            <div class="flex justify-between items-center">
+                <span class="label-tag bg-white/5 text-gray-400">Networking / Insight</span>
+                <span class="text-[9px] text-gray-700 font-bold uppercase">Tap to Copy</span>
+            </div>
+            <p id="snippet-4" class="text-sm text-gray-400 leading-relaxed italic">
+                "Danke für das Teilen. Besonders der Aspekt der Skalierbarkeit wird in diesem Kontext oft unterschätzt. Wie sehen Sie hier die langfristige Entwicklung der Team-Dynamik, wenn wir Technik noch konsequenter als Hebel nutzen?"
+            </p>
+        </section>
+
+        <div class="pt-8 text-center">
+            <a href="index.html" class="text-[10px] font-black text-gray-600 uppercase tracking-[0.3em] hover:text-amber-500 transition-all">← Back to Hub</a>
+        </div>
+    </main>
+
+    <script>
+        function copySnippet(id) {
+            const text = document.getElementById(id).innerText;
+            navigator.clipboard.writeText(text).then(() => {
+                const card = document.getElementById(id).parentElement;
+                const oldText = card.querySelector('span:last-child').innerText;
+                card.querySelector('span:last-child').innerText = "COPIED";
+                card.querySelector('span:last-child').style.color = "#10b981";
+                
+                setTimeout(() => {
+                    card.querySelector('span:last-child').innerText = oldText;
+                    card.querySelector('span:last-child').style.color = "";
+                }, 1000);
+            });
+        }
+    </script>
+</body>
+</html>
