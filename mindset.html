@@ -1,0 +1,65 @@
+<!DOCTYPE html>
+<html lang="de">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Mindset Cards</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <style>
+        body { background: #000; color: #fff; font-family: 'Inter', sans-serif; }
+        .card-gradient { background: linear-gradient(180deg, #111 0%, #000 100%); border: 1px solid #222; }
+        .glow-gold { text-shadow: 0 0 20px rgba(245, 158, 11, 0.5); }
+    </style>
+</head>
+<body class="p-8 flex flex-col items-center min-h-screen">
+    
+    <header class="w-full mb-12 flex justify-between items-center">
+        <h1 class="font-black italic uppercase tracking-tighter text-xl">Daily <span class="text-amber-500">Primer</span></h1>
+        <a href="index.html" class="text-[10px] uppercase border border-white/20 px-3 py-1 rounded-full">Dashboard</a>
+    </header>
+
+    <div id="share-area" class="card-gradient rounded-[2.5rem] p-12 w-full max-w-sm aspect-[3/4] flex flex-col justify-between shadow-2xl relative overflow-hidden">
+        <div class="absolute top-0 right-0 p-8 opacity-[0.05] font-black text-6xl italic leading-none">DOCTRINE</div>
+        
+        <div class="w-12 h-1 bg-amber-500 mb-6"></div>
+        <h2 id="quote-text" class="text-3xl md:text-4xl font-black italic uppercase leading-[0.95] tracking-tighter glow-gold">
+            Disziplin ist kein <br>Zustand. <br>Es ist ein <br>System.
+        </h2>
+        
+        <div class="mt-8">
+            <span class="block text-[10px] font-black uppercase tracking-[0.4em] text-gray-500 mb-1">Strategy</span>
+            <span class="text-xs font-bold text-white uppercase tracking-widest">David Wenningmann</span>
+        </div>
+    </div>
+
+    <div class="mt-10 flex gap-4 w-full max-w-sm">
+        <button onclick="nextQuote()" class="flex-1 py-4 bg-white/5 border border-white/10 rounded-2xl text-xs font-bold uppercase tracking-widest">Nächster Impuls</button>
+        <button onclick="shareWhatsApp()" class="flex-1 py-4 bg-green-600 text-white rounded-2xl text-xs font-bold uppercase tracking-widest flex items-center justify-center gap-2">
+            <span>WhatsApp</span>
+        </button>
+    </div>
+
+    <script>
+        const quotes = [
+            "Disziplin ist kein Zustand. Es ist ein System.",
+            "Der Markt bezahlt Ergebnisse, keine Bemühungen.",
+            "Architekten bauen. Coder führen aus. Entscheide dich.",
+            "Stärke entsteht in der Stille, nicht im Lärm.",
+            "Führung bedeutet, die Verantwortung für das Scheitern zu tragen.",
+            "Wer nicht nein sagen kann, hat keine Strategie.",
+            "Stand Fast. Der Fels bewegt sich nicht."
+        ];
+
+        function nextQuote() {
+            const text = quotes[Math.floor(Math.random() * quotes.length)];
+            document.getElementById('quote-text').innerHTML = text.replace(/\. /g, '. <br>');
+        }
+
+        function shareWhatsApp() {
+            const text = document.getElementById('quote-text').innerText;
+            const url = `whatsapp://send?text=${encodeURIComponent("*Daily Doctrine:* \n\n" + '"' + text + '"' + "\n\n— Geteilt via David's App Dashboard")}`;
+            window.location.href = url;
+        }
+    </script>
+</body>
+</html>
