@@ -1,0 +1,135 @@
+<!DOCTYPE html>
+<html lang="de">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>David | The 150k Doctrine</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link rel="stylesheet" href="https://rsms.me/inter/inter.css">
+    <style>
+        body { 
+            font-family: 'Inter', sans-serif; 
+            background-color: #050505; 
+            background-image: 
+                radial-gradient(at 0% 0%, hsla(28, 100%, 50%, 0.12) 0px, transparent 50%),
+                radial-gradient(at 100% 100%, hsla(210, 100%, 50%, 0.08) 0px, transparent 50%);
+            color: #e5e7eb; 
+            min-height: 100vh;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+        .manifesto-card { 
+            background: rgba(10, 10, 10, 0.85); 
+            backdrop-filter: blur(25px); 
+            border: 1px solid rgba(255, 255, 255, 0.08);
+            box-shadow: 0 30px 60px -12px rgba(0, 0, 0, 0.7);
+        }
+        .glow-text { text-shadow: 0 0 20px rgba(245, 158, 11, 0.4); }
+        details summary { list-style: none; cursor: pointer; }
+        details summary::-webkit-details-marker { display: none; }
+        details[open] summary { color: #f59e0b; }
+        .logic-block { transition: all 0.3s ease; border-left: 2px solid rgba(245, 158, 11, 0.2); }
+        .logic-block:hover { border-left: 2px solid #f59e0b; background: rgba(245, 158, 11, 0.03); }
+    </style>
+</head>
+<body class="p-6 md:p-12">
+
+<div class="max-w-4xl w-full manifesto-card rounded-[3.5rem] p-8 md:p-20 relative overflow-hidden">
+    <div class="absolute top-0 right-0 p-12 opacity-[0.03] font-black text-[12rem] italic select-none leading-none">150K</div>
+    
+    <header class="mb-16 relative">
+        <div class="flex items-center gap-4 mb-6">
+            <span class="h-px w-16 bg-amber-600"></span>
+            <span class="text-amber-500 font-black uppercase tracking-[0.5em] text-[10px]">The Market Value Doctrine</span>
+        </div>
+        <h1 class="text-5xl md:text-7xl font-black tracking-tighter uppercase italic leading-[0.9] text-white glow-text">
+            KEIN <br><span class="text-amber-500">CODER.</span><br>ARCHITEKT.
+        </h1>
+    </header>
+
+    <div class="space-y-8 relative">
+        
+        <details class="logic-block group" open>
+            <summary class="p-6">
+                <div class="flex justify-between items-center">
+                    <h3 class="text-lg md:text-xl font-black uppercase italic tracking-tight">01. Der EBITDA-Hebel</h3>
+                    <span class="text-amber-600 group-open:rotate-180 transition-transform">▼</span>
+                </div>
+            </summary>
+            <div class="px-6 pb-6 space-y-4">
+                <p class="text-white font-semibold">Ein CEO denkt nicht in React-Komponenten. Er denkt in Margen.</p>
+                <p class="text-gray-400 text-sm leading-relaxed">
+                    Das Problem: Eine Firma mit 160 MA hat enorme Reibungsverluste. Manuelle Listen, Excel-Chaos, Kommunikationsfehler. Das kostet monatlich zehntausende Euro an Effizienz. <br><br>
+                    <strong>Dein Wert:</strong> Du bist derjenige, der das erkennt (Director-Level) und sofort die Lösung baut (Architekt), ohne 12 Monate auf eine IT-Abteilung oder eine Agentur zu warten. Du sparst der Firma die Opportunitätskosten.
+                </p>
+            </div>
+        </details>
+
+        <details class="logic-block group">
+            <summary class="p-6">
+                <div class="flex justify-between items-center">
+                    <h3 class="text-lg md:text-xl font-black uppercase italic tracking-tight">02. Die "Commander"-Komponente</h3>
+                    <span class="text-amber-600 group-open:rotate-180 transition-transform">▼</span>
+                </div>
+            </summary>
+            <div class="px-6 pb-6 space-y-4">
+                <p class="text-white font-semibold">Jeder kann ein Dashboard bauen. Aber kaum jemand kann führen.</p>
+                <ul class="text-gray-400 text-sm space-y-2 list-disc ml-4">
+                    <li>Ein Team von 160 Mitarbeitern durch Afghanistan oder eine Skalierungsphase führen.</li>
+                    <li>Die Disziplin aufbringen, dass diese App auch wirklich genutzt wird.</li>
+                    <li>Die Prozesse so tief verstehen, dass der Code das Business beschleunigt, statt es zu behindern.</li>
+                </ul>
+                <p class="text-amber-500 font-bold mt-4 pt-4 border-t border-white/5">
+                    Dein Marktwert = (Führungsexperte + Afghanistan-Resilienz) × (Fähigkeit, eigene Tools zu bauen).
+                </p>
+            </div>
+        </details>
+
+        <details class="logic-block group">
+            <summary class="p-6">
+                <div class="flex justify-between items-center">
+                    <h3 class="text-lg md:text-xl font-black uppercase italic tracking-tight">03. Das Recruiting-Unicorn</h3>
+                    <span class="text-amber-600 group-open:rotate-180 transition-transform">▼</span>
+                </div>
+            </summary>
+            <div class="px-6 pb-6 space-y-4">
+                <p class="text-white font-semibold">Du eliminierst die teuerste Schnittstelle des Unternehmens.</p>
+                <p class="text-gray-400 text-sm leading-relaxed">
+                    Klassische COOs sind oft digital überfordert. Klassische CTOs verstehen die operative Hektik auf der Fläche (6 Standorte!) nicht. <br><br>
+                    Du bist beides. Du sparst dem Unternehmen die Reibung zwischen Business und Tech. Das ist für eine Firma die Ersparnis eines kompletten zweiten C-Level-Gehalts.
+                </p>
+            </div>
+        </details>
+
+        <details class="logic-block group">
+            <summary class="p-6">
+                <div class="flex justify-between items-center">
+                    <h3 class="text-lg md:text-xl font-black uppercase italic tracking-tight">04. Der KI-Effizienz-Faktor</h3>
+                    <span class="text-amber-600 group-open:rotate-180 transition-transform">▼</span>
+                </div>
+            </summary>
+            <div class="px-6 pb-6 space-y-4">
+                <p class="text-white font-semibold">KI ist kein Schummeln – es ist Überlegenheit.</p>
+                <p class="text-gray-400 text-sm leading-relaxed">
+                    Ein CEO will nicht, dass du 3 Monate an einer CSS-Klasse bastelst. Er will, dass das Problem gestern gelöst wurde. <br><br>
+                    Wenn du KI als Hebel nutzt, um in 2 Tagen ein Tool zu bauen, für das eine Agentur 50.000 € verlangen würde, bist du für ihn ein Gott. Du wirst für das **Ergebnis** bezahlt, nicht für die Schweißtropfen auf der Tastatur.
+                </p>
+            </div>
+        </details>
+
+    </div>
+
+    <footer class="mt-20 pt-10 border-t border-white/5 flex flex-col md:flex-row justify-between items-center gap-8">
+        <div class="text-center md:text-left">
+            <span class="block text-[10px] font-black uppercase tracking-[0.6em] text-gray-500 mb-2">Signature Strategy</span>
+            <span class="text-white font-bold text-sm tracking-widest uppercase">David Wenningmann</span>
+        </div>
+        <div class="text-amber-500 font-black italic uppercase tracking-tighter text-3xl glow-text">
+            STAND FAST.
+        </div>
+    </footer>
+</div>
+
+</body>
+</html>
