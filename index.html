@@ -3,19 +3,20 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
-    <title>My App Cloud</title>
+    <title>David | Executive Hub</title>
     <style>
         :root {
-            --bg: #121212;
-            --card-bg: #1e1e1e;
+            --bg: #050505;
+            --card-bg: #0c0c0c;
             --text: #ffffff;
-            --accent: #bb86fc;
-            --gold: #f59e0b;
+            --accent: #f59e0b; /* Gold/Amber */
+            --blue: #2563eb;
         }
 
         body {
             font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
             background-color: var(--bg);
+            background-image: radial-gradient(at 0% 0%, hsla(28, 100%, 50%, 0.05) 0px, transparent 50%);
             color: var(--text);
             margin: 0;
             padding: 20px;
@@ -31,13 +32,28 @@
             margin-top: 20px;
         }
 
-        h1 { font-size: 2rem; margin-bottom: 5px; letter-spacing: -1px; }
-        .status { color: #03dac6; font-size: 0.8rem; font-weight: bold; text-transform: uppercase; }
+        .status-bar { 
+            font-size: 9px; 
+            font-weight: 900; 
+            text-transform: uppercase; 
+            letter-spacing: 0.3em; 
+            color: var(--accent);
+            margin-bottom: 8px;
+        }
+
+        h1 { 
+            font-size: 1.8rem; 
+            font-weight: 900; 
+            margin: 0; 
+            letter-spacing: -1px; 
+            font-style: italic; 
+            text-transform: uppercase;
+        }
 
         .app-grid {
             display: grid;
             grid-template-columns: repeat(2, 1fr);
-            gap: 20px;
+            gap: 16px;
             width: 100%;
             max-width: 400px;
         }
@@ -45,32 +61,45 @@
         .app-item {
             background: var(--card-bg);
             aspect-ratio: 1 / 1;
-            border-radius: 24px;
+            border-radius: 28px;
             display: flex;
             flex-direction: column;
             align-items: center;
             justify-content: center;
             text-decoration: none;
             color: var(--text);
-            transition: transform 0.1s;
+            transition: all 0.2s cubic-bezier(0.4, 0, 0.2, 1);
             border: 1px solid rgba(255,255,255,0.05);
-            box-shadow: 0 10px 20px rgba(0,0,0,0.3);
-            text-align: center;
-            padding: 10px;
+            padding: 20px;
             box-sizing: border-box;
+            text-align: center;
         }
 
-        .app-item:active { transform: scale(0.95); background: #2c2c2c; }
+        .app-item:active { transform: scale(0.92); background: #151515; }
 
-        /* Spezial-Style für die 150k Doctrine */
-        .app-item.doctrine {
-            border: 1px solid rgba(245, 158, 11, 0.3);
-            background: linear-gradient(145deg, #1e1e1e, #261a05);
+        /* Spezial-Styles */
+        .item-doctrine { 
+            border: 1px solid rgba(245, 158, 11, 0.2); 
+            background: linear-gradient(145deg, #0c0c0c, #1a140a);
+        }
+        
+        .item-breath { 
+            border: 1px solid rgba(37, 99, 235, 0.2);
+            animation: pulse-border 4s infinite;
         }
 
-        .icon { font-size: 2.5rem; margin-bottom: 10px; }
-        .label { font-size: 0.85rem; font-weight: 600; line-height: 1.2; }
-        .desc { font-size: 0.65rem; color: #94a3b8; margin-top: 4px; font-weight: 400; }
+        @keyframes pulse-border {
+            0% { border-color: rgba(37, 99, 235, 0.2); }
+            50% { border-color: rgba(37, 99, 235, 0.5); }
+            100% { border-color: rgba(37, 99, 235, 0.2); }
+        }
+
+        .icon { font-size: 2.2rem; margin-bottom: 12px; }
+        .label { font-size: 0.8rem; font-weight: 800; text-transform: uppercase; letter-spacing: 0.05em; }
+        .desc { font-size: 0.6rem; color: #555; margin-top: 4px; font-weight: 500; }
+
+        .item-doctrine .label { color: var(--accent); }
+        .item-doctrine .desc { color: rgba(245, 158, 11, 0.4); }
 
         .coming-soon { opacity: 0.2; filter: grayscale(1); }
     </style>
@@ -78,33 +107,45 @@
 <body>
 
     <header>
-        <div class="status">● System Online</div>
-        <h1>Personal Apps</h1>
+        <div class="status-bar">● Systems Operational</div>
+        <h1>Executive <span style="color:var(--accent)">Hub</span></h1>
     </header>
 
     <div class="app-grid">
+        <a href="150k.html" class="app-item item-doctrine">
+            <div class="icon" style="text-shadow: 0 0 15px rgba(245,158,11,0.4)">📜</div>
+            <div class="label">150k Doctrine</div>
+            <div class="desc">Market Value</div>
+        </a>
+
+        <a href="mindset.html" class="app-item item-doctrine" style="background: #0c0c0c;">
+            <div class="icon">💡</div>
+            <div class="label">Daily Primer</div>
+            <div class="desc">Mindset & Share</div>
+        </a>
+
+        <a href="breath.html" class="app-item item-breath">
+            <div class="icon" style="text-shadow: 0 0 15px rgba(37, 99, 235, 0.4)">🫁</div>
+            <div class="label" style="color:#60a5fa">Breathe Tech</div>
+            <div class="desc">Focus & Sleep</div>
+        </a>
+
         <a href="sodoku.html" class="app-item">
             <div class="icon">🧩</div>
             <div class="label">Sudoku</div>
-            <div class="desc">Werbefreies Zen</div>
-        </a>
-
-        <a href="150k.html" class="app-item doctrine">
-            <div class="icon" style="text-shadow: 0 0 10px rgba(245,158,11,0.5)">📜</div>
-            <div class="label" style="color: var(--gold)">150k Doctrine</div>
-            <div class="desc" style="color: rgba(245,158,11,0.6)">The Market Value</div>
+            <div class="desc">Zen Mode</div>
         </a>
 
         <div class="app-item coming-soon">
-            <div class="icon">🛒</div>
-            <div class="label">Einkauf</div>
-            <div class="desc">Lokal gespeichert</div>
+            <div class="icon">⚡</div>
+            <div class="label">Core Base</div>
+            <div class="desc">Training Unit</div>
         </div>
 
         <div class="app-item coming-soon">
-            <div class="icon">📊</div>
-            <div class="label">Sprit</div>
-            <div class="desc">Verbrauchs-Log</div>
+            <div class="icon">🛠️</div>
+            <div class="label">Utilities</div>
+            <div class="desc">System Tools</div>
         </div>
     </div>
 
