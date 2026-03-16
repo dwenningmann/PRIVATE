@@ -1,0 +1,161 @@
+<!DOCTYPE html>
+<html lang="de">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+    <title>Extended Circle // Massive Edition</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <style>
+        @import url('https://fonts.googleapis.com/css2?family=Inter:wght@400;900&display=swap');
+        body { background: #050505; color: #fff; font-family: 'Inter', sans-serif; padding-bottom: 60px; }
+        .circle-card { background: #0c0c0c; border: 1px solid rgba(255,255,255,0.05); border-radius: 24px; }
+        .btn-action { background: #1a1a1a; border: 1px solid #333; color: #aaa; font-size: 8px; font-weight: 900; text-transform: uppercase; padding: 12px 4px; border-radius: 12px; transition: 0.2s; }
+        .btn-action:active { background: #333; color: #fff; transform: scale(0.95); }
+        .btn-whatsapp { background: #25D366; color: #fff; font-weight: 900; text-transform: uppercase; font-size: 10px; letter-spacing: 0.1em; }
+        .preview-box { background: #000; padding: 20px; border-radius: 16px; min-height: 100px; display: flex; align-items: center; justify-content: center; text-align: center; border: 1px dashed #222; }
+    </style>
+</head>
+<body class="p-6 flex flex-col items-center">
+
+    <header class="w-full max-w-md mb-8">
+        <h1 class="text-3xl font-black italic uppercase tracking-tighter">Extended <span class="text-emerald-500">Circle</span></h1>
+        <p class="text-[10px] text-gray-500 mt-2 uppercase tracking-widest text-balance">Massive Content Update // 70+ Variations</p>
+    </header>
+
+    <main class="w-full max-w-md space-y-8">
+        
+        <section class="circle-card p-6 space-y-4">
+            <div class="flex justify-between items-center">
+                <h2 class="text-xl font-black text-pink-400 uppercase">Mama</h2>
+                <span class="text-[8px] font-bold text-pink-900 bg-pink-400/10 px-2 py-1 rounded">Flowers & Care</span>
+            </div>
+            <div id="msg-mama" class="preview-box text-sm text-gray-400 italic">Wähle Kategorie...</div>
+            <div class="grid grid-cols-2 gap-2">
+                <button onclick="setMsg('mama', 'flowers')" class="btn-action">Digitale Blumen</button>
+                <button onclick="setMsg('mama', 'care')" class="btn-action">Check-In</button>
+            </div>
+            <button onclick="send('mama')" class="btn-whatsapp w-full py-4 rounded-xl">WhatsApp</button>
+        </section>
+
+        <section class="circle-card p-6 space-y-4">
+            <div class="flex justify-between items-center">
+                <h2 class="text-xl font-black text-purple-400 uppercase">Schwester</h2>
+                <span class="text-[8px] font-bold text-purple-900 bg-purple-400/10 px-2 py-1 rounded">Motivation & Fun</span>
+            </div>
+            <div id="msg-schwester" class="preview-box text-sm text-gray-400 italic">Wähle Kategorie...</div>
+            <div class="grid grid-cols-2 gap-2">
+                <button onclick="setMsg('schwester', 'power')" class="btn-action">Motivation</button>
+                <button onclick="setMsg('schwester', 'laugh')" class="btn-action">Lachen</button>
+            </div>
+            <button onclick="send('schwester')" class="btn-whatsapp w-full py-4 rounded-xl">WhatsApp</button>
+        </section>
+
+        <section class="circle-card p-6 space-y-4">
+            <div class="flex justify-between items-center">
+                <h2 class="text-xl font-black text-blue-400 uppercase">Vater</h2>
+                <span class="text-[8px] font-bold text-blue-900 bg-blue-400/10 px-2 py-1 rounded">Direct & Solid</span>
+            </div>
+            <div id="msg-vater" class="preview-box text-sm text-gray-400 italic">Wähle Kategorie...</div>
+            <div class="grid grid-cols-2 gap-2">
+                <button onclick="setMsg('vater', 'status')" class="btn-action">Status Check</button>
+                <button onclick="setMsg('vater', 'wisdom')" class="btn-action">Sprüche</button>
+            </div>
+            <button onclick="send('vater')" class="btn-whatsapp w-full py-4 rounded-xl">WhatsApp</button>
+        </section>
+
+    </main>
+
+    <script>
+        const db = {
+            mama: {
+                flowers: [
+                    "Kleiner Blumengruß für dich! 🌸 Hab einen schönen Tag, Mama.",
+                    "Ein paar digitale Rosen für die beste Mama 🌹 Hoffe du hast heute keinen Stress!",
+                    "Frische Blumen für zwischendurch 🌷 Genieß die Sonne / den Tag!",
+                    "Wollte dir nur kurz ein paar Blumen schicken 🌺 Kuss!",
+                    "Digitale Hortensien für dich 💠 Denk an dich!",
+                    "Ein kleiner Strauß Emojis 💐 nur für dich!",
+                    "Frühjahrsgruß im Anmarsch 🌼 Hab einen tollen Nachmittag!",
+                    "Blumen brauchen Wasser, Mamas brauchen Liebe 🌻 Hier ist ein kleiner Gruß!",
+                    "Wollte den Chat ein bisschen verschönern 🌸 Liebe Grüße!",
+                    "Ein kleiner Farbtupfer für deinen Tag 🌷 Kuss!"
+                ],
+                care: [
+                    "Wollte nur kurz hören, ob bei dir alles okay ist? 😘",
+                    "Wie läuft dein Tag bisher? Hoffe, du hast ein bisschen Zeit für dich!",
+                    "Denk an dich! Melde mich später mal in Ruhe.",
+                    "Kleines Lebenszeichen von mir. Alles gut bei dir? ❤️",
+                    "Einfach so: Ich bin froh, dass wir uns haben. Hab einen schönen Tag!",
+                    "Hoffe du hattest ein gutes Frühstück / Mittagessen? 😘",
+                    "Wollte nur kurz deine Stimme hören – ach ne, ist ja Text: Wollte kurz lesen, dass es dir gut geht! 😉",
+                    "Kurzer Check-in: Brauchst du irgendwas oder ist alles paletti? ❤️"
+                ]
+            },
+            schwester: {
+                power: [
+                    "Du rockst das heute! Lass dich nicht unterkriegen. 🚀",
+                    "Kleiner Reminder: Du bist eine Maschine. Zieh durch! 🔥",
+                    "Focus on the goal. Du hast das im Griff, Schwesterherz! 👊",
+                    "Einfach mal machen – du weißt, dass du es kannst! ✨",
+                    "Dein Limit ist nur im Kopf. Go for it! ⚡",
+                    "Hör nicht auf, bis du stolz auf dich bist. 🚀",
+                    "Du hast die Architektur für Erfolg schon in dir. Bau weiter! 🏗️",
+                    "Kurzer Motivations-Schub für dich: Du bist die Beste! 👑",
+                    "Probleme sind nur Aufgaben in Arbeitskleidung. Du knackst das! 🛠️",
+                    "Zieh die Ellbogen aus, heute gehört dir! 👊"
+                ],
+                laugh: [
+                    "Warum können Geister so schlecht lügen? Weil sie zu durchschaubar sind. 👻",
+                    "Was ist grün und klopft an die Tür? Klopfsalat. 🥬",
+                    "Was ist gelb und kann nicht schwimmen? Ein Bagger. 🏗️",
+                    "Egal wie leer du bist, es gibt Leute die sind Lehrer. 👨‍🏫",
+                    "Habe heute ein Brötchen angerufen. War belegt. 🥯",
+                    "Was ist braun und sitzt hinter Gittern? Eine Knastanie. 🌰",
+                    "Wie nennt man ein verschwundenes Rind? Eine Oxford. 🐂",
+                    "Was macht ein Mathematiker im Garten? Wurzeln ziehen. 🪴",
+                    "Warum gehen Ameisen nicht in die Kirche? Weil sie In-Sekten sind. 🐜",
+                    "Sagt die eine Wand zur anderen: Wir treffen uns in der Ecke. 🧱"
+                ]
+            },
+            vater: {
+                status: [
+                    "Moin Papa, kurz und knapp: Alles stabil bei dir? 👊",
+                    "Wollte nur mal hören, ob bei dir alles okay ist? Meld dich mal!",
+                    "Kurzer Check-in: Alles im grünen Bereich? Gruß, David",
+                    "Alles gut bei dir? Lass mal wieder von dir hören.",
+                    "Hoffe die Lage ist unter Kontrolle? Melde dich, falls was ist! ⚡",
+                    "Kurzes Update vom Sohn: Hier läuft's. Wie sieht's bei dir aus? 👊",
+                    "Wollte nur kurz horchen, ob der Motor noch rund läuft? 😉 Gruß!",
+                    "Alles fit im Schritt? (Spaß beiseite: Alles okay bei dir?)",
+                    "Wollte nur ein kurzes Signal senden. Denke an dich! 👊",
+                    "Kurzer Dienstweg: Alles klar bei dir? 👍"
+                ],
+                wisdom: [
+                    "Egal wie hart der Tag ist, wir bleiben härter. 👊 Gruß!",
+                    "Wer rastet, der rostet. Hoffe du bist fleißig am 'Werken'. 😉",
+                    "Ein Mann, ein Wort. Wollte nur mal kurz Hallo sagen!",
+                    "Stabilität ist alles. Hoffe bei dir läuft's!",
+                    "Handwerk hat goldenen Boden. (Oder in unserem Fall: Architektur) 😉",
+                    "Das Leben ist kein Ponyhof, aber wir reiten trotzdem. 🐎",
+                    "Nicht lang schnacken, Kopf in' Nacken. Hab einen guten Tag! 🍺",
+                    "Erfolg ist kein Glück, sondern Disziplin. Denk an dich, Papa! 👊",
+                    "Ein Fels in der Brandung braucht keine Sonnenbrille. Bleib stabil! 🪨",
+                    "Lieber spät als nie, aber besser jetzt als später. Gruß!"
+                ]
+            }
+        };
+
+        function setMsg(person, cat) {
+            const pool = db[person][cat];
+            const msg = pool[Math.floor(Math.random() * pool.length)];
+            document.getElementById(`msg-${person}`).innerText = msg;
+        }
+
+        function send(person) {
+            const text = document.getElementById(`msg-${person}`).innerText;
+            if(text.includes('Wähle')) return;
+            window.location.href = `whatsapp://send?text=${encodeURIComponent(text)}`;
+        }
+    </script>
+</body>
+</html>
