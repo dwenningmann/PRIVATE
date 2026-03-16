@@ -31,8 +31,21 @@
 
         header {
             text-align: center;
-            margin-bottom: 30px;
-            margin-top: 20px;
+            margin-bottom: 25px;
+            margin-top: 10px;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+        }
+
+        /* Dein Lieblingsicon */
+        .family-emblem {
+            font-size: 1.2rem;
+            font-weight: 900;
+            color: var(--gold);
+            letter-spacing: 0.1em;
+            margin-bottom: 5px;
+            text-shadow: 0 0 15px rgba(245, 158, 11, 0.4);
         }
 
         .status-bar { 
@@ -96,15 +109,27 @@
 
         .app-item:active { transform: scale(0.94); background: #111; }
 
-        /* Branding Themes */
+        .item-alignment {
+            grid-column: span 2;
+            aspect-ratio: auto;
+            padding: 22px;
+            background: linear-gradient(145deg, #0c0c0c, #1a140a);
+            border: 1px solid rgba(245, 158, 11, 0.3);
+            display: flex;
+            flex-direction: row;
+            justify-content: flex-start;
+            gap: 20px;
+            text-align: left;
+        }
+
         .item-leadership { border: 1px solid rgba(245, 158, 11, 0.15); }
-        .item-sniper { border: 1px solid rgba(245, 158, 11, 0.3); background: linear-gradient(145deg, #0c0c0c, #1a140a); }
         .item-summit { border: 1px solid rgba(16, 185, 129, 0.2); background: linear-gradient(145deg, #0c0c0c, #061a12); }
         .item-kyria { border: 1px solid rgba(236, 72, 153, 0.2); background: linear-gradient(145deg, #0c0c0c, #1a0f0f); }
         .item-generation { border: 1px solid rgba(59, 130, 246, 0.2); background: linear-gradient(145deg, #0c0c0c, #0a141a); }
         .item-circle { border: 1px solid rgba(168, 85, 247, 0.15); }
 
         .icon { font-size: 2.1rem; margin-bottom: 10px; }
+        .item-alignment .icon { margin-bottom: 0; font-size: 1.8rem; }
         .label { font-size: 0.7rem; font-weight: 800; text-transform: uppercase; letter-spacing: 0.05em; }
         .desc { font-size: 0.6rem; color: #555; margin-top: 4px; line-height: 1.2; }
 
@@ -118,21 +143,33 @@
 <body>
 
     <header>
+        <div class="family-emblem">A³ ♥️</div>
         <div class="status-bar">● System Online // David</div>
         <h1>Executive <span style="color:var(--gold)">Hub</span></h1>
     </header>
 
+    <div class="section-label">State of Mind</div>
+    <div class="app-grid">
+        <a href="alignment.html" class="app-item item-alignment">
+            <div class="icon" style="text-shadow: 0 0 15px rgba(245,158,11,0.5)">⚡</div>
+            <div>
+                <div class="label gold-text">Morning Alignment</div>
+                <div class="desc">Rekalibrierung deiner Führungs-Identität</div>
+            </div>
+        </a>
+    </div>
+
     <div class="section-label">Branding & Network</div>
     <div class="app-grid">
-        <a href="sniper.html" class="app-item item-sniper">
-            <div class="icon" style="text-shadow: 0 0 15px rgba(245,158,11,0.5)">🎯</div>
+        <a href="sniper.html" class="app-item item-leadership" style="border-color: rgba(245,158,11,0.3);">
+            <div class="icon">🎯</div>
             <div class="label gold-text">Comment Sniper</div>
-            <div class="desc">Expert Interaction</div>
+            <div class="desc">High-Value Interaction</div>
         </a>
         <a href="connector.html" class="app-item item-leadership">
             <div class="icon">🤝</div>
             <div class="label gold-text">Connector</div>
-            <div class="desc">Personal Growth</div>
+            <div class="desc">Network Growth</div>
         </a>
         <a href="mindset.html" class="app-item item-leadership">
             <div class="icon">💡</div>
