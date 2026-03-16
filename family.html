@@ -1,0 +1,128 @@
+<!DOCTYPE html>
+<html lang="de">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+    <title>Generation // Pro Content</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <style>
+        @import url('https://fonts.googleapis.com/css2?family=Inter:wght@400;900&display=swap');
+        body { background: #050505; color: #fff; font-family: 'Inter', sans-serif; padding-bottom: 40px; }
+        .kid-card { background: #0c0c0c; border: 1px solid rgba(255,255,255,0.05); border-radius: 24px; }
+        .btn-action { background: #1a1a1a; border: 1px solid #333; color: #aaa; font-size: 8px; font-weight: 900; text-transform: uppercase; padding: 10px 4px; border-radius: 12px; transition: 0.2s; }
+        .btn-action:active { background: #333; color: #fff; }
+        .btn-whatsapp { background: #25D366; color: #fff; font-weight: 900; text-transform: uppercase; font-size: 10px; letter-spacing: 0.1em; }
+        .tag { font-size: 8px; font-weight: 900; padding: 3px 8px; border-radius: 6px; text-transform: uppercase; }
+    </style>
+</head>
+<body class="p-6 flex flex-col items-center">
+
+    <header class="w-full max-w-md mb-8">
+        <h1 class="text-3xl font-black italic uppercase tracking-tighter">Generation</h1>
+        <p class="text-[10px] text-gray-500 mt-2 uppercase tracking-widest text-balance">Massive Content Update // 60+ Options</p>
+    </header>
+
+    <main class="w-full max-w-md space-y-6">
+        
+        <section class="kid-card p-6 space-y-4">
+            <div class="flex justify-between items-center">
+                <h2 class="text-xl font-black text-amber-500 uppercase">Alexandra</h2>
+                <span class="tag bg-amber-500/10 text-amber-500">Vol. 2</span>
+            </div>
+            <div id="msg-alexandra" class="text-sm text-gray-400 italic leading-relaxed min-h-[80px] bg-black/30 p-4 rounded-xl">
+                Wähle eine Kategorie für Alexandra...
+            </div>
+            <div class="grid grid-cols-3 gap-2">
+                <button onclick="setMsg('alexandra', 'dadjokes')" class="btn-action">Dad Jokes</button>
+                <button onclick="setMsg('alexandra', 'riddles')" class="btn-action">Riddles</button>
+                <button onclick="setMsg('alexandra', 'real')" class="btn-action">Real Talk</button>
+            </div>
+            <button onclick="send('alexandra')" class="btn-whatsapp w-full py-4 rounded-xl shadow-lg">WhatsApp Alexandra</button>
+        </section>
+
+        <section class="kid-card p-6 space-y-4">
+            <div class="flex justify-between items-center">
+                <h2 class="text-xl font-black text-blue-500 uppercase">Ari</h2>
+                <span class="tag bg-blue-500/10 text-blue-500">Vol. 2</span>
+            </div>
+            <div id="msg-ari" class="text-sm text-gray-400 italic leading-relaxed min-h-[80px] bg-black/30 p-4 rounded-xl">
+                Wähle eine Kategorie für Ari...
+            </div>
+            <div class="grid grid-cols-3 gap-2">
+                <button onclick="setMsg('ari', 'roast')" class="btn-action">Gentle Roast</button>
+                <button onclick="setMsg('ari', 'brain')" class="btn-action">Brainteaser</button>
+                <button onclick="setMsg('ari', 'vibe')" class="btn-action">Vibe Check</button>
+            </div>
+            <button onclick="send('ari')" class="btn-whatsapp w-full py-4 rounded-xl shadow-lg">WhatsApp Ari</button>
+        </section>
+
+    </main>
+
+    <script>
+        const db = {
+            dadjokes: [
+                "Warum können Geister so schlecht lügen? Weil sie zu durchschaubar sind. 👻",
+                "Was ist gelb und kann nicht schwimmen? Ein Bagger. Und warum? Weil er nur einen Arm hat. 🏗️",
+                "Wie nennt man ein verschwundenes Rind? Eine Oxford. 🐂",
+                "Warum haben Fische Schuppen? Weil sie keine Haare haben. 🐟",
+                "Was macht ein Mathematiker im Garten? Wurzeln ziehen. 🪴",
+                "Warum sitzen Fliegen so gerne auf dem Computer? Weil sie das Internet so mögen. 💻",
+                "Treffen sich zwei Kerzen. Fragt die eine: 'Ist Wasser gefährlich?' Sagt die andere: 'Davon kannst du ausgehen.' 🕯️",
+                "Ich habe ein neues Wort erfunden: 'Plagiat'. 📝",
+                "Was ist braun, klebrig und läuft durch die Wüste? Ein Karamel. 🐫",
+                "Sagt der eine Stift zum anderen: 'Spitz pass auf!' ✏️"
+            ],
+            riddles: [
+                "Was wird beim Trocknen nass? (Handtuch) 🧼",
+                "Was hat einen Hals, aber keinen Kopf? (Flasche) 🍾",
+                "Was hat vier Beine und kann nicht laufen? (Tisch) 🪑",
+                "Was kannst du halten, ohne deine Hände zu benutzen? (Atem/Versprechen) 🌬️",
+                "Je mehr man davon hat, desto weniger sieht man. Was ist es? (Dunkelheit) 🌑",
+                "Was hat Zähne, kann aber nicht essen? (Reißverschluss) 🤐",
+                "Es ist dein Eigentum, aber alle anderen benutzen es mehr als du. (Name) 📛",
+                "Was bricht, wenn man es nur ausspricht? (Schweigen) 🤫"
+            ],
+            real: [
+                "Wollte dir nur mal sagen: Ich bewundere, wie fokussiert du deinen Weg gehst. 🚀",
+                "Egal wie viel ich arbeite – du bist mein wichtigstes 'Projekt'. ❤️",
+                "Alexandra, ich vertraue dir voll und ganz. Mach dein Ding! ✨",
+                "Danke, dass du so eine starke Persönlichkeit entwickelst. Bin stolz. 🔥",
+                "Wenn du mal Hilfe brauchst: Ich bin nur eine Nachricht weit weg. Immer. ❤️"
+            ],
+            roast: [
+                "Ari, dein Zimmer hat gerade bei der UN den Status als Katastrophengebiet beantragt. 🚮",
+                "Ich habe dein WLAN-Passwort geändert. Für das neue musst du den Müll rausbringen. Game on! 🎮",
+                "Na, du Legende? Schon aus dem Bett gerollt oder ist das heute dein permanenter Wohnsitz? 🛌",
+                "Bist du eigentlich so cool geboren oder hast du das im Abo bestellt? 😎",
+                "Ich würde dir ja beim Aufräumen helfen, aber ich möchte deine archäologischen Funde nicht stören. 🦖"
+            ],
+            brain: [
+                "Wenn 3 Katzen 3 Mäuse in 3 Minuten fangen, wie lange brauchen 100 Katzen für 100 Mäuse? (3 Min) 🐈",
+                "Ein Bauer hat 17 Schafe. Alle außer 9 sterben. Wie viele hat er noch? (9) 🐑",
+                "Was ist schwerer: 1kg Federn oder 1kg Gold? (Beide gleich) ⚖️",
+                "Wie viele Monate haben 28 Tage? (Alle 12!) 📅",
+                "Was geht morgens auf vier, mittags auf zwei und abends auf drei Beinen? (Der Mensch) 👶👴"
+            ],
+            vibe: [
+                "Ari, lass dich heute nicht stressen. Du hast das im Griff! 👊",
+                "Wollte dir nur mal sagen: Deine Art, die Dinge zu sehen, inspiriert mich. 💡",
+                "Kurzer Vibe-Check: Alles stabil? Melde dich, wenn was ist! ✌️",
+                "Einfach nur so: Du bist ein verdammt guter Typ. 🔥",
+                "Genieß den Tag, Junior. Wir sehen uns später! ⚡"
+            ]
+        };
+
+        function setMsg(kid, category) {
+            const pool = db[category];
+            const msg = pool[Math.floor(Math.random() * pool.length)];
+            document.getElementById(`msg-${kid}`).innerText = msg;
+        }
+
+        function send(kid) {
+            const text = document.getElementById(`msg-${kid}`).innerText;
+            if(text.includes('Wähle')) return;
+            window.location.href = `whatsapp://send?text=${encodeURIComponent(text)}`;
+        }
+    </script>
+</body>
+</html>
