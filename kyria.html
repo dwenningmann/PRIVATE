@@ -1,0 +1,109 @@
+<!DOCTYPE html>
+<html lang="de">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+    <title>Kyria // Love Notes</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <style>
+        @import url('https://fonts.googleapis.com/css2?family=Playfair+Display:italic,wght@700&family=Inter:wght@400;700&display=swap');
+        body { background: #080505; color: #fff; font-family: 'Inter', sans-serif; }
+        .love-card { 
+            background: linear-gradient(145deg, #1a0f0f, #080505); 
+            border: 1px solid rgba(236, 72, 153, 0.1); 
+            border-radius: 24px; 
+            transition: 0.3s;
+        }
+        .love-card:active { transform: scale(0.98); border-color: #ec4899; }
+        .greek-text { font-family: 'Playfair Display', serif; color: #ec4899; }
+        .btn-whatsapp { background: #25D366; color: #fff; font-weight: 900; text-transform: uppercase; font-size: 11px; letter-spacing: 0.1em; }
+    </style>
+</head>
+<body class="p-6 md:p-12 flex flex-col items-center min-h-screen">
+
+    <header class="w-full max-w-md mb-10 text-center">
+        <div class="text-[10px] uppercase tracking-[0.5em] text-pink-500/50 mb-2">Private // Connection</div>
+        <h1 class="text-3xl greek-text italic">Kyria</h1>
+        <div class="h-px w-12 bg-pink-900 mx-auto mt-4"></div>
+    </header>
+
+    <main class="w-full max-w-md space-y-6">
+        
+        <section class="love-card p-8 text-center space-y-6">
+            <div id="message-display" class="text-lg leading-relaxed font-medium">
+                S'agapo, meine Schöne. Ich denk an dich! 💘
+            </div>
+            
+            <div class="flex flex-col gap-3">
+                <button onclick="shareWhatsApp()" class="btn-whatsapp w-full py-4 rounded-xl flex items-center justify-center gap-2">
+                    <span>Per WhatsApp senden</span>
+                </button>
+                <button onclick="nextMessage()" class="text-[10px] text-gray-500 uppercase font-bold tracking-widest pt-2">Nächste Inspiration</button>
+            </div>
+        </section>
+
+        <div class="grid grid-cols-2 gap-4">
+            <button onclick="setCategory('short')" class="love-card p-4 text-[10px] font-bold uppercase tracking-widest text-pink-200/60">Kurz & Knapp</button>
+            <button onclick="setCategory('greek')" class="love-card p-4 text-[10px] font-bold uppercase tracking-widest text-pink-200/60">Griechischer Vibe</button>
+            <button onclick="setCategory('deep')" class="love-card p-4 text-[10px] font-bold uppercase tracking-widest text-pink-200/60">Tiefgründig</button>
+            <button onclick="setCategory('fun')" class="love-card p-4 text-[10px] font-bold uppercase tracking-widest text-pink-200/60">Kleiner Flirt</button>
+        </div>
+
+        <div class="pt-8 text-center">
+            <a href="index.html" class="text-[9px] uppercase tracking-widest text-gray-700">← Back to Hub</a>
+        </div>
+    </main>
+
+    <script>
+        const messages = {
+            short: [
+                "Denk an dich! 💘",
+                "Wollte dir nur kurz sagen: Ich liebe dich. 😘",
+                "Du fehlst mir hier gerade. 🌹",
+                "Kann es kaum erwarten, dich nachher zu sehen!",
+                "Kurzer Gruß an meine Lieblingsfrau! 💋"
+            ],
+            greek: [
+                "S'agapo polí, meine Schöne! 💘",
+                "Mou leípeis (Du fehlst mir) – freu mich auf dich! 😘",
+                "Eísai i zoí mou (Du bist mein Leben). Hab einen tollen Tag!",
+                "Morfoniá mou (Meine Hübsche), denk an dich! 🌹",
+                "Kardiá mou (Mein Herz), du bist die Beste. 💘"
+            ],
+            deep: [
+                "Egal wie stressig der Tag ist, der Gedanke an dich bringt mich zur Ruhe. ❤️",
+                "Danke, dass du mir immer den Rücken freihältst. Du bist meine Basis.",
+                "Du bist das Beste, was mir je passiert ist. Wollte ich nur mal loswerden. 💘",
+                "Hinter jedem starken Mann steht eine noch stärkere Frau. Danke für alles!"
+            ],
+            fun: [
+                "Na, du Hübsche? Heute schon was vor? 😉",
+                "Ich hab die tollste Frau der Welt – wollte ich nur mal feststellen. 💘",
+                "Heute Abend gehört nur uns. Freu mich drauf! 🔥",
+                "Ganz kurz: Ich bin verknallt wie am ersten Tag. 😘"
+            ]
+        };
+
+        let currentCategory = 'greek';
+
+        function nextMessage() {
+            const pool = messages[currentCategory];
+            const msg = pool[Math.floor(Math.random() * pool.length)];
+            document.getElementById('message-display').innerText = msg;
+        }
+
+        function setCategory(cat) {
+            currentCategory = cat;
+            nextMessage();
+        }
+
+        function shareWhatsApp() {
+            const text = document.getElementById('message-display').innerText;
+            window.location.href = `whatsapp://send?text=${encodeURIComponent(text)}`;
+        }
+
+        // Init
+        nextMessage();
+    </script>
+</body>
+</html>
