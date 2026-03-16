@@ -1,0 +1,80 @@
+<!DOCTYPE html>
+<html lang="de">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+    <title>State Alignment</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <style>
+        @import url('https://fonts.googleapis.com/css2?family=Inter:wght@400;900&display=swap');
+        body { background: #050505; color: #fff; font-family: 'Inter', sans-serif; overflow: hidden; }
+        .alignment-card { background: #0c0c0c; border: 1px solid rgba(245, 158, 11, 0.2); border-radius: 32px; box-shadow: 0 20px 50px rgba(0,0,0,0.5); }
+        .timer-bar { height: 2px; background: #f59e0b; width: 0%; transition: width 4s linear; }
+    </style>
+</head>
+<body class="p-6 flex flex-col items-center justify-center min-h-screen">
+
+    <main class="w-full max-w-md alignment-card p-10 space-y-8 relative">
+        <div id="step-container">
+            <div id="step-1" class="space-y-6 text-center">
+                <div class="text-xs font-black uppercase tracking-[0.3em] text-gray-600">Phase 01 // Calibration</div>
+                <h2 class="text-3xl font-black italic uppercase">Breathe.</h2>
+                <p class="text-gray-400 text-sm leading-relaxed">Fokussiere den Punkt. <br>Atme aus, bis die Bar voll ist.</p>
+                <div class="w-full bg-gray-900 rounded-full overflow-hidden mt-4">
+                    <div id="progress" class="timer-bar"></div>
+                </div>
+            </div>
+
+            <div id="step-2" class="hidden space-y-6 text-center">
+                <div class="text-xs font-black uppercase tracking-[0.3em] text-amber-500">Phase 02 // Daily Mission</div>
+                <h2 id="mission-title" class="text-2xl font-black uppercase italic"></h2>
+                <p id="mission-text" class="text-gray-300 text-sm leading-relaxed border-l-2 border-amber-500 pl-4 text-left"></p>
+                <button onclick="finish()" class="w-full py-4 bg-white text-black font-black uppercase text-xs rounded-2xl mt-6 active:scale-95 transition-all">Mission akzeptiert</button>
+            </div>
+        </div>
+    </main>
+
+    <script>
+        const missions = [
+            {
+                title: "Der Raum",
+                text: "Heute wird dich jemand triggern. Dein Ziel: Beobachte den Impuls, aber antworte mit 2 Sekunden Verzögerung. Gewinne den Raum zwischen Reiz und Reaktion."
+            },
+            {
+                title: "Radikale Stille",
+                text: "Höre heute in Meetings 20% mehr zu als du sprichst. Wer zuhört, sammelt Daten. Wer spricht, gibt sie nur aus. Führe durch Fragen, nicht durch Ansagen."
+            },
+            {
+                title: "Non-Reaktivität",
+                text: "Ein Problem wird heute auftauchen. Deine erste Reaktion: 'Interessant.' Bewerte es nicht sofort als schlecht. Bleib der Beobachter, der das System repariert."
+            },
+            {
+                title: "People First Hebel",
+                text: "Suche heute eine Gelegenheit, einem Teammitglied den Rücken frei zu halten, indem du eine bürokratische Hürde eliminierst. Sei der Enabler, nicht der Kontrolleur."
+            },
+            {
+                title: "Architekten-Blick",
+                text: "Wenn Stress aufkommt, frag dich: 'Wird das in 6 Monaten noch wichtig sein?' Wenn nein, investiere keine emotionale Energie. Schütze deinen Fokus."
+            }
+        ];
+
+        // Start Progress Bar
+        setTimeout(() => {
+            document.getElementById('progress').style.width = "100%";
+        }, 100);
+
+        // Switch to Mission after 4 seconds
+        setTimeout(() => {
+            document.getElementById('step-1').classList.add('hidden');
+            const mission = missions[Math.floor(Math.random() * missions.length)];
+            document.getElementById('mission-title').innerText = mission.title;
+            document.getElementById('mission-text').innerText = mission.text;
+            document.getElementById('step-2').classList.remove('hidden');
+        }, 4100);
+
+        function finish() {
+            window.location.href = 'index.html';
+        }
+    </script>
+</body>
+</html>
