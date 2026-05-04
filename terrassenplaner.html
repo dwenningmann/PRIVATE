@@ -5,56 +5,74 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Terrassen-Masterplan: Die ultimative SPAX-Zentrale</title>
     <style>
-        :root { --primary: #27ae60; --secondary: #2c3e50; --spax: #008a45; --light: #f4f7f6; --accent: #03a9f4; --warn: #f39c12; --danger: #e74c3c; }
-        body { font-family: 'Segoe UI', sans-serif; background: var(--light); color: var(--secondary); line-height: 1.6; padding: 20px; }
-        .container { background: white; max-width: 1100px; margin: 0 auto; padding: 30px; border-radius: 15px; box-shadow: 0 10px 30px rgba(0,0,0,0.1); }
+        :root { 
+            --primary: #27ae60; 
+            --secondary: #2c3e50; 
+            --spax: #008a45; 
+            --light: #f4f7f6; 
+            --accent: #03a9f4; 
+            --warn: #f39c12; 
+            --danger: #e74c3c; 
+            --white: #ffffff;
+        }
+        * { box-sizing: border-box; }
+        body { font-family: 'Segoe UI', Roboto, sans-serif; background: var(--light); color: var(--secondary); line-height: 1.6; margin: 0; padding: 10px; }
+        .container { background: var(--white); max-width: 1100px; margin: 0 auto; padding: 20px; border-radius: 15px; box-shadow: 0 10px 30px rgba(0,0,0,0.1); }
         
-        h1 { color: var(--spax); text-align: center; border-bottom: 4px solid var(--spax); margin-bottom: 30px; font-size: 2.2em; }
-        h2 { border-left: 6px solid var(--spax); padding-left: 15px; margin-top: 40px; background: #f9f9f9; padding: 10px; }
-        h3 { color: var(--spax); margin-top: 25px; }
+        h1 { color: var(--spax); text-align: center; border-bottom: 4px solid var(--spax); margin-bottom: 20px; font-size: 1.8em; padding-bottom: 10px; }
+        h2 { border-left: 6px solid var(--spax); padding-left: 15px; margin-top: 40px; background: #f9f9f9; padding: 10px; font-size: 1.4em; }
+        h3 { color: var(--spax); margin-top: 20px; font-size: 1.2em; border-bottom: 1px solid #eee; padding-bottom: 5px; }
 
-        .calc-area { display: grid; grid-template-columns: repeat(auto-fit, minmax(200px, 1fr)); gap: 15px; background: #2c3e50; color: white; padding: 25px; border-radius: 10px; }
-        .calc-area input { width: 100%; padding: 10px; border-radius: 5px; border: none; font-size: 1.1em; margin-top: 5px; box-sizing: border-box; }
-        
-        .result-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(220px, 1fr)); gap: 15px; margin-top: 20px; }
-        .res-card { background: #e8f5e9; padding: 20px; border-radius: 8px; font-weight: bold; border: 2px solid var(--spax); text-align: center; }
-        .res-card span { color: var(--spax); display: block; font-size: 1.4em; margin-top: 5px; }
+        /* Rechner */
+        .calc-area { display: grid; grid-template-columns: 1fr; gap: 15px; background: var(--secondary); color: white; padding: 20px; border-radius: 10px; }
+        @media (min-width: 600px) { .calc-area { grid-template-columns: 1fr 1fr; } }
+        .calc-area div { display: flex; flex-direction: column; }
+        .calc-area input { padding: 12px; border-radius: 8px; border: none; font-size: 1em; }
 
-        .space-check { background: #fff3cd; border: 2px solid #ffe58f; padding: 20px; border-radius: 10px; margin: 20px 0; text-align: center; }
-        .people-count { font-size: 2.5em; font-weight: bold; color: #856404; display: block; }
+        .space-check { background: #fff3cd; border: 2px solid #ffe58f; padding: 15px; border-radius: 10px; margin: 20px 0; text-align: center; }
+        .people-count { font-size: 2.2em; font-weight: bold; color: #856404; display: block; }
 
-        .visual-container { display: grid; grid-template-columns: 1fr 1fr; gap: 20px; margin-top: 30px; }
-        .sketch-box, .layer-box { background: #fff; border: 1px solid #ddd; padding: 20px; border-radius: 10px; text-align: center; }
-        .layer { display: flex; align-items: center; margin-bottom: 12px; font-size: 0.95em; }
-        .layer-color { width: 30px; height: 12px; margin-right: 15px; border-radius: 2px; }
+        /* Kosten */
+        .cost-matrix { background: #fdfdfd; border: 1px solid #ddd; padding: 20px; border-radius: 10px; margin-top: 20px; }
+        .cost-row { display: flex; justify-content: space-between; align-items: center; padding: 10px 0; border-bottom: 1px solid #eee; flex-wrap: wrap; }
+        .cost-row input { width: 100px; padding: 8px; border: 1px solid #ccc; border-radius: 5px; text-align: right; }
 
-        .comp-table { width: 100%; border-collapse: collapse; margin-top: 20px; background: white; }
-        .comp-table th { background: var(--secondary); color: white; padding: 12px; text-align: left; }
-        .comp-table td { border: 1px solid #ddd; padding: 12px; font-size: 0.9em; }
-        .tag { padding: 2px 8px; border-radius: 4px; font-weight: bold; font-size: 0.8em; }
-        .tag-pro { background: #d4edda; color: #155724; }
-        .tag-con { background: #f8d7da; color: #721c24; }
+        .result-grid { display: grid; grid-template-columns: 1fr; gap: 15px; margin-top: 20px; }
+        @media (min-width: 600px) { .result-grid { grid-template-columns: 1fr 1fr; } }
+        .res-card { background: #e8f5e9; padding: 15px; border-radius: 8px; font-weight: bold; border: 2px solid var(--spax); text-align: center; }
+        .res-card span { color: var(--spax); display: block; font-size: 1.3em; margin-top: 5px; }
+        .res-card.total { background: var(--spax); color: white; grid-column: 1 / -1; }
+        .res-card.total span { color: white; font-size: 1.8em; }
 
-        .pro-tips-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(300px, 1fr)); gap: 15px; margin-top: 20px; }
+        /* Visualisierung */
+        .visual-container { display: grid; grid-template-columns: 1fr; gap: 20px; margin-top: 20px; }
+        @media (min-width: 800px) { .visual-container { grid-template-columns: 1fr 1fr; } }
+        .sketch-box, .layer-box { background: #fff; border: 1px solid #ddd; padding: 15px; border-radius: 10px; text-align: center; }
+        .layer { display: flex; align-items: center; margin-bottom: 10px; font-size: 0.9em; text-align: left; }
+        .layer-color { width: 25px; height: 10px; margin-right: 12px; border-radius: 2px; flex-shrink: 0; }
+
+        /* Wissen & Tipps */
+        .pro-tips-grid { display: grid; grid-template-columns: 1fr; gap: 15px; margin-top: 20px; }
+        @media (min-width: 600px) { .pro-tips-grid { grid-template-columns: 1fr 1fr; } }
         .pro-tip-card { background: #e1f5fe; border-left: 5px solid var(--accent); padding: 15px; border-radius: 0 8px 8px 0; font-size: 0.9em; }
-        .pro-tip-card h4 { margin: 0 0 10px 0; color: #0277bd; }
 
-        .list-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 20px; margin-top: 20px; }
+        .list-grid { display: grid; grid-template-columns: 1fr; gap: 15px; margin-top: 20px; }
+        @media (min-width: 700px) { .list-grid { grid-template-columns: 1fr 1fr; } }
         .list-card { background: #fdfdfd; border: 1px solid #eee; padding: 15px; border-radius: 10px; }
-        .list-card ul { padding-left: 20px; margin: 0; }
 
-        .step { background: #fff; border: 1px solid #ddd; padding: 25px; margin-bottom: 25px; border-radius: 12px; position: relative; box-shadow: 2px 2px 10px rgba(0,0,0,0.05); }
-        .step-num { position: absolute; left: -15px; top: -15px; background: var(--spax); color: white; width: 40px; height: 40px; border-radius: 50%; display: flex; align-items: center; justify-content: center; font-weight: bold; font-size: 1.2em; border: 4px solid white; }
-        .pro-note { background: #fff3cd; padding: 15px; border-left: 6px solid var(--warn); margin-top: 15px; border-radius: 0 8px 8px 0; font-size: 0.9em; }
-
-        @media (max-width: 768px) { .visual-container, .list-grid { grid-template-columns: 1fr; } }
+        /* Anleitung */
+        .step { background: #fff; border: 1px solid #ddd; padding: 25px; margin-bottom: 25px; border-radius: 12px; position: relative; }
+        .step-num { position: absolute; left: -10px; top: -10px; background: var(--spax); color: white; width: 35px; height: 35px; border-radius: 50%; display: flex; align-items: center; justify-content: center; font-weight: bold; border: 3px solid white; }
+        .pro-note { background: #fff3cd; padding: 12px; border-left: 5px solid var(--warn); margin-top: 10px; border-radius: 0 8px 8px 0; font-size: 0.9em; }
     </style>
 </head>
 <body>
 
 <div class="container">
-    <h1>🏗️ Terrassen-Masterplan (SPAX-Edition)</h1>
+    <h1>🏗️ Terrassen-Masterplan: Profi-Edition</h1>
 
+    <!-- 1. ABMESSUNGEN -->
+    <h2>📐 1. Abmessungen & Planung</h2>
     <div class="calc-area">
         <div><label>Länge (m)</label><input type="number" id="L" value="3.5" step="0.1" oninput="update()"></div>
         <div><label>Breite (m)</label><input type="number" id="B" value="3.2" step="0.1" oninput="update()"></div>
@@ -62,155 +80,160 @@
         <div><label>Fugenbreite (mm)</label><input type="number" id="fW" value="5" step="1" oninput="update()"></div>
     </div>
 
+    <!-- 2. KAPAZITÄT -->
     <div id="spaceCheck" class="space-check"></div>
+
+    <!-- 3. KOSTEN-MATRIX -->
+    <h2>💰 2. Kosten-Matrix (€)</h2>
+    <div class="cost-matrix">
+        <div class="cost-row"><label>🪵 Dielen (€/m)</label><input type="number" id="pD" value="8.50" step="0.1" oninput="update()"></div>
+        <div class="cost-row"><label>🦴 UK-Balken (€/m)</label><input type="number" id="pU" value="7.00" step="0.1" oninput="update()"></div>
+        <div class="cost-row"><label>🔩 Erdnagel (€/Stk)</label><input type="number" id="pN" value="45.00" step="1" oninput="update()"></div>
+        <div class="cost-row"><label>🛠️ Kleinteile & SPAX Set (€)</label><input type="number" id="pK" value="250.00" step="5" oninput="update()"></div>
+    </div>
 
     <div class="result-grid" id="out"></div>
 
+    <!-- 4. VISUALISIERUNG -->
+    <h2>📊 3. Visualisierung & Schichten</h2>
     <div class="visual-container">
         <div class="sketch-box">
-            <h3>📍 Bauplan & Komfortzone</h3>
+            <h3>📍 Live-Bauplan (Draufsicht)</h3>
             <div id="sketch"></div>
-            <p style="font-size:0.8em; color:#666; margin-top:10px;">🔴 Erdnägel | 🟦 UK-Balken | 🟩 Sicherer Sitzbereich</p>
+            <p style="font-size:0.75em; color:#666;">🔴 Erdnägel | 🟦 UK-Balken | 🟩 Sicherer Sitzbereich</p>
         </div>
         <div class="layer-box">
             <h3>🍰 Der SPAX-Schichtkuchen</h3>
-            <div class="layer"><div class="layer-color" style="background:#8d6e63"></div> 1. Dielen (Echtholz / WPC)</div>
-            <div class="layer"><div class="layer-color" style="background:#008a45"></div> 2. SPAX Air (Lüftung gegen Fäulnis)</div>
+            <div class="layer"><div class="layer-color" style="background:#8d6e63"></div> 1. Dielen (Versenktiefe beachten!)</div>
+            <div class="layer"><div class="layer-color" style="background:#008a45"></div> 2. SPAX Air (Hinterlüftung ist Pflicht)</div>
             <div class="layer"><div class="layer-color" style="background:#5d4037"></div> 3. Tragbalken + SPAX Tape (Schutz)</div>
             <div class="layer"><div class="layer-color" style="background:#333"></div> 4. SPAX Pads (Gummischutz/Dämpfung)</div>
             <div class="layer"><div class="layer-color" style="background:#90a4ae"></div> 5. Erdnägel & Unkrautvlies</div>
         </div>
     </div>
 
-    <h2>🛠️ Material & Werkzeug Empfehlungen</h2>
+    <!-- 5. EXPERTEN-TIPPS -->
+    <h2>💡 4. Experten-Wissen</h2>
+    <div class="pro-tips-grid">
+        <div class="pro-tip-card"><strong>📏 3-4-5 Regel:</strong> Markiert an einer Ecke 3m und 4m Schenkel. Die Diagonale muss genau 5m sein für einen perfekten 90° Winkel.</div>
+        <div class="pro-tip-card"><strong>💧 Gefälle:</strong> Baut zwingend 1-2% Gefälle vom Haus weg ein (ca. 1-2cm pro Meter), um Staunässe zu verhindern.</div>
+        <div class="pro-tip-card"><strong>🪵 Akklimatisierung:</strong> Lagert das Holz 48h vor Ort im Schatten, damit es sich an die Umgebungsfeuchtigkeit anpasst.</div>
+        <div class="pro-tip-card"><strong>🪛 Hirnholzschutz:</strong> Versiegelt die Stirnkanten der Dielen mit Wachs, um Wasseraufnahme und Rissbildung zu minimieren.</div>
+    </div>
+
     <div class="list-grid">
         <div class="list-card">
-            <h4>🪵 Das perfekte Holz für die UK</h4>
-            <p style="font-size: 0.9em;"><strong>Regel:</strong> Das Holz der Unterkonstruktion sollte mindestens die gleiche Dauerhaftigkeit haben wie das Deckholz!</p>
-            <ul style="font-size: 0.85em;">
-                <li><strong>Empfehlung 1: Aluminium.</strong> Unverwüstlich, verzieht sich nie. Beste Wahl für WPC oder hochwertige Hölzer.</li>
-                <li><strong>Empfehlung 2: Konstruktionsvollholz (KVH) Lärche/Douglasie.</strong> Gut für Nadelholzdielen.</li>
-                <li><strong>Empfehlung 3: Exotenhölzer (z.B. Angelim Pedra).</strong> Nur wenn auch die Dielen aus Hartholz sind.</li>
+            <h4>🦴 Unterkonstruktion (UK) & Holz</h4>
+            <ul style="font-size:0.85em;">
+                <li><strong>Aluminium:</strong> Absolut verzugsfrei & ewig haltbar. Beste Wahl.</li>
+                <li><strong>Dauerhaftigkeit:</strong> Die UK muss mindestens so langlebig sein wie das Deckholz.</li>
+                <li><strong>Abstand zum Haus:</strong> Mindestens 15mm Dehnungsfuge einplanen.</li>
             </ul>
         </div>
         <div class="list-card">
-            <h4>🧰 Benötigtes Werkzeug (Checkliste)</h4>
-            <ul style="font-size: 0.85em;">
-                <li><strong>Akkuschrauber:</strong> Idealerweise zwei (einer zum Bohren, einer zum Schrauben).</li>
-                <li><strong>Kappsäge:</strong> Für saubere, rechtwinklige Schnitte der Dielen und Balken.</li>
-                <li><strong>Wasserwaage & Richtschnur:</strong> Für das Fundament essenziell.</li>
-                <li><strong>Zwingen:</strong> Hilfreich beim Fixieren der Unterkonstruktion.</li>
-                <li><strong>Bit-Set:</strong> Passend zu deinen SPAX Schrauben (meist T-Star plus).</li>
+            <h4>🧰 Werkzeug-Checkliste</h4>
+            <ul style="font-size:0.85em;">
+                <li>Zwei Akkuschrauber (einer bohrt vor, einer schraubt).</li>
+                <li>Kappsäge für präzise und rechtwinklige Schnitte.</li>
+                <li>SPAX Kaiman Pro & Stufenbohrer (für das SPAX-System).</li>
+                <li>Rotationslaser oder Schlauchwaage für die 10cm Justierung.</li>
             </ul>
         </div>
     </div>
 
-    <h2>💡 Profi-Tipps vom Experten</h2>
-    <div class="pro-tips-grid">
-        <div class="pro-tip-card">
-            <h4>📏 Die 3-4-5 Regel</h4>
-            Um einen perfekten 90° Winkel zu erhalten: Messt an einer Ecke 3m nach links und 4m nach rechts. Die Diagonale zwischen den Endpunkten muss exakt 5m lang sein.
-        </div>
-        <div class="pro-tip-card">
-            <h4>💧 Gefälle einplanen</h4>
-            Baut ein Gefälle von mindestens 1-2% vom Haus weg ein (1-2cm pro Meter). Das verhindert Staunässe und schützt die Bausubstanz.
-        </div>
-        <div class="pro-tip-card">
-            <h4>🪵 Akklimatisierung</h4>
-            Lasst die Dielen vor dem Verlegen 48h am Einsatzort liegen (im Schatten), damit sie sich an die Luftfeuchtigkeit gewöhnen können.
-        </div>
-        <div class="pro-tip-card">
-            <h4>🪛 Hirnholzschutz</h4>
-            Versiegelt die Schnittkanten der Dielen mit Wachs oder einer speziellen Lasur, um das Eindringen von Feuchtigkeit und Risse an den Enden zu verhindern.
-        </div>
-    </div>
-
-    <h2>🌲 Material-Vergleich (Dielen)</h2>
-    <table class="comp-table">
-        <tr><th>Material</th><th>Vorteile</th><th>Nachteile</th></tr>
-        <tr><td><strong>WPC</strong></td><td><span class="tag tag-pro">Pflegefrei</span> Splitterfrei, kein Streichen.</td><td><span class="tag tag-con">Hitze</span> Wird sehr heiß, wirkt künstlich.</td></tr>
-        <tr><td><strong>Lärche/Douglasie</strong></td><td><span class="tag tag-pro">Ökologisch</span> Günstig, schöne Maserung.</td><td><span class="tag tag-con">Pflege</span> Muss geölt werden, Splittergefahr.</td></tr>
-        <tr><td><strong>Thermoholz</strong></td><td><span class="tag tag-pro">Stabil</span> Fäulnisresistent, verzieht kaum.</td><td><span class="tag tag-con">Preis</span> Spröder, teurer als Nadelholz.</td></tr>
-    </table>
-
-    <h2>🛠️ Die große Baumeister-Anleitung</h2>
-
-    <div class="step">
-        <div class="step-num">0</div>
-        <h3>Bodenvorbereitung & Unkrautstopp</h3>
-        <p>Bevor ihr die Balken legt: Breitet ein starkes <strong>Unkrautvlies</strong> unter der gesamten Fläche aus. Beschwert es mit einer dünnen Schicht Kies. Das verhindert, dass später Pflanzen durch eure Dielen wachsen.</p>
-    </div>
+    <!-- 6. ANLEITUNG -->
+    <h2>🛠️ 5. Schritt-für-Schritt Bauanleitung</h2>
 
     <div class="step">
         <div class="step-num">1</div>
-        <h3>Das Fundament & Justierung</h3>
-        <p>Setzt die Erdnägel. Da ihr 10cm Höhenunterschied habt, nutzt <strong>SPAX Lift</strong> Stützfüße auf den Erdnägeln für eine millimetergenaue Ausrichtung.</p>
-        <div class="pro-note"><strong>Elektro-Tipp:</strong> Zieht jetzt schon <strong>Leerrohre</strong> unter die Konstruktion für spätere Gartenbeleuchtung oder Steckdosen.</div>
+        <strong>Vorbereitung:</strong> Unkrautvlies überlappend auslegen und mit Kies beschweren. Verlegt jetzt bereits <strong>Leerrohre</strong> für Strom/Licht unter der Fläche.
     </div>
 
     <div class="step">
         <div class="step-num">2</div>
-        <h3>Die Unterkonstruktion schützen</h3>
-        <p>Legt <strong>SPAX Pads</strong> unter die Balken. Klebt <strong>SPAX Tape</strong> auf die Balkenoberseite. Das Tape verhindert, dass Regenwasser in das Skelett einzieht.</p>
+        <strong>Fundament-Raster:</strong> Erdnägel laut Live-Bauplan positionieren. Nutzt die 3-4-5-Regel für exakte Winkel. Kontrolliert die 10cm Höhenunterschied präzise.
     </div>
 
     <div class="step">
         <div class="step-num">3</div>
-        <h3>Verlegen mit SPAX-System</h3>
-        <p>Nutzt den <strong>SPAX Kaiman Pro</strong>, um krumme Dielen zu richten. Mit dem <strong>Stufenbohrer</strong> bohrt ihr vor. Verwendet <strong>SPAX Air</strong> für optimale Belüftung.</p>
-        <div class="pro-note"><strong>Optik-Geheimnis:</strong> Plant eine <strong>Sichtschutz-Blende</strong> (Schürze) ein, um die Erdnägel und das Vlies an den Stirnseiten unsichtbar zu machen.</div>
+        <strong>Unterkonstruktion:</strong> Tragbalken auf die Erdnägel setzen. Nutzt <strong>SPAX Lift</strong> Stützfüße zur Justierung. Zwischen Holz und Metall zwingend <strong>SPAX Pads</strong> einlegen.
     </div>
 
     <div class="step">
         <div class="step-num">4</div>
-        <h3>Abschluss & Dach-Option</h3>
-        <p>Markiert die Erdnägel für spätere Dachpfosten. Achtet beim Verschrauben darauf, dass diese Punkte zugänglich bleiben.</p>
+        <strong>Holzschutz:</strong> Klebt das <strong>SPAX Tape</strong> auf die Oberseite der Tragbalken. Es verhindert, dass stehendes Wasser in die Schraublöcher und Balken eindringt.
     </div>
+
+    <div class="step">
+        <div class="step-num">5</div>
+        <strong>Erste Diele:</strong> Haltet 15mm Dehnungsabstand zur Hauswand. Richtet die erste Diele absolut parallel aus – sie ist die Basis für das gesamte Fugenbild.
+    </div>
+
+    <div class="step">
+        <div class="step-num">6</div>
+        <strong>Verlege-System:</strong> Legt <strong>SPAX Air</strong> Abstandshalter zwischen Diele und UK ein. Nutzt den <strong>SPAX Kaiman Pro</strong>, um krumme Dielen unter Spannung gerade zu drücken.
+    </div>
+
+    <div class="step">
+        <div class="step-num">7</div>
+        <strong>Bohren & Schrauben:</strong> Mit dem <strong>SPAX Stufenbohrer</strong> vorbohren. Schraubt die Dielen mit Edelstahl-Schrauben (A2) fest. Köpfe bündig versenken, nicht tiefer!
+    </div>
+
+    <div class="step">
+        <div class="step-num">8</div>
+        <strong>Finish:</strong> Stirnkanten mit Hirnholzwachs versiegeln. Montiert zum Abschluss senkrechte Dielen als <strong>Sichtblende (Schürze)</strong>, um die Technik darunter zu verstecken.
+    </div>
+
 </div>
 
 <script>
 function update() {
-    const l = parseFloat(document.getElementById('L').value);
-    const b = parseFloat(document.getElementById('B').value);
-    const dw = parseFloat(document.getElementById('dW').value) / 100;
-    const fw = parseFloat(document.getElementById('fW').value) / 1000;
+    const l = parseFloat(document.getElementById('L').value) || 0;
+    const b = parseFloat(document.getElementById('B').value) || 0;
+    const dw = (parseFloat(document.getElementById('dW').value) || 14.5) / 100;
+    const fw = (parseFloat(document.getElementById('fW').value) || 5) / 1000;
+    
+    const pD = parseFloat(document.getElementById('pD').value) || 0;
+    const pU = parseFloat(document.getElementById('pU').value) || 0;
+    const pN = parseFloat(document.getElementById('pN').value) || 0;
+    const pK = parseFloat(document.getElementById('pK').value) || 0;
 
-    if(!l || !b) return;
+    // Kapazität (Nutzfläche abzüglich Sicherheitsrand)
+    const people = Math.max(0, Math.floor(((l-1.2) * (b-1.2)) / 1.1));
+    document.getElementById('spaceCheck').innerHTML = `<span class="people-count">👥 ca. ${people} Personen</span><p>Komfortabler Sitzbereich ohne Absturzgefahr am Rand.</p>`;
 
-    const usableL = Math.max(0, l - 1.2);
-    const usableB = Math.max(0, b - 1.2);
-    const people = Math.max(0, Math.floor((usableL * usableB) / 1.1));
-
-    document.getElementById('spaceCheck').innerHTML = `
-        <span class="people-count">👥 ca. ${people} Personen</span>
-        <p>haben hier gemütlich Platz zum Essen, ohne dass Stühle über die Kante rutschen.</p>
-    `;
-
-    const flaeche = l * b;
-    const lfmDielen = (flaeche / (dw + fw)) * 1.05;
+    // Mengenberechnung
+    const fl = l * b;
+    const ld = (fl / (dw + fw)) * 1.05;
     const nX = Math.ceil(l / 1.6) + 1;
     const nY = Math.ceil(b / 1.6) + 1;
-    const naegel = nX * nY;
-    const schrauben = (lfmDielen / 0.5) * 2 * 1.1;
+    const nTotal = nX * nY;
+    const lu = (fl * 1.6);
+    const sCount = (ld / 0.5) * 2 * 1.1;
+
+    // Kostenberechnung
+    const costTotal = (ld * pD) + (lu * pU) + (nTotal * pN) + pK;
 
     document.getElementById('out').innerHTML = `
-        <div class="res-card">Holzbedarf<span>${lfmDielen.toFixed(0)}m Dielen / ${(flaeche*1.6).toFixed(0)}m Balken</span></div>
-        <div class="res-card">Zubehör<span>${naegel} Erdnägel / ca. ${Math.ceil(flaeche*1.1)}m² Vlies</span></div>
-        <div class="res-card">Schrauben<span>ca. ${Math.ceil(schrauben/100)*100} Stk (A2)</span></div>
-        <div class="res-card">Technik<span>Leerrohre & Hirnholzwachs einplanen</span></div>
+        <div class="res-card">📦 Holzbedarf<span>${ld.toFixed(0)}m Dielen / ${lu.toFixed(0)}m Balken</span></div>
+        <div class="res-card">🔩 Fixierung<span>${nTotal} Erdnägel / ${Math.ceil(sCount/100)*100} Schrauben</span></div>
+        <div class="res-card total">💶 Gesamtkosten geschätzt<span>${costTotal.toFixed(2)} €</span></div>
     `;
 
-    const scale = 240 / Math.max(l, b);
-    const w = l * scale; const h = b * scale;
-    let svg = `<svg width="260" height="260" viewBox="-10 -10 260 260">`;
-    svg += `<rect x="0" y="0" width="${w}" height="${h}" fill="#f9f9f9" stroke="#333" stroke-width="2"/>`;
-    for(let x=0; x <= l; x += 0.5) svg += `<line x1="${x*scale}" y1="0" x2="${x*scale}" y2="${h}" stroke="#03a9f4" stroke-width="1" stroke-dasharray="3"/>`;
-    const margin = 0.6 * scale;
-    if(w > 2*margin && h > 2*margin) svg += `<rect x="${margin}" y="${margin}" width="${w-2*margin}" height="${h-2*margin}" fill="rgba(39, 174, 96, 0.1)" stroke="#27ae60" stroke-dasharray="5"/>`;
-    for(let i=0; i<nX; i++) for(let j=0; j<nY; j++) svg += `<circle cx="${(i*w)/(nX-1)}" cy="${(j*h)/(nY-1)}" r="6" fill="#e74c3c"/>`;
-    svg += `</svg>`;
-    document.getElementById('sketch').innerHTML = svg;
+    // Skizze zeichnen
+    const sc = 220 / Math.max(l, b);
+    const sw = l * sc; const sh = b * sc;
+    let svg = `<svg width="240" height="240" viewBox="-10 -10 240 240"><rect x="0" y="0" width="${sw}" height="${sh}" fill="#f4f4f4" stroke="#333" stroke-width="2"/>`;
+    // UK-Balken Visualisierung
+    for(let x=0; x <= l; x += 0.5) svg += `<line x1="${x*sc}" y1="0" x2="${x*sc}" y2="${sh}" stroke="#03a9f4" stroke-width="1" stroke-dasharray="3"/>`;
+    // Sicherheitszone (Möbel-Bereich)
+    const m = 0.6 * sc;
+    if(sw > 2*m && sh > 2*m) svg += `<rect x="${m}" y="${m}" width="${sw-2*m}" height="${sh-2*m}" fill="rgba(39,174,96,0.1)" stroke="#27ae60" stroke-dasharray="5"/>`;
+    // Erdnägel Positionen
+    for(let i=0; i<nX; i++) for(let j=0; j<nY; j++) svg += `<circle cx="${(i*sw)/(nX-1)}" cy="${(j*sh)/(nY-1)}" r="5" fill="#e74c3c"/>`;
+    document.getElementById('sketch').innerHTML = svg + `</svg>`;
 }
+// Init
 update();
 </script>
 </body>
