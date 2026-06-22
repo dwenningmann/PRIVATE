@@ -100,31 +100,30 @@
         }
 
         .card-header {
-            display: table;
+            display: flex;
+            align-items: center;
             margin-bottom: 15px;
             width: 100%;
         }
 
         .badge-num {
-            display: table-cell;
             background: var(--melon-green);
             color: white;
             font-weight: bold;
             width: 32px;
             height: 32px;
             text-align: center;
-            vertical-align: middle;
+            line-height: 32px;
             border-radius: 50%;
             font-size: 16px;
+            flex-shrink: 0;
         }
 
         .card-title {
-            display: table-cell;
             font-size: 18px;
             font-weight: 700;
             color: var(--sea-blue);
             padding-left: 12px;
-            vertical-align: middle;
         }
 
         .image-box {
@@ -138,7 +137,7 @@
         .image-box img {
             width: 100%;
             display: block;
-            max-height: 220px;
+            max-height: 250px;
             object-fit: cover;
         }
 
@@ -164,7 +163,6 @@
         .tag-do { background-color: #e3fcef; color: #006644; }
         .tag-dont { background-color: #ffebe6; color: #bf2600; }
 
-        /* Rezepte-Styling */
         .recipe-card {
             background: #fff;
             border: 2px solid #eccc68;
@@ -262,7 +260,7 @@
     </header>
 
     <div class="beach-intro">
-        Es ist Urlaubszeit! Damit die Erfrischung perfekt wird, kommt hier der Spickzettel gegen mehlige Melonen direkt gefolgt von zwei genialen Summer-Drinks & Snacks! 🌊☀️
+        Es ist Urlaubszeit! Damit die Erfrischung perfekt wird, kommt hier der Spickzettel gegen mehlige Melonen direkt gefolgt von zwei genialen Summer-Drinks & Snacks! 🌊☀️[cite: 1]
     </div>
 
     <h3 class="section-title">Melonen-Check im Laden</h3>
@@ -275,15 +273,16 @@
         </div>
         
         <div class="image-box">
-            <img src="http://googleusercontent.com/image_collection/image_retrieval/3073694141329350488_0" alt="Gelber Feldfleck">
+            <!-- Sicheres HTTPS Bild von Unsplash (Wassermelone auf dem Feld/Boden) -->
+            <img src="https://images.unsplash.com/photo-1589927986089-35812388d1f4?auto=format&fit=crop&w=600&q=80" alt="Wassermelone auf dem Feld">
         </div>
 
         <div class="status-box">
             <div class="status-row">
-                <span class="tag tag-do">Do</span> <strong>Cremegelb bis Orange-Gelb:</strong> Volltreffer! Sie lag lange genug in der warmen Sonne.
+                <span class="tag tag-do">Do</span> <strong>Cremegelb bis Orange-Gelb:</strong> Volltreffer! Sie lag lange genug in der warmen Sonne.[cite: 1]
             </div>
             <div class="status-row">
-                <span class="tag tag-dont">Don't</span> <strong>Weiß oder grünlich:</strong> Liegen lassen. Sie reift nicht mehr nach.
+                <span class="tag tag-dont">Don't</span> <strong>Weiß oder grünlich:</strong> Liegen lassen. Sie reift nicht mehr nach.[cite: 1]
             </div>
         </div>
     </div>
@@ -296,15 +295,16 @@
         </div>
 
         <div class="image-box">
-            <img src="http://googleusercontent.com/image_collection/image_retrieval/5447396157163215764_0" alt="Netzmuster">
+            <!-- Sicheres HTTPS Bild von Unsplash (Nahaufnahme Melone mit Struktur) -->
+            <img src="https://images.unsplash.com/photo-1587049352846-4a222e784d38?auto=format&fit=crop&w=600&q=80" alt="Wassermelone Struktur">
         </div>
 
         <div class="status-box">
             <div class="status-row">
-                <span class="tag tag-do">Do</span> <strong>Viele raue, braune Netze:</strong> Die Bienen haben tolle Arbeit geleistet. Das bedeutet extra viel Fruchtzucker!
+                <span class="tag tag-do">Do</span> <strong>Viele raue, braune Netze:</strong> Die Bienen haben tolle Arbeit geleistet. Das bedeutet extra viel Fruchtzucker![cite: 1]
             </div>
             <div class="status-row">
-                <span class="tag tag-dont">Don't</span> <strong>Perfekt glatt & glänzend:</strong> Sieht hübsch aus, schmeckt aber oft wässrig.
+                <span class="tag tag-dont">Don't</span> <strong>Perfekt glatt & glänzend:</strong> Sieht hübsch aus, schmeckt aber oft wässrig.[cite: 1]
             </div>
         </div>
     </div>
@@ -317,10 +317,10 @@
         </div>
         <div class="status-box">
             <div class="status-row">
-                <span class="tag tag-do">Klopfen</span> <strong>Tief & dumpf:</strong> Wie eine pralle Trommel. Knackig und voller Saft! (Klingt es hohl oder leise, ist sie mehlig).
+                <span class="tag tag-do">Klopfen</span> <strong>Tief & dumpf:</strong> Wie eine pralle Trommel. Knackig und voller Saft! (Klingt es hohl oder leise, ist sie mehlig).[cite: 1]
             </div>
             <div class="status-row">
-                <span class="tag tag-do">Gewicht</span> <strong>Schwerer als gedacht:</strong> Vergleiche zwei Melonen gleicher Größe. Nimm immer die schwerere!
+                <span class="tag tag-do">Gewicht</span> <strong>Schwerer als gedacht:</strong> Vergleiche zwei Melonen gleicher Größe. Nimm immer die schwerere![cite: 1]
             </div>
         </div>
     </div>
