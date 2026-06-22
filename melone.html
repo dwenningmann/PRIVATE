@@ -1,0 +1,397 @@
+<!DOCTYPE html>
+<html lang="de">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Melon Mania 🍉 - Der Sommer-Guide</title>
+    <style>
+        :root {
+            --melon-red: #ff4757;
+            --melon-pink: #ff6b81;
+            --melon-green: #2ed573;
+            --sea-blue: #10ac84;
+            --sun-yellow: #ffa502;
+            --sand-beach: #fefaf2;
+            --text-main: #2f3542;
+        }
+
+        * {
+            box-sizing: border-box;
+            margin: 0;
+            padding: 0;
+        }
+
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
+            background-color: var(--sand-beach);
+            background-image: radial-gradient(#ffa502 0.5px, transparent 0.5px), radial-gradient(#ffa502 0.5px, #fefaf2 0.5px);
+            background-size: 20px 20px;
+            background-position: 0 0, 10px 10px;
+            color: var(--text-main);
+            line-height: 1.6;
+            padding: 10px;
+        }
+
+        .container {
+            max-width: 600px;
+            margin: 20px auto;
+            background: rgba(255, 255, 255, 0.96);
+            padding: 30px 20px;
+            border-radius: 30px;
+            box-shadow: 0 15px 35px rgba(235, 94, 40, 0.15);
+            border: 4px solid #fff;
+        }
+
+        header {
+            text-align: center;
+            margin-bottom: 35px;
+            background: linear-gradient(135deg, #ffa502, #ff4757);
+            padding: 40px 20px;
+            border-radius: 24px;
+            color: white;
+            position: relative;
+            overflow: hidden;
+            box-shadow: 0 8px 20px rgba(255, 71, 87, 0.2);
+        }
+
+        header h1 {
+            font-size: 32px;
+            font-weight: 900;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+            text-shadow: 2px 2px 4px rgba(0,0,0,0.15);
+            margin-bottom: 5px;
+        }
+
+        header p {
+            font-size: 16px;
+            opacity: 0.95;
+            font-weight: 500;
+        }
+
+        .beach-intro {
+            text-align: center;
+            font-size: 16px;
+            margin-bottom: 30px;
+            background: #fff8eb;
+            padding: 15px;
+            border-radius: 15px;
+            border: 2px dashed var(--sun-yellow);
+        }
+
+        h3.section-title {
+            font-size: 22px;
+            color: var(--melon-red);
+            text-align: center;
+            margin: 40px 0 20px 0;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+            background: linear-gradient(to right, transparent, #ffe0e6, transparent);
+            padding: 8px 0;
+        }
+
+        .card {
+            background: white;
+            border-radius: 20px;
+            padding: 20px;
+            margin-bottom: 20px;
+            box-shadow: 0 4px 12px rgba(0,0,0,0.03);
+            border: 2px solid #f1f2f6;
+        }
+
+        .card-header {
+            display: table;
+            margin-bottom: 15px;
+            width: 100%;
+        }
+
+        .badge-num {
+            display: table-cell;
+            background: var(--melon-green);
+            color: white;
+            font-weight: bold;
+            width: 32px;
+            height: 32px;
+            text-align: center;
+            vertical-align: middle;
+            border-radius: 50%;
+            font-size: 16px;
+        }
+
+        .card-title {
+            display: table-cell;
+            font-size: 18px;
+            font-weight: 700;
+            color: var(--sea-blue);
+            padding-left: 12px;
+            vertical-align: middle;
+        }
+
+        .image-box {
+            width: 100%;
+            border-radius: 15px;
+            overflow: hidden;
+            margin-bottom: 15px;
+            border: 1px solid #e4e7eb;
+        }
+
+        .image-box img {
+            width: 100%;
+            display: block;
+            max-height: 220px;
+            object-fit: cover;
+        }
+
+        .status-box {
+            margin-top: 10px;
+        }
+
+        .status-row {
+            margin-bottom: 8px;
+            font-size: 14.5px;
+        }
+
+        .tag {
+            display: inline-block;
+            padding: 2px 10px;
+            border-radius: 20px;
+            font-size: 11px;
+            font-weight: bold;
+            text-transform: uppercase;
+            margin-right: 8px;
+        }
+
+        .tag-do { background-color: #e3fcef; color: #006644; }
+        .tag-dont { background-color: #ffebe6; color: #bf2600; }
+
+        /* Rezepte-Styling */
+        .recipe-card {
+            background: #fff;
+            border: 2px solid #eccc68;
+            border-radius: 20px;
+            padding: 20px;
+            margin-bottom: 25px;
+            box-shadow: 0 6px 15px rgba(236, 204, 104, 0.1);
+        }
+
+        .recipe-title {
+            font-size: 19px;
+            color: #ff6b81;
+            margin-bottom: 12px;
+            border-bottom: 2px solid #ffe0e6;
+            padding-bottom: 5px;
+        }
+
+        .recipe-details {
+            font-size: 13px;
+            color: #747d8c;
+            margin-bottom: 10px;
+            font-weight: 500;
+        }
+
+        .ingredients {
+            background: #fdfaf4;
+            padding: 12px 15px;
+            border-radius: 12px;
+            margin-bottom: 15px;
+        }
+
+        .ingredients h4 {
+            font-size: 14px;
+            color: var(--text-main);
+            margin-bottom: 6px;
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+        }
+
+        .ingredients ul {
+            list-style-type: "🌴 ";
+            padding-left: 20px;
+        }
+
+        .ingredients li {
+            font-size: 14px;
+            margin-bottom: 4px;
+        }
+
+        .steps ol {
+            padding-left: 20px;
+        }
+
+        .steps li {
+            font-size: 14.5px;
+            margin-bottom: 8px;
+        }
+
+        .quick-banner {
+            background: linear-gradient(135deg, var(--melon-green), var(--sea-blue));
+            color: white;
+            padding: 25px 20px;
+            border-radius: 20px;
+            text-align: center;
+            margin-top: 40px;
+            box-shadow: 0 6px 15px rgba(16, 172, 132, 0.2);
+        }
+
+        .quick-banner h3 {
+            font-size: 20px;
+            margin-bottom: 8px;
+        }
+
+        .quick-banner p {
+            font-size: 14.5px;
+            opacity: 0.95;
+        }
+
+        footer {
+            text-align: center;
+            margin-top: 40px;
+            font-size: 13px;
+            color: #747d8c;
+            border-top: 1px solid #ddd;
+            padding-top: 20px;
+        }
+    </style>
+</head>
+<body>
+
+<div class="container">
+    <header>
+        <h1>Melon Mania 🍉</h1>
+        <p>Der ultimative Sommer-Guide für die Family</p>
+    </header>
+
+    <div class="beach-intro">
+        Es ist Urlaubszeit! Damit die Erfrischung perfekt wird, kommt hier der Spickzettel gegen mehlige Melonen direkt gefolgt von zwei genialen Summer-Drinks & Snacks! 🌊☀️
+    </div>
+
+    <h3 class="section-title">Melonen-Check im Laden</h3>
+
+    <!-- Regel 1 -->
+    <div class="card">
+        <div class="card-header">
+            <span class="badge-num">1</span>
+            <span class="card-title">Der Feldfleck (Ground Spot)</span>
+        </div>
+        
+        <div class="image-box">
+            <img src="http://googleusercontent.com/image_collection/image_retrieval/3073694141329350488_0" alt="Gelber Feldfleck">
+        </div>
+
+        <div class="status-box">
+            <div class="status-row">
+                <span class="tag tag-do">Do</span> <strong>Cremegelb bis Orange-Gelb:</strong> Volltreffer! Sie lag lange genug in der warmen Sonne.
+            </div>
+            <div class="status-row">
+                <span class="tag tag-dont">Don't</span> <strong>Weiß oder grünlich:</strong> Liegen lassen. Sie reift nicht mehr nach.
+            </div>
+        </div>
+    </div>
+
+    <!-- Regel 2 -->
+    <div class="card">
+        <div class="card-header">
+            <span class="badge-num">2</span>
+            <span class="card-title">Das Netzmuster (Bienen-Narben)</span>
+        </div>
+
+        <div class="image-box">
+            <img src="http://googleusercontent.com/image_collection/image_retrieval/5447396157163215764_0" alt="Netzmuster">
+        </div>
+
+        <div class="status-box">
+            <div class="status-row">
+                <span class="tag tag-do">Do</span> <strong>Viele raue, braune Netze:</strong> Die Bienen haben tolle Arbeit geleistet. Das bedeutet extra viel Fruchtzucker!
+            </div>
+            <div class="status-row">
+                <span class="tag tag-dont">Don't</span> <strong>Perfekt glatt & glänzend:</strong> Sieht hübsch aus, schmeckt aber oft wässrig.
+            </div>
+        </div>
+    </div>
+
+    <!-- Regel 3 -->
+    <div class="card">
+        <div class="card-header">
+            <span class="badge-num">3</span>
+            <span class="card-title">Der Sound- & Gewichtscheck</span>
+        </div>
+        <div class="status-box">
+            <div class="status-row">
+                <span class="tag tag-do">Klopfen</span> <strong>Tief & dumpf:</strong> Wie eine pralle Trommel. Knackig und voller Saft! (Klingt es hohl oder leise, ist sie mehlig).
+            </div>
+            <div class="status-row">
+                <span class="tag tag-do">Gewicht</span> <strong>Schwerer als gedacht:</strong> Vergleiche zwei Melonen gleicher Größe. Nimm immer die schwerere!
+            </div>
+        </div>
+    </div>
+
+
+    <h3 class="section-title">🍹 Holiday Rezepte</h3>
+
+    <!-- Rezept 1 -->
+    <div class="recipe-card">
+        <div class="recipe-title">1. Wassermelone-Minze Cooler 🧊</div>
+        <div class="recipe-details">⏱️ 5 Min. • Absoluter Frische-Kick</div>
+        
+        <div class="ingredients">
+            <h4>Zutaten:</h4>
+            <ul>
+                <li>400g Wassermelone (gekühlt & entkernt)</li>
+                <li>1 Handvoll frische Minzblätter</li>
+                <li>Saft von 1 Limette</li>
+                <li>Eiswürfel (nach Belieben)</li>
+                <li>Optional: Ein Schuss Mineralwasser oder Gin</li>
+            </ul>
+        </div>
+
+        <div class="steps">
+            <ol>
+                <li>Die Melone in grobe Würfel schneiden.</li>
+                <li>Melonenstücke, Limettensaft und die Minzblätter in einen Mixer geben.</li>
+                <li>Alles kräftig pürieren, bis es komplett flüssig ist.</li>
+                <li>In Gläser mit Eiswürfeln füllen. Für den Extra-Prickel mit etwas Sprudelwasser aufgießen. Strohhalm rein, Augen zu, Strandfeeling genießen!</li>
+            </ol>
+        </div>
+    </div>
+
+    <!-- Rezept 2 -->
+    <div class="recipe-card">
+        <div class="recipe-title">2. Griechischer Wassermelone-Feta-Salat 🇬🇷</div>
+        <div class="recipe-details">⏱️ 10 Min. • Perfekt zum Grillen</div>
+        
+        <div class="ingredients">
+            <h4>Zutaten:</h4>
+            <ul>
+                <li>500g Wassermelone (in mundgerechten Würfeln)</li>
+                <li>200g echter Feta-Käse</li>
+                <li>1 kleine rote Zwiebel (in feinen Streifen)</li>
+                <li>Frische Minze oder Basilikum</li>
+                <li>2 EL gutes Olivenöl & 1 EL feiner Balsamico</li>
+                <li>Prise schwarzer Pfeffer</li>
+            </ul>
+        </div>
+
+        <div class="steps">
+            <ol>
+                <li>Die Melonenwürfel und feinen Zwiebelstreifen in eine große Schüssel geben.</li>
+                <li>Den Feta-Käse mit den Händen direkt grob darüber bröseln (schmeckt besser als geschnitten!).</li>
+                <li>Die Minzblätter grob hacken und dazugeben.</li>
+                <li>Mit Olivenöl und Balsamico beträufeln, mit frisch gemahlenem Pfeffer würzen und einmal ganz vorsichtig durchheben. Direkt kühl servieren!</li>
+            </ol>
+        </div>
+    </div>
+
+
+    <!-- Quick Check -->
+    <div class="quick-banner">
+        <h3>⚡ Der 3-Sekunden-Supermarkt-Check</h3>
+        <p>Gelber Bauch + raue braune Netze + schweres Gewicht + dumpfer Sound = Die perfekte Sommer-Melone!</p>
+    </div>
+
+    <footer>
+        <p>Made with ☀️ for the Family • Ab auf die Liege! 🌴</p>
+    </footer>
+</div>
+
+</body>
+</html>
