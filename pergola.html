@@ -1,0 +1,445 @@
+<!DOCTYPE html>
+<html lang="de">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Umfassender interaktiver Pergola-Bauplan (4,5m x 4,0m)</title>
+    <style>
+        :root {
+            --primary: #2c3e50;
+            --accent: #27ae60;
+            --bg: #f8f9fa;
+            --text: #333333;
+            --card-bg: #ffffff;
+            --border: #e2e8f0;
+            --interactive: #3498db;
+        }
+        * {
+            box-sizing: border-box;
+            margin: 0;
+            padding: 0;
+        }
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
+            line-height: 1.6;
+            color: var(--text);
+            background-color: var(--bg);
+        }
+        header {
+            background: linear-gradient(135deg, #1a2a3a, #2c3e50);
+            color: white;
+            padding: 50px 20px;
+            text-align: center;
+            border-bottom: 5px solid var(--accent);
+        }
+        header h1 {
+            font-size: 2.5rem;
+            margin-bottom: 10px;
+        }
+        header p {
+            font-size: 1.2rem;
+            opacity: 0.9;
+        }
+        .container {
+            max-width: 1000px;
+            margin: 30px auto;
+            padding: 0 20px;
+        }
+        .nav-tabs {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 10px;
+            margin-bottom: 30px;
+            justify-content: center;
+        }
+        .nav-btn {
+            background-color: #e2e8f0;
+            color: var(--primary);
+            border: none;
+            padding: 10px 20px;
+            border-radius: 20px;
+            cursor: pointer;
+            font-weight: bold;
+            transition: all 0.3s ease;
+        }
+        .nav-btn.active, .nav-btn:hover {
+            background-color: var(--accent);
+            color: white;
+        }
+        .section-card {
+            background: var(--card-bg);
+            border-radius: 12px;
+            padding: 40px;
+            margin-bottom: 30px;
+            box-shadow: 0 4px 10px rgba(0,0,0,0.05);
+            border: 1px solid var(--border);
+        }
+        .section-card h2 {
+            color: var(--primary);
+            margin-bottom: 25px;
+            border-bottom: 2px solid var(--border);
+            padding-bottom: 10px;
+            font-size: 1.8rem;
+        }
+        
+        /* RECHNER STYLES */
+        .calc-container {
+            background: #eef7fc;
+            border: 2px solid var(--interactive);
+            border-radius: 12px;
+            padding: 30px;
+            margin-bottom: 30px;
+            box-shadow: 0 4px 6px rgba(0,0,0,0.05);
+        }
+        .calc-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+            gap: 20px;
+            margin-bottom: 20px;
+        }
+        .input-group {
+            display: flex;
+            flex-direction: column;
+        }
+        .input-group label {
+            font-weight: bold;
+            margin-bottom: 5px;
+            color: var(--primary);
+            font-size: 0.9rem;
+        }
+        .input-group input {
+            padding: 10px;
+            border: 1px solid #cbd5e1;
+            border-radius: 6px;
+            font-size: 1rem;
+        }
+        .results-box {
+            background: white;
+            border-left: 5px solid var(--interactive);
+            padding: 20px;
+            border-radius: 0 8px 8px 0;
+            box-shadow: inset 0 2px 4px rgba(0,0,0,0.02);
+        }
+        .results-box ul {
+            list-style: none;
+            margin-left: 0;
+            margin-top: 10px;
+        }
+        .results-box li {
+            margin-bottom: 12px;
+            font-size: 1.05rem;
+        }
+        .highlight-val {
+            font-weight: bold;
+            color: #2980b9;
+            background: #e8f4f8;
+            padding: 2px 8px;
+            border-radius: 4px;
+        }
+
+        h3 {
+            color: #34495e;
+            margin: 25px 0 12px 0;
+            font-size: 1.3rem;
+            border-left: 4px solid var(--accent);
+            padding-left: 10px;
+        }
+        p {
+            margin-bottom: 15px;
+            text-align: justify;
+        }
+        ul, ol {
+            margin-left: 25px;
+            margin-bottom: 25px;
+        }
+        li {
+            margin-bottom: 12px;
+        }
+        .step-list ol li {
+            margin-bottom: 35px;
+        }
+        .tip-box {
+            background-color: #e8f8f5;
+            border-left: 5px solid var(--accent);
+            padding: 20px;
+            border-radius: 0 8px 8px 0;
+            margin: 20px 0;
+        }
+        .warning-box {
+            background-color: #fdf2f2;
+            border-left: 5px solid #de350b;
+            padding: 20px;
+            border-radius: 0 8px 8px 0;
+            margin: 20px 0;
+        }
+        .checklist-item {
+            display: flex;
+            align-items: flex-start;
+            gap: 12px;
+            margin-bottom: 12px;
+            background: #f8f9fa;
+            padding: 12px;
+            border-radius: 6px;
+        }
+        .checklist-item input {
+            margin-top: 6px;
+            transform: scale(1.3);
+        }
+        
+        footer {
+            text-align: center;
+            padding: 40px 20px;
+            color: #a0aec0;
+            background: #1a2a3a;
+            margin-top: 60px;
+            font-size: 0.9rem;
+        }
+        @media (max-width: 768px) {
+            .section-card { padding: 20px; }
+            header h1 { font-size: 2rem; }
+        }
+    </style>
+</head>
+<body>
+
+    <header>
+        <h1>Interaktiver Pergola-Bauplan (4,5m x 4,0m)</h1>
+        <p>Lückenlose Profi-Anleitung mit dynamischer Echtzeit-Berechnung für die Baustelle</p>
+    </header>
+
+    <div class="container">
+        
+        <div class="calc-container">
+            <h2 style="color: var(--primary); margin-bottom: 15px; font-size: 1.4rem; border: none;">📱 Live-Baustellen-Rechner</h2>
+            <p style="font-size: 0.95rem; color: #555; margin-bottom: 20px;">
+                Tragt hier die zentimetergenauen Maße eurer tatsächlichen Hülsenabstände ein, sobald ihr mit dem Maßband nachgemessen habt. Alle Angaben und Einkaufslisten im Text passen sich sofort automatisch an.
+            </p>
+            
+            <div class="calc-grid">
+                <div class="input-group">
+                    <label for="input-width">Tatsächliche Gesamtbreite (cm):</label>
+                    <input type="number" id="input-width" value="450" oninput="calculatePergola()">
+                </div>
+                <div class="input-group">
+                    <label for="input-depth">Tatsächliche Gesamttiefe (cm):</label>
+                    <input type="number" id="input-depth" value="400" oninput="calculatePergola()">
+                </div>
+                <div class="input-group">
+                    <label for="input-door-dist">Abstand Vorn bis Türpfosten (cm):</label>
+                    <input type="number" id="input-door-dist" value="230" oninput="calculatePergola()">
+                </div>
+                <div class="input-group">
+                    <label for="input-height-front">Gewünschte Durchgangshöhe Vorn (cm):</label>
+                    <input type="number" id="input-height-front" value="220" oninput="calculatePergola()">
+                </div>
+            </div>
+
+            <div class="results-box">
+                <strong>Berechnete Echtzeit-Werte für euren Zuschnitt:</strong>
+                <ul>
+                    <li>Hintere Pfosten (Kapp-Höhe): <span class="highlight-val" id="res-height-back">108 cm</span> über der Schlauchwaagen-Referenzlinie</li>
+                    <li>Türpfosten rechts (Kapp-Höhe): <span class="highlight-val" id="res-height-door">113 cm</span> über der Schlauchwaagen-Referenzlinie</li>
+                    <li>Empfohlene Sparrenanzahl: <span class="highlight-val" id="res-sparren-count">8 Stück</span> (Exakter Achsabstand: <span class="highlight-val" id="res-sparren-dist">57.1 cm</span>)</li>
+                    <li>Sichtschutz-Lamellen Rückwand: <span class="highlight-val" id="res-lamellen-count">ca. 29 Stück</span> (bei 5cm Lamellenbreite + 2cm Abstand bis 2m Gesamthöhe)</li>
+                </ul>
+            </div>
+        </div>
+
+        <div class="nav-tabs">
+            <button class="nav-btn" onclick="scrollToSection('werkzeug')">1. Werkzeugliste</button>
+            <button class="nav-btn" onclick="scrollToSection('einkauf')">2. Materialbestellung</button>
+            <button class="nav-btn" onclick="scrollToSection('anleitung')">3. Meister-Bauanleitung</button>
+            <button class="nav-btn" onclick="scrollToSection('tipps')">4. Alle Tipps & Tricks</button>
+        </div>
+
+        <div id="werkzeug" class="section-card">
+            <h2>🛠️ 1. Vollständige Werkzeugliste</h2>
+            <p>Bevor es losgeht, stellt sicher, dass alle Werkzeuge griffbereit auf der Baustelle liegen. Das spart Zeit und verhindert unnötige Wege zum Baumarkt während der Montage.</p>
+            
+            <h3>Mess- und Ausrichtwerkzeuge</h3>
+            <div class="checklist-item"><input type="checkbox"> <div><strong>Schlauchwaage:</strong> Ein transparenter Kunststoffschlauch (Länge ca. 10m, Durchmesser 10-12mm) aus dem Baumarkt. Befüllt ihn komplett blasenfrei mit Wasser. Das ist das präziseste Werkzeug für große Distanzen, da sich das physikalische Wasserniveau im Gegensatz zu kleinen Wasserwaagen niemals täuschen lässt.</div></div>
+            <div class="checklist-item"><input type="checkbox"> <div><strong>Lange Wasserwaage & Richtlatte:</strong> Mindestens 2 Meter Länge, um Balken beim Auflegen direkt zu prüfen und Fluchten zu kontrollieren.</div></div>
+            <div class="checklist-item"><input type="checkbox"> <div><strong>Rollmaßband & Zimmermannsbleistift:</strong> Ein 5-Meter-Bandmaß und weiche Bleistifte für gut sichtbare Schnitte auf dem feuchten KDI-Holz.</div></div>
+
+            <h3>Maschinen und Zubehör</h3>
+            <div class="checklist-item"><input type="checkbox"> <div><strong>Leistungsstarker Akkuschrauber:</strong> Ein Gerät mit gutem Drehmoment, da lange Holzbauschrauben viel Kraft erfordern. Ein zweiter Akku am Ladegerät ist Pflicht.</div></div>
+            <div class="checklist-item"><input type="checkbox"> <div><strong>Kapp- und Gehrungssäge oder Handkreissäge:</strong> Für absolut rechtwinklige und saubere Schnitte an den dicken 10x10 Pfosten und Hauptbalken.</div></div>
+            <div class="checklist-item"><input type="checkbox"> <div><strong>Holzbohrer-Set & Schlangenbohrer:</strong> Bohrer mit den Durchmessern 3mm (für Lamellen), sowie ein langer 8mm Schlangenbohrer für die tiefen Durchgangslöcher der großen Tellerkopfschrauben.</div></div>
+            <div class="checklist-item"><input type="checkbox"> <div><strong>Bit-Set (Torx):</strong> Hochwertige Torx-Bits (meistens TX20 für Lamellen, TX40 für die großen Holzbauschrauben). Billige Bits drehen sofort durch und zerstören den Schraubenkopf.</div></div>
+
+            <h3>Handwerkzeuge & Arbeitsschutz</h3>
+            <div class="checklist-item"><input type="checkbox"> <div><strong>Zwei starke Schraubzwingen:</strong> Unverzichtbar als "dritte Hand", um schwere Holzbalken vor dem Verschrauben exakt am Pfosten einzuspannen.</div></div>
+            <div class="checklist-item"><input type="checkbox"> <div><strong>Vorschlaghammer & Holzbeilage:</strong> Falls die Pfosten stramm in die alten Hülsen gleiten. Niemals direkt mit dem Metallhammer auf das Holz schlagen!</div></div>
+            <div class="checklist-item"><input type="checkbox"> <div><strong>Arbeitshandschuhe & Schutzbrille:</strong> KDI-Holz splittert leicht und beim Sägen fliegen feine Späne.</div></div>
+        </div>
+
+        <div id="einkauf" class="section-card">
+            <h2>🛒 2. Detaillierte Materialliste & Holzdimensionen</h2>
+            <p>Eure Pergola hat die Grundfläche von ca. <span class="dynamic-width-txt">4,50</span> Meter Breite (Front) und <span class="dynamic-depth-txt">4,00</span> Meter Tiefe (Seiten). Ihr habt vorne 2 Hülsen und hinten 2 Hülsen. Auf der rechten Flanke befindet sich eine 3. Hülse (der asymmetrische Türpfosten). Das Gefälle fällt nach hinten zur Böschung ab. Die Materialliste ist auf preisbewusstes KDI-Holz (Kesseldruckimprägniert) optimiert.</p>
+            
+            <h3>🪵 Holzkomponenten</h3>
+            <div class="checklist-item"><input type="checkbox"> <div><strong>5x Pfosten (10x10 cm):</strong> Länge je nach Wunschhöhe, empfohlen sind 2,50 m oder 3,00 m Ausgangslänge. Sie werden beim Bau exakt gekappt.</div></div>
+            <div class="checklist-item"><input type="checkbox"> <div><strong>2x Hauptbalken / Fetten (6x14 cm):</strong> Sie fangen die gesamte Dachlast ab. Sie werden <strong>von vorne nach hinten</strong> verlegt. Der rechte Balken läuft stabil durchgehend über alle drei Pfosten der rechten Seite (Ecke vorne, Türpfosten, Ecke hinten). Die benötigte Bestelllänge beträgt <strong id="mat-fette-len">430 cm</strong> (Tiefe + 30 cm für jeweils 15 cm Überstand vorne und hinten).</div></div>
+            <div class="checklist-item"><input type="checkbox"> <div><strong>Querbalken / Sparren (4x12 cm oder 6x10 cm):</strong> Diese werden flach von links nach rechts auf die beiden Hauptbalken gelegt. Die benötigte Bestelllänge beträgt <strong id="mat-sparren-len">480 cm</strong> (Breite + 30 cm für jeweils 15 cm Überstand links und rechts). Menge auf Basis eurer Tiefe: <strong id="mat-sparren-count">8</strong> Stück.</div></div>
+            <div class="checklist-item"><input type="checkbox"> <div><strong>Sichtschutz-Lamellen (ca. 2x5 cm oder 2x6 cm Latten):</strong> Für die komplette Rückseite zur Böschung hin (Länge <span class="dynamic-width-txt">450</span> cm) und für den geschlossenen Teil der rechten Seite vom hinteren Eckpfosten bis zum asymmetrischen Türpfosten (Benötigte Lattenlänge hierfür: <strong id="mat-lamelle-right-len">170 cm</strong>). Der Bereich vom Türpfosten bis zur vorderen rechten Ecke bleibt komplett frei und bildet die Tür.</div></div>
+            <div class="checklist-item"><input type="checkbox"> <div><strong>4x Kopfbänder (6x10 cm oder Reste):</strong> Diagonale Stützhölzer, die im 45-Grad-Winkel zwischen den äußeren Pfosten und den Hauptbalken montiert werden.</div></div>
+
+            <h3>🔩 Schrauben, Beschläge & Bedachung</h3>
+            <div class="checklist-item"><input type="checkbox"> <div><strong>Hülsenschrauben:</strong> 10x robuste Sechskant-Holzschrauben (M8 oder M10, Länge ca. 60mm) inklusive Unterlegscheiben, um die Pfosten in den Hülsen zu sichern.</div></div>
+            <div class="checklist-item"><input type="checkbox"> <div><strong>Holzbauschrauben mit Tellerkopf (8x140 mm):</strong> Ca. 40 Stück für die Verbindung der Hauptbalken mit den Pfosten und der Sparren mit den Hauptbalken. Der breite Kopf zieht das Holz extrem stark zusammen.</div></div>
+            <div class="checklist-item"><input type="checkbox"> <div><strong>Edelstahlschrauben (V2A, 4,5x50 mm, Teilgewinde):</strong> Für die Montage der Lamellen, um schwarze Rostflecken bei Regen zu vermeiden.</div></div>
+            <div class="checklist-item"><input type="checkbox"> <div><strong>Polycarbonat (PC) Wellplatten:</strong> Gesamtfläche für die Eindeckung. Achtet beim Kauf auf Hagelschutzgarantie und Wabenstruktur (bricht das Licht angenehm).</div></div>
+            <div class="checklist-item"><input type="checkbox"> <div><strong>Spenglerschrauben & Kalotten:</strong> Passend zur Wellenform der Platten für die regendichte Verschraubung auf dem Wellenberg.</div></div>
+        </div>
+
+        <div id="anleitung" class="section-card step-list">
+            <h2>🔨 3. Lückenlose Schritt-für-Schritt Bauanleitung</h2>
+            <p>Arbeitet die Schritte präzise nacheinander ab. Da der Türpfosten auf der rechten Flanke liegt, bestimmt er die Geometrie der rechten Seitenwand.</p>
+            
+            <ol>
+                <li>
+                    <h3>Pfosten vorbereiten und temporär fixieren</h3>
+                    <p>Säubert die alten 5 Hülsen gründlich von Erde, Laub und Rostresten. Setzt die 5 ungekürzten 10x10 cm Pfosten in die Hülsen ein (2 vorne, 2 hinten, 1 als Türpfosten auf der rechten Seite). Richtet sie grob mit einer Handwasserwaage senkrecht aus und fixiert sie jeweils stramm mit einer großen Schraubzwinge an der Hülse, damit sie von alleine standsicher stehen. Noch nicht festschrauben!</p>
+                </li>
+
+                <li>
+                    <h3>Das Höhen-Niveau mit der Schlauchwaage ermitteln (Meterriss)</h3>
+                    <p>Da das Dach von vorne nach hinten abfallen soll, müssen wir eine perfekte, waagerechte Referenzlinie an alle Pfosten bringen. Vertraut hierbei nicht auf den reinen Abstand zum Boden, da Hülsen oft minimal unterschiedlich tief sitzen.</p>
+                    <p>Wählt den vorderen linken Eckpfosten aus. Macht dort im unteren Bereich eine gut sichtbare Markierung auf exakt 1,00 Meter Höhe ab der Oberkante eurer Metallhülse. Füllt den transparenten Gartenschlauch vollständig und absolut blasenfrei mit Wasser. Person A hält das eine Schlauchende an die 1,00-Meter-Markierung des ersten Pfostens. Person B geht mit dem anderen Schlauchende nacheinander zu den anderen 4 Pfosten (auch zum Türpfosten rechts). Wartet ein paar Sekunden, bis das Wasser im Schlauch stillsteht. Macht an jedem Pfosten exakt dort einen feinen Bleistiftstrich, wo das Wasser steht. Jetzt habt ihr an allen 5 Pfosten eine horizontale Linie, die sich auf exakt derselben physikalischen Höhe befindet.</p>
+                </li>
+
+                <li>
+                    <h3>Gefälle berechnen und Pfosten exakt kappen</h3>
+                    <p>Eure gewünschte Durchgangshöhe an der hohen Vorderseite der Pergola beträgt aktuell <span class="dynamic-height-front-txt">220</span> cm. Da eure Referenzlinie bei 100 cm liegt, messt ihr von dieser Linie an den <strong>beiden vorderen Pfosten</strong> exakt <strong class="calc-front-offset">120</strong> cm nach oben ab. Dort setzt ihr den Sägestrich an.</p>
+                    <p>Das Dach fällt nach hinten zur Böschung ab. Bei einem empfohlenen Gefälle von 3% müssen die <strong>beiden hinteren Pfosten</strong> exakt niedriger sein. Gemessen ab eurer Schlauchwaagen-Referenzlinie müsst ihr an den hinteren Pfosten exakt <strong id="step-height-back">108 cm</strong> nach oben abmessen und anzeichnen.</p>
+                    <p><strong>Der Türpfosten auf der rechten Seite:</strong> Da dieser Pfosten zwischen der vorderen und hinteren Ecke steht, wird seine Höhe anhand eurer Eingabe prozentual im Gefälle ermittelt. Messt ab der Referenzlinie am Türpfosten exakt <strong id="step-height-door">113 cm</strong> nach oben ab und macht dort den Strich. Nehmt alle Pfosten nacheinander heraus, sägt sie mit der Kappsäge perfekt rechtwinklig ab und stellt sie wieder zurück.</p>
+                </li>
+
+                <li>
+                    <h3>Konstruktiver Holzschutz beim Einbau</h3>
+                    <p>Damit das Holz in den alten Hülsen nicht fault, darf es unten nicht direkt auf dem Metallboden aufstehen, wo sich Regenwasser sammelt. Legt vor dem Festschrauben ein kleines, 1 cm dickes Holz- oder Kunststoffreststück unten in die Hülse und stellt den Pfosten darauf. Richtet den Pfosten mit der Wasserwaage perfekt senkrecht aus. Bohrt die Löcher der Hülse mit einem Holzbohrer vor (2 mm dünner als die Hülsenschrauben). Dreht die Sechskant-Holzschrauben fest ein. Zwingend danach das temporäre 1-cm-Abstandsholz unten wieder herausziehen! Der Pfosten hängt nun frei in der Hülse und kann nach jedem Regen schnell abtrocknen.</p>
+                </li>
+
+                <li>
+                    <h3>Montage der Hauptbalken (Fetten) von vorne nach hinten</h3>
+                    <p>Da die rechte Seite 3 Pfosten hat, werden die beiden 6x14 cm Hauptbalken hochkant (die 14 cm zeigen nach oben für maximale Tragkraft) <strong>von vorne nach hinten</strong> verlegt. Der rechte Hauptbalken läuft durchgehend über das Dreiergespann (Ecke vorne-rechts, Türpfosten, Ecke hinten-rechts). Der linke Hauptbalken läuft über die beiden linken Pfosten. Richtet die Balken so aus, dass sie vorne und hinten jeweils exakt 15 cm über die Eckpfosten herausragen (als konstruktiver Wetterschutz). Zwingt sie mit Schraubzwingen fest. Bohrt mit dem 8mm Schlangenbohrer von oben durch die Balken in die Pfostenköpfe vor und zieht sie mit den 8x140 mm Tellerkopfschrauben bombenfest.</p>
+                </li>
+
+                <li>
+                    <h3>Die Querbalken (Sparren) einmessen und fixieren</h3>
+                    <p>Eure <span id="step-sparren-count">8</span> Sparren (4x12 cm) werden nun quer – also <strong>von links nach rechts</strong> – flach auf die beiden Hauptbalken gelegt. Bei eurer Breite haben die Sparren eine Länge von <span id="step-sparren-len-txt">480</span> cm (inklusive 15 cm seitlichem Überstand links und rechts).</p>
+                    <p>Verteilt die Sparren gleichmäßig über die Gesamttiefe. Das ergibt einen stabilen und sicheren Achsabstand von exakt <strong id="step-sparren-dist">57.1 cm</strong> von Sparren zu Sparren, was ideal für die Schneelast im Winter ist. Sichert jeden Sparren an den Kreuzungspunkten mit dem darunterliegenden Hauptbalken, indem ihr eine 8x140 mm Tellerkopfschraube von oben durch den Sparren in den Hauptbalken treibt (unbedingt kräftig vorbohren!).</p>
+                </li>
+
+                <li>
+                    <h3>Die sturmfesten Kopfbänder einbauen</h3>
+                    <p>Schneidet aus Holzresten vier ca. 40-50 cm lange Stücke zu und verseht beide Enden mit einem exakten 45-Grad-Gehrungsschnitt. Diese Kopfbänder werden in den vier äußeren Ecken der Pergola direkt unter den Hauptbalken an die Pfosten geschraubt, um die Konstruktion windfest zu machen. Verwendet zwei Tellerkopfschrauben pro Kopfband. Am asymmetrischen Türpfosten rechts verzichtet ihr auf ein Kopfband, um den Durchgang der Tür nicht zu blockieren. Die drei Pfosten auf dieser Flanke stabilisieren sich gegenseitig.</p>
+                </li>
+
+                <li>
+                    <h3>Lamellen-Sichtschutz an Rückseite und rechter Flanke</h3>
+                    <p>Der Sichtschutz wird mit den dünnen Latten (ca. 2x5 cm) gebaut. Wir arbeiten mit einer offenen Struktur und exakt 2,0 cm Luft zwischen den Lamellen. Schneidet euch zwei kleine Holzklötze mit einer exakten Breite von genau 2,0 cm als Schablone zu.</p>
+                    <p><strong>Die rechte Flanke (Tür):</strong> Der Bereich von der vorderen Ecke bis zum Türpfosten bleibt komplett frei – das ist eure Tür (Tatsächliche Breite: <strong id="step-door-width">230 cm</strong>). Die Lamellen werden nur im hinteren Teil vom Türpfosten bis zur hinteren Ecke montiert (Tatsächliche Breite: <strong id="step-lamelle-right-width">170 cm</strong>). Beginnt ganz oben: Setzt die erste Lamelle waagerecht an, bohrt die Enden mit einem 3mm Bohrer vor (wichtig, sonst reißen die dünnen Latten auf) und schraubt sie mit den Edelstahl-Schrauben fest. Für die nächste Lamelle klemmt ihr einfach eure beiden 2-cm-Abstandsklötze unter die obere Lamelle, drückt die neue Latte von unten dagegen und schraubt sie fest. Arbeitet euch so bis zum Boden vor.</p>
+                    <p><strong>Die Rückseite (Böschung):</strong> Verlegt die Lamellen hier über die volle Breite von <span class="dynamic-width-txt">450</span> cm von der linken zur rechten hinteren Ecke. Damit die langen Latten in der Mitte mit der Zeit nicht durchhängen, schraubt ihr von der Innenseite mittig eine senkrechte Dachlatte als "Rückgrat" gegen alle Lamellen.</p>
+                </li>
+
+                <li>
+                    <h3>Die Montage des Wellendachs</h3>
+                    <p>Die Polycarbonat-Wellplatten werden nun auf den Sparren verlegt. Beginnt an der Seite, die der Hauptwindrichtung abgewandt ist. Die Platten überlappen sich seitlich immer um mindestens eine volle Welle. Kunststoff dehnt sich bei Hitze stark aus. Bohrt die Löcher in den Wellplatten mit einem Kunststoffbohrer daher immer 3 bis 4 mm größer vor, als der Durchmesser eurer Spenglerschraube ist.</p>
+                    <p>Setzt die Kalotte auf den <strong>Wellenberg (oben)</strong>, führt die Spenglerschraube hindurch und dreht sie vorsichtig in das Holz des Querbalkens. <strong>Achtung:</strong> Die Schrauben nur so weit anziehen, dass der Moosgummi der Kalotte sauber dichtet. Die Kunststoffwelle darf unter keinen Umständen nach unten gequetscht oder verformt werden! Verschraubt die Platten auf jedem Sparren an jedem zweiten oder dritten Wellenberg.</p>
+                </li>
+            </ol>
+        </div>
+
+        <div id="tipps" class="section-card">
+            <h2>💡 4. Wichtige Profi-Tricks im Detail</h2>
+            
+            <div class="warning-box">
+                <strong>Das KDI-Feuchtigkeitsproblem:</strong> Kessledruckimprägniertes Holz kommt oft sehr feucht aus dem Handel. Da wir bei den Lamellen bewusst mit 2 cm Abstandhölzern arbeiten, fallen spätere Trocknungsschwindungen optisch nicht ins Gewicht. Lagert das Holz dennoch vor dem Bau am besten 2-3 Tage flach ausgelegt im Schatten.
+            </div>
+
+            <div class="tip-box">
+                <strong>Der weiße Hitzeschutz-Anstrich (Absolut wichtig!):</strong> Unter klaren Wellplatten entsteht bei Sonne extreme Hitze. Die dunklen Oberseiten der KDI-Sparren können so heiß werden, dass das Polycarbonat darüber spröde wird oder schmilzt. Streicht die Oberseiten der Sparren vor dem Verlegen des Dachs einfach mit weißer Wetterschutzfarbe an oder beklebt sie mit hellem Aluband, um die Hitze zu reflektieren.
+            </div>
+
+            <div class="tip-box">
+                <strong>Schnittkanten nachversiegeln:</strong> Sobald ihr die imprägnierten Pfosten oder Balken absägt, liegt an den Schnittflächen das rohe Kernholz frei. Pinselt jede frische Sägekante vor dem Zusammenbau großzügig mit einer Schnittkanten-Nachimprägnierung oder Holzschutzgrundierung ein, um Faulnis vorzubeugen.
+            </div>
+        </div>
+    </div>
+
+    <footer>
+        <p>Projekt Pergola-Neubau – Maßgeschneidert und dynamisch berechnet. Viel Erfolg! 🔨</p>
+    </footer>
+
+    <script>
+        function calculatePergola() {
+            // Werte aus den Inputs auslesen
+            const width = parseFloat(document.getElementById('input-width').value) || 450;
+            const depth = parseFloat(document.getElementById('input-depth').value) || 400;
+            const doorDist = parseFloat(document.getElementById('input-door-dist').value) || 230;
+            const heightFront = parseFloat(document.getElementById('input-height-front').value) || 220;
+
+            // 1. Gefälle berechnen (3% nach hinten -> 3cm pro Meter Tiefe)
+            const slopeTotal = (depth / 100) * 3; 
+            const heightBack = heightFront - slopeTotal;
+            
+            // 2. Höhe am Türpfosten rechts berechnen (Anteilig im Gefälle von Vorn gemessen)
+            const heightDoor = heightFront - ((doorDist / 100) * 3);
+
+            // 3. Sparren-Berechnung (Ziel-Abstand ca. 55-60cm)
+            const targetDist = 55;
+            const spaces = Math.round(depth / targetDist);
+            const sparrenCount = spaces + 1;
+            const sparrenDist = depth / spaces;
+
+            // 4. Lamellen-Berechnung (Anzahl für Rückwand bis ca 2m Höhe)
+            // Lamelle 5cm + 2cm Abstand = 7cm Raster
+            const lamellenCount = Math.round(200 / 7);
+
+            // Werte in die Live-Rechner Box schreiben (Kappwerte ab Referenzlinie = Wert - 100)
+            document.getElementById('res-height-back').innerText = Math.round(heightBack - 100) + " cm";
+            document.getElementById('res-height-door').innerText = Math.round(heightDoor - 100) + " cm";
+            document.getElementById('res-sparren-count').innerText = sparrenCount + " Stück";
+            document.getElementById('res-sparren-dist').innerText = sparrenDist.toFixed(1) + " cm";
+            document.getElementById('res-lamellen-count').innerText = "ca. " + lamellenCount + " Stück";
+
+            // Dynamische Textelemente anpassen
+            document.querySelectorAll('.dynamic-width-txt').forEach(el => el.innerText = width);
+            document.querySelectorAll('.dynamic-depth-txt').forEach(el => el.innerText = depth);
+            document.querySelectorAll('.dynamic-height-front-txt').forEach(el => el.innerText = heightFront);
+            document.querySelectorAll('.calc-front-offset').forEach(el => el.innerText = Math.round(heightFront - 100));
+
+            // Materialliste aktualisieren
+            document.getElementById('mat-fette-len').innerText = (depth + 30) + " cm";
+            document.getElementById('mat-sparren-len').innerText = (width + 30) + " cm";
+            document.getElementById('mat-sparren-count').innerText = sparrenCount;
+            document.getElementById('mat-lamelle-right-len').innerText = Math.round(depth - doorDist) + " cm";
+
+            // Anleitungsschritte aktualisieren
+            document.getElementById('step-height-back').innerText = Math.round(heightBack - 100) + " cm";
+            document.getElementById('step-height-door').innerText = Math.round(heightDoor - 100) + " cm";
+            document.getElementById('step-sparren-count').innerText = sparrenCount;
+            document.getElementById('step-sparren-len-txt').innerText = (width + 30) + " cm";
+            document.getElementById('step-sparren-dist').innerText = sparrenDist.toFixed(1) + " cm";
+            document.getElementById('step-door-width').innerText = doorDist + " cm";
+            document.getElementById('step-lamelle-right-width').innerText = Math.round(depth - doorDist) + " cm";
+        }
+
+        function scrollToSection(id) {
+            const element = document.getElementById(id);
+            if (element) {
+                element.scrollIntoView({ behavior: 'smooth' });
+                const buttons = document.querySelectorAll('.nav-btn');
+                buttons.forEach(btn => btn.classList.remove('active'));
+                event.target.classList.add('active');
+            }
+        }
+
+        // Erstmalige Berechnung beim Laden der Seite
+        window.onload = function() {
+            calculatePergola();
+        };
+    </script>
+</body>
+</html>
