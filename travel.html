@@ -1,0 +1,391 @@
+<!DOCTYPE html>
+<html lang="de">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Grenzübergänge Balkanroute – Übersicht</title>
+<style>
+  :root {
+    --bg: #0f1419;
+    --card: #1a2129;
+    --card-border: #2a333d;
+    --text: #e6e9ec;
+    --muted: #9aa5b1;
+    --accent: #4fb8ff;
+    --good: #3ecf8e;
+    --warn: #f5a623;
+    --bad: #ef5350;
+  }
+  * { box-sizing: border-box; }
+  body {
+    margin: 0;
+    font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
+    background: var(--bg);
+    color: var(--text);
+    line-height: 1.5;
+    padding: 0 0 60px;
+  }
+  header {
+    padding: 32px 20px 20px;
+    max-width: 1000px;
+    margin: 0 auto;
+  }
+  header h1 {
+    margin: 0 0 6px;
+    font-size: 1.6rem;
+  }
+  header p {
+    color: var(--muted);
+    margin: 0;
+    font-size: 0.95rem;
+  }
+  main {
+    max-width: 1000px;
+    margin: 0 auto;
+    padding: 0 20px;
+  }
+  section {
+    margin-top: 36px;
+  }
+  section h2 {
+    font-size: 1.15rem;
+    border-bottom: 1px solid var(--card-border);
+    padding-bottom: 8px;
+    margin-bottom: 16px;
+  }
+  .badge {
+    display: inline-block;
+    font-size: 0.7rem;
+    font-weight: 600;
+    padding: 2px 8px;
+    border-radius: 999px;
+    margin-left: 8px;
+    vertical-align: middle;
+  }
+  .badge.good { background: rgba(62,207,142,0.15); color: var(--good); }
+  .badge.warn { background: rgba(245,166,35,0.15); color: var(--warn); }
+  .badge.bad { background: rgba(239,83,80,0.15); color: var(--bad); }
+
+  .tool-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(230px, 1fr));
+    gap: 14px;
+  }
+  .tool-card {
+    background: var(--card);
+    border: 1px solid var(--card-border);
+    border-radius: 10px;
+    padding: 16px;
+  }
+  .tool-card a {
+    color: var(--accent);
+    text-decoration: none;
+    font-weight: 600;
+    font-size: 1rem;
+  }
+  .tool-card a:hover { text-decoration: underline; }
+  .tool-card p {
+    color: var(--muted);
+    font-size: 0.85rem;
+    margin: 8px 0 0;
+  }
+
+  .crossing {
+    background: var(--card);
+    border: 1px solid var(--card-border);
+    border-radius: 12px;
+    padding: 18px;
+    margin-bottom: 18px;
+  }
+  .crossing-head {
+    display: flex;
+    flex-wrap: wrap;
+    align-items: center;
+    justify-content: space-between;
+    gap: 8px;
+    margin-bottom: 10px;
+  }
+  .crossing-head h3 {
+    margin: 0;
+    font-size: 1.05rem;
+  }
+  .crossing-links {
+    display: flex;
+    gap: 14px;
+    flex-wrap: wrap;
+    font-size: 0.88rem;
+    margin-top: 10px;
+  }
+  .crossing-links a {
+    color: var(--accent);
+    text-decoration: none;
+  }
+  .crossing-links a:hover { text-decoration: underline; }
+  .crossing p.note {
+    color: var(--muted);
+    font-size: 0.88rem;
+    margin: 0;
+  }
+  .map-wrap {
+    margin-top: 12px;
+    border-radius: 8px;
+    overflow: hidden;
+    border: 1px solid var(--card-border);
+  }
+  .map-wrap iframe {
+    width: 100%;
+    height: 220px;
+    border: 0;
+    display: block;
+    filter: grayscale(15%) invert(92%) hue-rotate(180deg);
+  }
+  details { margin-top: 10px; }
+  summary {
+    cursor: pointer;
+    color: var(--accent);
+    font-size: 0.85rem;
+  }
+
+  .route-note {
+    background: rgba(79,184,255,0.08);
+    border: 1px solid rgba(79,184,255,0.3);
+    border-radius: 10px;
+    padding: 14px 18px;
+    font-size: 0.9rem;
+    color: var(--text);
+  }
+  .route-note strong { color: var(--accent); }
+
+  footer {
+    max-width: 1000px;
+    margin: 40px auto 0;
+    padding: 0 20px;
+    color: var(--muted);
+    font-size: 0.8rem;
+  }
+</style>
+</head>
+<body>
+
+<header>
+  <h1>🚗 Grenzübergänge Balkanroute</h1>
+  <p>Stuttgart ⇄ Belgrad ⇄ Novi Sad ⇄ Griechenland – Live-Checks &amp; Ausweichübergänge</p>
+</header>
+
+<main>
+
+  <section>
+    <h2>Live-Wartezeiten prüfen</h2>
+    <div class="tool-grid">
+      <div class="tool-card">
+        <a href="https://alltrafficcams.com/de/live/grenzubergaenge/" target="_blank" rel="noopener">alltrafficcams.com</a>
+        <p>Live-Kameras &amp; Verkehrsinfo an den Grenzübergängen Serbien–Kroatien / Serbien–Ungarn / Serbien–Nordmazedonien.</p>
+      </div>
+      <div class="tool-card">
+        <a href="https://borderalarm.com/" target="_blank" rel="noopener">borderalarm.com</a>
+        <p>Aktuelle gemeldete Wartezeiten pro Grenzübergang, auch für die Nebenübergänge.</p>
+      </div>
+      <div class="tool-card">
+        <a href="https://www.hak.hr/promet" target="_blank" rel="noopener">HAK – Hrvatski Autoklub</a>
+        <p>Offizieller kroatischer Automobilclub, Echtzeit-Verkehrslage inkl. Grenzübergänge.</p>
+      </div>
+      <div class="tool-card">
+        <a href="https://nakordoni.eu/de/" target="_blank" rel="noopener">nakordoni.eu</a>
+        <p>Übersicht aller Grenzübergänge auf dem Balkan mit Wartezeit-Statistiken nach Wochentag/Uhrzeit.</p>
+      </div>
+      <div class="tool-card">
+        <a href="https://www.auswaertiges-amt.de/de/reiseundsicherheit/serbiensicherheit-207502" target="_blank" rel="noopener">AA Reisehinweise Serbien</a>
+        <p>Aktuelle Sicherheitslage, Demonstrationen, Reisehinweise.</p>
+      </div>
+      <div class="tool-card">
+        <a href="https://www.auswaertiges-amt.de/de/service/laender/kroatien-node/kroatiensicherheit-210072" target="_blank" rel="noopener">AA Reisehinweise Kroatien</a>
+        <p>Grenzverkehr, Wartezeiten, allgemeine Sicherheitslage.</p>
+      </div>
+    </div>
+  </section>
+
+  <section>
+    <h2>Grenzübergänge Serbien ⇄ Ungarn</h2>
+
+    <div class="crossing">
+      <div class="crossing-head">
+        <h3>Horgoš 2 / Röszke 2 <span class="badge good">empfohlen</span></h3>
+      </div>
+      <p class="note">Kleiner Nebenübergang parallel zum Hauptübergang, meist nur wenige Minuten Wartezeit. Erste Wahl für den Grenzübertritt am 2. Rückfahrttag.</p>
+      <div class="crossing-links">
+        <a href="https://www.google.com/maps/search/?api=1&query=Horgo%C5%A1+2+border+crossing" target="_blank" rel="noopener">📍 In Google Maps öffnen</a>
+        <a href="https://borderalarm.com/bottlenecks/horgos-2-roszke-2-2/" target="_blank" rel="noopener">⏱ Live-Wartezeit</a>
+      </div>
+      <div class="map-wrap">
+        <iframe loading="lazy" src="https://maps.google.com/maps?q=Horgo%C5%A1%202%20border%20crossing&t=&z=12&ie=UTF8&iwloc=&output=embed"></iframe>
+      </div>
+    </div>
+
+    <div class="crossing">
+      <div class="crossing-head">
+        <h3>Horgoš / Röszke (Hauptübergang) <span class="badge bad">meiden bei Andrang</span></h3>
+      </div>
+      <p class="note">Hauptübergang auf der E75 Belgrad–Budapest–Wien. In der Hochsaison Wartezeiten bis zu mehreren Stunden möglich.</p>
+      <div class="crossing-links">
+        <a href="https://www.google.com/maps/search/?api=1&query=Horgo%C5%A1+border+crossing" target="_blank" rel="noopener">📍 In Google Maps öffnen</a>
+        <a href="https://borderalarm.com/bottlenecks/horgos-roszke/" target="_blank" rel="noopener">⏱ Live-Wartezeit</a>
+      </div>
+    </div>
+  </section>
+
+  <section>
+    <h2>Grenzübergänge Serbien ⇄ Kroatien</h2>
+
+    <div class="crossing">
+      <div class="crossing-head">
+        <h3>Tovarnik (HR) / Šid (SRB) <span class="badge good">Alternative</span></h3>
+      </div>
+      <p class="note">24h geöffnet, deutlich weniger befahren als Bajakovo. Liegt nur wenige Kilometer nördlich der Autobahn-Route – guter Ausweichübergang.</p>
+      <div class="crossing-links">
+        <a href="https://www.google.com/maps/search/?api=1&query=Tovarnik+border+crossing" target="_blank" rel="noopener">📍 In Google Maps öffnen</a>
+        <a href="https://borderalarm.com/bottlenecks/tovarnik-sid/" target="_blank" rel="noopener">⏱ Live-Wartezeit</a>
+      </div>
+      <div class="map-wrap">
+        <iframe loading="lazy" src="https://maps.google.com/maps?q=Tovarnik%20border%20crossing&t=&z=12&ie=UTF8&iwloc=&output=embed"></iframe>
+      </div>
+    </div>
+
+    <div class="crossing">
+      <div class="crossing-head">
+        <h3>Bogojevo (SRB) / Erdut (HR) <span class="badge good">Alternative</span></h3>
+      </div>
+      <p class="note">24h geöffnet, an der Donau gelegen, beliebter Ausweichübergang bei Stau am Hauptübergang.</p>
+      <div class="crossing-links">
+        <a href="https://www.google.com/maps/search/?api=1&query=Bogojevo+border+crossing" target="_blank" rel="noopener">📍 In Google Maps öffnen</a>
+        <a href="https://borderalarm.com/bottlenecks/bogojevo-erdut/" target="_blank" rel="noopener">⏱ Live-Wartezeit</a>
+      </div>
+    </div>
+
+    <div class="crossing">
+      <div class="crossing-head">
+        <h3>Bačka Palanka (SRB) / Ilok (HR) <span class="badge warn">weitere Option</span></h3>
+      </div>
+      <p class="note">Weiterer Ausweichübergang in derselben Region, ebenfalls weniger frequentiert als Bajakovo.</p>
+      <div class="crossing-links">
+        <a href="https://www.google.com/maps/search/?api=1&query=Ba%C4%8Dka+Palanka+border+crossing" target="_blank" rel="noopener">📍 In Google Maps öffnen</a>
+      </div>
+    </div>
+
+    <div class="crossing">
+      <div class="crossing-head">
+        <h3>Bajakovo (HR) / Batrovci (SRB) <span class="badge bad">Hauptübergang – meiden</span></h3>
+      </div>
+      <p class="note">Meistbefahrener Übergang auf der Autobahn Belgrad–Zagreb (E70/A3). Seit Kroatiens Schengen-Beitritt Außengrenze mit vollen Kontrollen – in der Hochsaison teils mehrstündige bis mehr als 10-stündige Wartezeiten gemeldet.</p>
+      <div class="crossing-links">
+        <a href="https://www.google.com/maps/search/?api=1&query=Bajakovo+border+crossing" target="_blank" rel="noopener">📍 In Google Maps öffnen</a>
+        <a href="https://borderalarm.com/bottlenecks/batrovci-bajakovo/" target="_blank" rel="noopener">⏱ Live-Wartezeit</a>
+      </div>
+    </div>
+  </section>
+
+  <section>
+    <h2>Grenzübergang Serbien ⇄ Nordmazedonien</h2>
+    <div class="crossing">
+      <div class="crossing-head">
+        <h3>Preševo (SRB) / Tabanovce (MK)</h3>
+      </div>
+      <p class="note">Integrierter Übergang auf der Hinfahrt Richtung Griechenland. Wartezeiten üblicherweise 30 Min. – 4 Std., am wenigsten los werktags 10–15 Uhr, am vollsten Fr./So. abends.</p>
+      <div class="crossing-links">
+        <a href="https://www.google.com/maps/search/?api=1&query=Pre%C5%A1evo+border+crossing" target="_blank" rel="noopener">📍 In Google Maps öffnen</a>
+        <a href="https://alltrafficcams.com/de/live/grenzubergang/serbien/nordmazedonien/presevo-tabanovce/" target="_blank" rel="noopener">📷 Live-Kamera</a>
+      </div>
+    </div>
+  </section>
+
+  <section>
+    <div class="route-note">
+      <strong>Faustregel für alle Grenzen:</strong> möglichst vormittags (vor 9–10 Uhr) überqueren, Freitag- und Sonntagabend meiden, bei Stau am Hauptübergang gezielt auf einen der Nebenübergänge ausweichen.
+    </div>
+  </section>
+
+  <section>
+    <h2>Maut &amp; Vignetten</h2>
+    <div class="tool-grid">
+      <div class="tool-card">
+        <a href="https://www.asfinag.at/maut-vignette/" target="_blank" rel="noopener">Österreich – ASFINAG Vignette</a>
+        <p>Digitale Vignette online kaufen, auch kurzfristig gültig ab Kaufdatum.</p>
+      </div>
+      <div class="tool-card">
+        <a href="https://www.evinjeta.si/" target="_blank" rel="noopener">Slowenien – eVinjeta</a>
+        <p>Nur relevant, falls die Kroatien-Route über Slowenien gewählt wird.</p>
+      </div>
+      <div class="tool-card">
+        <a href="https://ematrica.nemzetiutdij.hu/" target="_blank" rel="noopener">Ungarn – e-Matrica</a>
+        <p>Elektronische Vignette für Autobahnen, online oder an Tankstellen kaufbar.</p>
+      </div>
+      <div class="tool-card">
+        <a href="https://hac.hr/en/toll" target="_blank" rel="noopener">Kroatien – HAC Maut</a>
+        <p>Autobahnen in Kroatien sind streckenbezogen mautpflichtig (Ticketsystem), keine Vignette nötig.</p>
+      </div>
+      <div class="tool-card">
+        <a href="https://www.putevi-srbije.rs/index.php/en/" target="_blank" rel="noopener">Serbien – Putevi Srbije</a>
+        <p>Streckenmaut auf serbischen Autobahnen, bar oder Karte an den Mautstationen.</p>
+      </div>
+    </div>
+  </section>
+
+  <section>
+    <h2>Wetter &amp; Verkehr unterwegs</h2>
+    <div class="tool-grid">
+      <div class="tool-card">
+        <a href="https://www.windy.com/" target="_blank" rel="noopener">windy.com</a>
+        <p>Streckenwetter inkl. Gewitter/Starkregen-Warnungen für die gesamte Route.</p>
+      </div>
+      <div class="tool-card">
+        <a href="https://www.adac.de/verkehr/verkehrsinformationen/staukarte/" target="_blank" rel="noopener">ADAC Stauprognose</a>
+        <p>Reisewochenenden und Stauschwerpunkte in Deutschland/Österreich im Voraus prüfen.</p>
+      </div>
+      <div class="tool-card">
+        <a href="https://www.asfinag.at/verkehr/verkehrslage/" target="_blank" rel="noopener">ASFINAG Verkehrslage</a>
+        <p>Aktuelle Verkehrslage &amp; Baustellen auf österreichischen Autobahnen.</p>
+      </div>
+      <div class="tool-card">
+        <a href="https://www.google.com/maps/dir/Stuttgart/Belgrade/Thessaloniki" target="_blank" rel="noopener">Google Maps – Gesamtroute</a>
+        <p>Live-Routenansicht mit Verkehrslage für die komplette Strecke.</p>
+      </div>
+    </div>
+  </section>
+
+  <section>
+    <h2>Nützliches unterwegs</h2>
+    <div class="tool-grid">
+      <div class="tool-card">
+        <a href="https://www.auswaertiges-amt.de/de/service/laender/griechenland-node" target="_blank" rel="noopener">AA Reisehinweise Griechenland</a>
+        <p>Aktuelle Sicherheits- und Einreisehinweise für das Zielland.</p>
+      </div>
+      <div class="tool-card">
+        <a href="tel:1987">Pannenhilfe Serbien (AMSS) – 1987</a>
+        <p>Automobilverband Serbiens, landesweite Pannenhilfe-Hotline.</p>
+      </div>
+      <div class="tool-card">
+        <a href="tel:1987">Pannenhilfe Kroatien (HAK) – 1987</a>
+        <p>Kroatischer Automobilclub, Pannenhilfe und Verkehrsinfo.</p>
+      </div>
+      <div class="tool-card">
+        <a href="tel:112">Europäischer Notruf – 112</a>
+        <p>Funktioniert in Serbien, Kroatien, Ungarn, Österreich und Griechenland gleichermaßen.</p>
+      </div>
+      <div class="tool-card">
+        <a href="https://www.xe.com/currencyconverter/convert/?Amount=1&From=EUR&To=RSD" target="_blank" rel="noopener">Währungsrechner EUR–RSD</a>
+        <p>Serbien zahlt in Dinar (RSD), nicht Euro – aktuellen Kurs vor Abfahrt checken.</p>
+      </div>
+      <div class="tool-card">
+        <a href="https://www.check24.de/kfz-versicherung/gruene-karte/" target="_blank" rel="noopener">Grüne Karte / Kfz-Auslandsschutz</a>
+        <p>Prüfen, ob die Versicherung eine gültige Grüne Karte für Serbien bereitstellt (Kroatien/Ungarn/Griechenland sind EU, meist automatisch mitversichert).</p>
+      </div>
+    </div>
+  </section>
+
+</main>
+
+<footer>
+  Erstellt für die Balkanroute-Reise Stuttgart–Griechenland, August 2026. Wartezeiten-Links vor Reisebeginn selbst nochmal prüfen.
+</footer>
+
+</body>
+</html>
