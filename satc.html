@@ -1,0 +1,399 @@
+<!DOCTYPE html>
+<html lang="de">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Sex and the City - Das ultimative Jeopardy</title>
+  <script src="https://cdn.tailwindcss.com"></script>
+  <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,700;1,600&family=Inter:wght@400;600;700;800&display=swap" rel="stylesheet">
+  <style>
+    .font-serif-title {
+      font-family: 'Playfair Display', Georgia, serif;
+    }
+    body {
+      font-family: 'Inter', sans-serif;
+      background: radial-gradient(circle at top center, #2e081c 0%, #15030d 60%, #080105 100%);
+    }
+    .custom-scroll::-webkit-scrollbar {
+      height: 6px;
+    }
+    .custom-scroll::-webkit-scrollbar-thumb {
+      background: rgba(244, 114, 182, 0.4);
+      border-radius: 9999px;
+    }
+  </style>
+</head>
+<body class="min-h-screen text-slate-100 flex flex-col justify-between p-2 sm:p-4 selection:bg-pink-500 selection:text-white">
+
+  <!-- Header -->
+  <header class="text-center py-3 sm:py-5">
+    <span class="text-xs uppercase tracking-widest text-pink-400 font-bold block mb-1">Staffel 1–6 & Kinofilme 1 & 2</span>
+    <h1 class="text-3xl sm:text-5xl md:text-6xl font-serif-title italic font-bold text-transparent bg-clip-text bg-gradient-to-r from-pink-300 via-rose-200 to-amber-200 drop-shadow-[0_2px_15px_rgba(244,114,182,0.3)]">
+      Sex and the City
+    </h1>
+    <p class="text-pink-200/80 text-xs sm:text-sm mt-1">Das Master-Trivia-Quiz für echte Kenner</p>
+  </header>
+
+  <!-- Scoreboard -->
+  <section class="max-w-5xl mx-auto w-full mb-4 bg-pink-950/40 backdrop-blur-md border border-pink-500/20 rounded-2xl p-3 sm:p-4 shadow-xl">
+    <div class="flex flex-col sm:flex-row items-center justify-between gap-3">
+      <div class="flex items-center gap-2 sm:gap-3 flex-wrap justify-center sm:justify-start" id="teamsContainer">
+        <!-- Teams dyn. geladen -->
+      </div>
+      <div class="flex gap-2 w-full sm:w-auto justify-center">
+        <button onclick="addTeam()" class="bg-pink-600/80 hover:bg-pink-500 text-white px-3 py-1.5 rounded-xl text-xs sm:text-sm font-semibold transition border border-pink-400/40 shadow">
+          + Team
+        </button>
+        <button onclick="resetGame()" class="bg-zinc-800 hover:bg-zinc-700 text-zinc-300 px-3 py-1.5 rounded-xl text-xs sm:text-sm font-semibold transition border border-zinc-700">
+          Neu starten
+        </button>
+      </div>
+    </div>
+  </section>
+
+  <!-- Board Wrapper (optimiert für Smartphones) -->
+  <main class="max-w-6xl mx-auto w-full flex-grow flex items-center justify-center">
+    <div class="w-full overflow-x-auto custom-scroll pb-2">
+      <div class="min-w-[650px] grid grid-cols-5 gap-2 sm:gap-3 bg-black/40 p-3 sm:p-4 rounded-2xl border border-pink-500/30 backdrop-blur-sm shadow-2xl" id="board">
+        <!-- Generated via JS -->
+      </div>
+    </div>
+  </main>
+
+  <p class="text-center text-[10px] sm:text-xs text-pink-300/60 mt-2">
+    Tipp fürs Smartphone: Drehe dein Display ins Querformat für die beste Übersicht!
+  </p>
+
+  <!-- Modal Popup -->
+  <div id="modal" class="fixed inset-0 bg-black/85 backdrop-blur-sm hidden flex items-center justify-center p-3 sm:p-4 z-50">
+    <div class="bg-gradient-to-b from-rose-950 via-zinc-950 to-black border-2 border-pink-400/80 max-w-2xl w-full rounded-2xl p-5 sm:p-8 shadow-[0_0_50px_rgba(244,114,182,0.25)] flex flex-col text-center relative max-h-[92vh] overflow-y-auto">
+      
+      <!-- Meta & Points -->
+      <div class="flex justify-between items-center text-xs font-bold tracking-widest text-pink-300 uppercase mb-3">
+        <span id="modalCategory">Kategorie</span>
+        <span id="modalPoints" class="bg-pink-500/20 px-3 py-1 rounded-full border border-pink-400/40 text-amber-200">100 $</span>
+      </div>
+
+      <!-- Question -->
+      <div class="my-4 sm:my-6">
+        <h2 id="modalQuestion" class="text-lg sm:text-2xl font-semibold leading-relaxed text-zinc-100 font-serif-title">
+          Frage lädt...
+        </h2>
+      </div>
+
+      <!-- Answer Box (Hidden) -->
+      <div id="modalAnswerBox" class="hidden bg-black/70 border border-amber-300/40 rounded-xl p-4 my-3 text-left">
+        <span class="text-[10px] uppercase tracking-wider text-amber-300 font-bold block mb-1">Offizielle Lösung:</span>
+        <p id="modalAnswer" class="text-base sm:text-xl font-bold text-amber-100"></p>
+      </div>
+
+      <!-- Controls -->
+      <div class="mt-4 flex flex-col gap-2">
+        <button id="showAnswerBtn" onclick="toggleAnswer()" class="w-full py-3 bg-gradient-to-r from-pink-500 to-rose-600 hover:from-pink-400 hover:to-rose-500 text-white font-bold rounded-xl transition text-sm sm:text-base shadow-lg shadow-pink-500/20">
+          Antwort aufdecken
+        </button>
+
+        <div id="scoringControls" class="hidden flex flex-col gap-2 pt-2">
+          <span class="text-xs text-pink-200/80">Punkte vergeben an:</span>
+          <div id="teamAwardButtons" class="flex flex-wrap gap-2 justify-center"></div>
+          <button onclick="closeModal(null)" class="bg-zinc-800 hover:bg-zinc-700 py-2 px-4 rounded-xl text-xs text-zinc-300 transition mt-1">
+            Niemand / Nur schließen
+          </button>
+        </div>
+      </div>
+
+    </div>
+  </div>
+
+  <footer class="text-center py-3 text-[11px] text-pink-400/50">
+    Sex and the City Jeopardy • 100% Original-Serien- und Filmdaten
+  </footer>
+
+  <script>
+    const jeopardyData = [
+      {
+        category: "Carrie & Co.",
+        questions: [
+          {
+            points: 100,
+            q: "In welchem New Yorker Stadtteil steht die ikonische Wohnung (mit Freitreppe) von Carrie Bradshaw?",
+            a: "West Village (Upper East Side in der Serienfiktion, gedreht in der Perry Street im West Village)."
+          },
+          {
+            points: 200,
+            q: "Welche der vier Frauen konvertiert vor ihrer Hochzeit aus voller Überzeugung zum Judentum?",
+            a: "Charlotte York (für Harry Goldenblatt)."
+          },
+          {
+            points: 300,
+            q: "Welchen ungewöhnlichen Namen gibt Miranda ihrem Sohn, inspiriert durch Steves Mutter?",
+            a: "Brady (der Nachname von Steve)."
+          },
+          {
+            points: 400,
+            q: "Aus welchem konkreten Grund zieht Samantha in Staffel 6 vorübergehend nach Los Angeles?",
+            a: "Um die florierende Schauspielkarriere ihres Partners Smith Jerrod hauptberuflich zu managen."
+          },
+          {
+            points: 500,
+            q: "Wie lautet der vollständige Mädchenname von Charlotte, bevor sie zum ersten Mal heiratet?",
+            a: "Charlotte York (später MacDougal, dann Goldenblatt)."
+          }
+        ]
+      },
+      {
+        category: "Die Männer",
+        questions: [
+          {
+            points: 100,
+            q: "Welcher Berufung geht Carries Verlobter Aidan Shaw mit Herzblut nach?",
+            a: "Möbeldesigner / Möbelschreiner."
+          },
+          {
+            points: 200,
+            q: "Wie erfährt das Publikum im allerletzten Satz des Serienfinales (Staffel 6) endlich den echten Vornamen von Mr. Big?",
+            a: "Auf Carries Handydisplay steht der Anrufername: 'John'."
+          },
+          {
+            points: 300,
+            q: "Welches Handwerk übt Steve Brady aus, bevor er zusammen mit Aidan die Bar 'Scout' eröffnet?",
+            a: "Barkeeper."
+          },
+          {
+            points: 400,
+            q: "Welcher berühmte russische Gegenwartskünstler entführt Carrie in Staffel 6 nach Paris?",
+            a: "Aleksandr Petrovsky."
+          },
+          {
+            points: 500,
+            q: "Mit welcher bizarren Methode beendet der Schriftsteller Jack Berger feige seine Beziehung mit Carrie?",
+            a: "Mit einem gelben Post-it-Zettel ('I'm sorry. I can't. Don't hate me.')."
+          }
+        ]
+      },
+      {
+        category: "Mode & Statussymbole",
+        questions: [
+          {
+            points: 100,
+            q: "Welchem spanischen Schuhdesigner ist Carries Schrank und Herz vollkommen verfallen?",
+            a: "Manolo Blahnik."
+          },
+          {
+            points: 200,
+            q: "Welches legendäre Schmuckstück verliert Carrie bei einem Ausflug in Paris im Futter ihrer Handtasche?",
+            a: "Ihre goldene 'Carrie'-Namenskette."
+          },
+          {
+            points: 300,
+            q: "Um den Erwerb welcher extrem begehrten Luxushandtasche belügt Samantha in Staffel 4 eine Verkäuferin dreist mit dem Namen von Lucy Liu?",
+            a: "Hermès Birkin Bag."
+          },
+          {
+            points: 400,
+            q: "Von welcher Designerin stammt das extravagante Brautkleid, das Carrie im 1. Kinofilm zur geplanten Hochzeit geschenkt bekommt?",
+            a: "Vivienne Westwood."
+          },
+          {
+            points: 500,
+            q: "Welches extravagante Accessoire trägt Carrie im 2. Kinofilm anstelle eines klassischen Eherings von Big?",
+            a: "Einen 5-Karat schwarzen Diamantring (weil sie 'nicht wie jede andere' ist)."
+          }
+        ]
+      },
+      {
+        category: "Die beiden Kinofilme",
+        questions: [
+          {
+            points: 100,
+            q: "In welches Land fliegen die vier Freundinnen im 1. Kinofilm, um Carries geplatzte Flitterwochen zu verbringen?",
+            a: "Mexiko."
+          },
+          {
+            points: 200,
+            q: "Wer heiratet ganz zu Beginn des 2. Kinofilms in einer glamourösen Zeremonie mit Liza Minnelli als Gaststar?",
+            a: "Stanford Blatch und Anthony Marantino."
+          },
+          {
+            points: 300,
+            q: "Welcher Assistentin vertraut Carrie im 1. Kinofilm die Organisation ihres Lebens an (gespielt von Jennifer Hudson)?",
+            a: "Louise (from St. Louis)."
+          },
+          {
+            points: 400,
+            q: "Welche arabische Metropole soll im 2. Kinofilm besucht werden, gedreht wurde die Reise jedoch in Marokko?",
+            a: "Abu Dhabi (Vereinigte Arabische Emirate)."
+          },
+          {
+            points: 500,
+            q: "Welches Buch lieh sich Carrie in der New York Public Library aus, dessen Liebesbriefe Big ihr später per E-Mail schickt?",
+            a: "'Love Letters of Great Men' (Liebesbriefe großer Männer)."
+          }
+        ]
+      },
+      {
+        category: "Zitate & Skandale",
+        questions: [
+          {
+            points: 100,
+            q: "Welcher rosa Cocktail wurde durch die vier Freundinnen weltberühmt?",
+            a: "Cosmopolitan (Cosmo)."
+          },
+          {
+            points: 200,
+            q: "Für welches Print-Magazin schreibt Carrie jahrelang ihre wöchentliche Kolumne?",
+            a: "The New York Star."
+          },
+          {
+            points: 300,
+            q: "Welcher Hollywoodstar serviert Samantha in Staffel 6 im Restaurant rohe vegetarische Kost, bevor sie ihn zum Star macht?",
+            a: "Smith Jerrod (damals noch Jerry Jerrod)."
+          },
+          {
+            points: 400,
+            q: "Mit welcher Diagnose schockt Samantha ihre Freundinnen in Staffel 6, geht jedoch humorvoll und stark damit um?",
+            a: "Brustkrebs (Mammakarzinom)."
+          },
+          {
+            points: 500,
+            q: "Wie lautet der berühmte Satz, mit dem Samantha im 1. Kinofilm ihre Beziehung zu Smith Jerrod liebevoll beendet?",
+            a: "'I love you, but I love me more.' (Ich liebe dich, aber ich liebe mich mehr)."
+          }
+        ]
+      }
+    ];
+
+    let teams = [
+      { name: "Team Carrie", score: 0 },
+      { name: "Team Samantha", score: 0 }
+    ];
+
+    let completedQuestions = {};
+    let activeQuestion = null;
+
+    function initBoard() {
+      const board = document.getElementById("board");
+      board.innerHTML = "";
+
+      // Render Categories
+      jeopardyData.forEach(cat => {
+        const header = document.createElement("div");
+        header.className = "bg-rose-950/80 border border-pink-400/40 p-2 sm:p-3 text-center font-bold text-[11px] sm:text-xs uppercase tracking-wider rounded-xl flex items-center justify-center min-h-[52px] shadow text-pink-200";
+        header.innerText = cat.category;
+        board.appendChild(header);
+      });
+
+      // Render Questions Row by Row (100 -> 500)
+      for (let row = 0; row < 5; row++) {
+        jeopardyData.forEach((cat, catIdx) => {
+          const item = cat.questions[row];
+          const cellId = `${catIdx}-${row}`;
+          const isDone = completedQuestions[cellId];
+
+          const tile = document.createElement("button");
+          tile.className = `font-bold text-lg sm:text-2xl py-3 sm:py-5 rounded-xl border transition-all duration-200 flex items-center justify-center shadow-md ${
+            isDone 
+              ? "bg-zinc-950/40 border-zinc-900 text-zinc-700 cursor-not-allowed" 
+              : "bg-gradient-to-b from-rose-900/60 to-pink-950/80 hover:from-pink-500 hover:to-rose-600 hover:text-white border-pink-500/40 text-amber-200 active:scale-95 cursor-pointer"
+          }`;
+          tile.innerText = `${item.points} $`;
+          if (!isDone) {
+            tile.onclick = () => openQuestion(catIdx, row, cellId);
+          }
+          board.appendChild(tile);
+        });
+      }
+      renderTeams();
+    }
+
+    function renderTeams() {
+      const container = document.getElementById("teamsContainer");
+      container.innerHTML = "";
+      teams.forEach((t, index) => {
+        const card = document.createElement("div");
+        card.className = "flex items-center gap-2 sm:gap-3 bg-pink-950/70 border border-pink-400/30 px-3 py-1.5 rounded-xl shadow-inner";
+        card.innerHTML = `
+          <div>
+            <span class="text-[10px] uppercase text-pink-300 font-bold block leading-tight">${t.name}</span>
+            <span class="text-sm sm:text-base font-extrabold ${t.score >= 0 ? 'text-amber-200' : 'text-rose-400'}">${t.score} $</span>
+          </div>
+          <div class="flex flex-col gap-1 ml-1">
+            <button onclick="adjustScore(${index}, 100)" class="text-[10px] bg-pink-600 hover:bg-pink-500 w-4 h-4 rounded flex items-center justify-center font-bold text-white">+</button>
+            <button onclick="adjustScore(${index}, -100)" class="text-[10px] bg-zinc-700 hover:bg-zinc-600 w-4 h-4 rounded flex items-center justify-center font-bold text-zinc-300">-</button>
+          </div>
+        `;
+        container.appendChild(card);
+      });
+    }
+
+    function addTeam() {
+      const name = prompt("Name des neuen Teams:", `Team ${teams.length + 1}`);
+      if (name && name.trim()) {
+        teams.push({ name: name.trim(), score: 0 });
+        renderTeams();
+      }
+    }
+
+    function adjustScore(teamIdx, amount) {
+      teams[teamIdx].score += amount;
+      renderTeams();
+    }
+
+    function openQuestion(catIdx, rowIdx, cellId) {
+      const data = jeopardyData[catIdx].questions[rowIdx];
+      activeQuestion = { ...data, cellId, catName: jeopardyData[catIdx].category };
+
+      document.getElementById("modalCategory").innerText = activeQuestion.catName;
+      document.getElementById("modalPoints").innerText = `${activeQuestion.points} $`;
+      document.getElementById("modalQuestion").innerText = activeQuestion.q;
+      document.getElementById("modalAnswer").innerText = activeQuestion.a;
+
+      document.getElementById("modalAnswerBox").classList.add("hidden");
+      document.getElementById("scoringControls").classList.add("hidden");
+      document.getElementById("showAnswerBtn").classList.remove("hidden");
+
+      // Setup team score buttons
+      const awardContainer = document.getElementById("teamAwardButtons");
+      awardContainer.innerHTML = "";
+      teams.forEach((team, idx) => {
+        const btn = document.createElement("button");
+        btn.className = "bg-pink-600 hover:bg-pink-500 text-white font-semibold px-3 py-1.5 rounded-lg text-xs transition border border-pink-400/40";
+        btn.innerText = `+ ${team.name}`;
+        btn.onclick = () => closeModal(idx);
+        awardContainer.appendChild(btn);
+      });
+
+      document.getElementById("modal").classList.remove("hidden");
+    }
+
+    function toggleAnswer() {
+      document.getElementById("modalAnswerBox").classList.remove("hidden");
+      document.getElementById("scoringControls").classList.remove("hidden");
+      document.getElementById("showAnswerBtn").classList.add("hidden");
+    }
+
+    function closeModal(awardedTeamIdx) {
+      if (activeQuestion) {
+        completedQuestions[activeQuestion.cellId] = true;
+        if (awardedTeamIdx !== null && awardedTeamIdx !== undefined) {
+          teams[awardedTeamIdx].score += activeQuestion.points;
+        }
+      }
+      document.getElementById("modal").classList.add("hidden");
+      activeQuestion = null;
+      initBoard();
+    }
+
+    function resetGame() {
+      if (confirm("Möchtest du das Spiel zurücksetzen? Alle Punkte und gelösten Fragen werden gelöscht.")) {
+        completedQuestions = {};
+        teams.forEach(t => t.score = 0);
+        initBoard();
+      }
+    }
+
+    // Startup
+    initBoard();
+  </script>
+</body>
+</html>
