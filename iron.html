@@ -1,0 +1,703 @@
+<!DOCTYPE html>
+<html lang="de">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=no">
+  <title>Warrior Athlete 46</title>
+  <style>
+    :root {
+      --bg: #09090b;
+      --card-bg: #18181b;
+      --card-sub: #121215;
+      --border: #27272a;
+      --text: #f4f4f5;
+      --muted: #a1a1aa;
+      --accent: #f59e0b;
+      --accent-dim: rgba(245, 158, 11, 0.15);
+      --accent-border: rgba(245, 158, 11, 0.35);
+      --font: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
+    }
+
+    * {
+      box-sizing: border-box;
+      margin: 0;
+      padding: 0;
+      -webkit-tap-highlight-color: transparent;
+    }
+
+    body {
+      background-color: var(--bg);
+      color: var(--text);
+      font-family: var(--font);
+      display: flex;
+      justify-content: center;
+      min-height: 100vh;
+    }
+
+    .app-container {
+      width: 100%;
+      max-width: 480px;
+      min-height: 100vh;
+      display: flex;
+      flex-direction: column;
+      border-left: 1px solid var(--border);
+      border-right: 1px solid var(--border);
+      background-color: var(--bg);
+      position: relative;
+    }
+
+    header {
+      padding: 16px;
+      border-bottom: 1px solid var(--border);
+      background: rgba(9, 9, 11, 0.95);
+      position: sticky;
+      top: 0;
+      z-index: 20;
+      backdrop-filter: blur(8px);
+    }
+
+    .header-top {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      margin-bottom: 4px;
+    }
+
+    .title {
+      font-size: 1.1rem;
+      font-weight: 900;
+      text-transform: uppercase;
+      letter-spacing: 0.05em;
+    }
+
+    .title span {
+      color: var(--accent);
+    }
+
+    .motto {
+      font-size: 0.65rem;
+      color: var(--muted);
+      text-transform: uppercase;
+      letter-spacing: 0.08em;
+      font-weight: 700;
+      line-height: 1.3;
+    }
+
+    nav {
+      display: flex;
+      background: #101014;
+      border-bottom: 1px solid var(--border);
+      padding: 4px;
+    }
+
+    .tab-btn {
+      flex: 1;
+      background: none;
+      border: none;
+      color: var(--muted);
+      font-weight: 800;
+      font-size: 0.8rem;
+      padding: 10px 0;
+      text-transform: uppercase;
+      cursor: pointer;
+      border-radius: 6px;
+      transition: all 0.2s;
+    }
+
+    .tab-btn.active {
+      background: var(--accent);
+      color: #000;
+    }
+
+    main {
+      padding: 16px;
+      flex: 1;
+      padding-bottom: 110px;
+      display: flex;
+      flex-direction: column;
+      gap: 14px;
+    }
+
+    .summary-card {
+      background: linear-gradient(135deg, var(--card-bg), var(--card-sub));
+      border: 1px solid var(--border);
+      border-radius: 12px;
+      padding: 16px;
+    }
+
+    .day-tag {
+      color: var(--accent);
+      font-size: 0.7rem;
+      font-weight: 800;
+      text-transform: uppercase;
+      letter-spacing: 0.05em;
+    }
+
+    .workout-heading {
+      font-size: 1.15rem;
+      font-weight: 900;
+      margin: 4px 0;
+    }
+
+    .workout-focus {
+      font-size: 0.75rem;
+      color: var(--muted);
+      margin-bottom: 12px;
+    }
+
+    .prep-toggle {
+      width: 100%;
+      background: #202025;
+      border: 1px solid var(--border);
+      color: #d4d4d8;
+      padding: 8px 12px;
+      border-radius: 6px;
+      font-size: 0.75rem;
+      font-weight: 700;
+      text-align: left;
+      cursor: pointer;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+    }
+
+    .prep-box {
+      display: none;
+      margin-top: 8px;
+      padding: 10px;
+      background: rgba(0,0,0,0.4);
+      border-radius: 6px;
+      font-size: 0.75rem;
+      color: #a1a1aa;
+    }
+
+    .prep-box.show {
+      display: block;
+    }
+
+    .prep-box ul {
+      list-style-type: none;
+      display: flex;
+      flex-direction: column;
+      gap: 6px;
+    }
+
+    .prep-box li::before {
+      content: "• ";
+      color: var(--accent);
+      font-weight: bold;
+    }
+
+    .exercise-card {
+      background: var(--card-bg);
+      border: 1px solid var(--border);
+      border-radius: 12px;
+      padding: 14px;
+    }
+
+    .exercise-header {
+      margin-bottom: 6px;
+    }
+
+    .exercise-name {
+      font-size: 0.9rem;
+      font-weight: 800;
+      color: #fff;
+    }
+
+    .meta-line {
+      font-size: 0.7rem;
+      color: var(--muted);
+      display: flex;
+      gap: 8px;
+      margin-top: 3px;
+      font-family: monospace;
+    }
+
+    .meta-line .hl {
+      color: var(--accent);
+      font-weight: bold;
+    }
+
+    .exercise-note {
+      font-size: 0.75rem;
+      color: #a1a1aa;
+      background: var(--card-sub);
+      border-left: 3px solid var(--accent);
+      padding: 6px 10px;
+      border-radius: 0 4px 4px 0;
+      margin: 8px 0 12px 0;
+      line-height: 1.35;
+    }
+
+    .set-row {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      background: var(--card-sub);
+      padding: 6px 10px;
+      border-radius: 6px;
+      margin-bottom: 6px;
+      font-size: 0.8rem;
+      border: 1px solid transparent;
+      transition: all 0.2s;
+    }
+
+    .set-row.checked {
+      background: var(--accent-dim);
+      border-color: var(--accent-border);
+    }
+
+    .set-num {
+      font-weight: 900;
+      color: #71717a;
+      width: 20px;
+      font-family: monospace;
+    }
+
+    .input-wrap {
+      display: flex;
+      align-items: center;
+      gap: 4px;
+    }
+
+    .input-wrap input {
+      width: 58px;
+      background: #27272a;
+      border: 1px solid #3f3f46;
+      border-radius: 4px;
+      color: #fff;
+      font-size: 0.85rem;
+      padding: 4px 0;
+      text-align: center;
+      font-weight: bold;
+      font-family: monospace;
+    }
+
+    .input-wrap input:focus {
+      outline: none;
+      border-color: var(--accent);
+    }
+
+    .input-wrap label {
+      font-size: 0.65rem;
+      color: var(--muted);
+      font-weight: bold;
+    }
+
+    .check-btn {
+      background: #27272a;
+      border: 1px solid #3f3f46;
+      color: var(--muted);
+      border-radius: 6px;
+      width: 32px;
+      height: 32px;
+      cursor: pointer;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-weight: 900;
+      transition: all 0.1s;
+    }
+
+    .check-btn:active {
+      transform: scale(0.92);
+    }
+
+    .set-row.checked .check-btn {
+      background: var(--accent);
+      color: #000;
+      border-color: var(--accent);
+    }
+
+    footer {
+      position: fixed;
+      bottom: 0;
+      left: 50%;
+      transform: translateX(-50%);
+      width: 100%;
+      max-width: 480px;
+      padding: 12px 16px;
+      background: rgba(9, 9, 11, 0.95);
+      border-top: 1px solid var(--border);
+      backdrop-filter: blur(8px);
+      z-index: 30;
+    }
+
+    .timer-bar {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      background: var(--card-bg);
+      border: 1px solid var(--border);
+      border-radius: 10px;
+      padding: 8px 12px;
+    }
+
+    .timer-display {
+      display: flex;
+      align-items: center;
+      gap: 10px;
+    }
+
+    .timer-icon {
+      font-size: 1.2rem;
+    }
+
+    .timer-digits {
+      font-family: monospace;
+      font-size: 1.3rem;
+      font-weight: 900;
+      letter-spacing: 0.05em;
+    }
+
+    .timer-controls {
+      display: flex;
+      gap: 4px;
+    }
+
+    .t-btn {
+      background: #27272a;
+      border: 1px solid #3f3f46;
+      color: #f4f4f5;
+      padding: 6px 10px;
+      border-radius: 6px;
+      font-size: 0.75rem;
+      font-weight: 800;
+      cursor: pointer;
+    }
+
+    .t-btn:active {
+      transform: scale(0.95);
+    }
+  </style>
+</head>
+<body>
+
+<div class="app-container">
+  <header>
+    <div class="header-top">
+      <div class="title">Warrior Athlete <span>46</span></div>
+    </div>
+    <div class="motto">Look like a bodybuilder, move like an athlete, last like a warrior.</div>
+  </header>
+
+  <nav id="dayNav"></nav>
+
+  <main id="mainContent"></main>
+
+  <footer>
+    <div class="timer-bar">
+      <div class="timer-display">
+        <div class="timer-icon">⏱️</div>
+        <div>
+          <div style="font-size:0.6rem; color:var(--muted); text-transform:uppercase; font-weight:800;">Rest Timer</div>
+          <div class="timer-digits" id="timerDigits">0:00</div>
+        </div>
+      </div>
+      <div class="timer-controls">
+        <button class="t-btn" onclick="toggleTimer()" id="playPauseBtn">▶</button>
+        <button class="t-btn" onclick="setTimer(45)">45s</button>
+        <button class="t-btn" onclick="setTimer(60)">60s</button>
+        <button class="t-btn" onclick="setTimer(90)">90s</button>
+        <button class="t-btn" onclick="setTimer(120)">120s</button>
+      </div>
+    </div>
+  </footer>
+</div>
+
+<script>
+  const WORKOUT_PLAN = [
+    {
+      id: 'mo',
+      day: 'Montag',
+      tag: 'MO',
+      title: 'Push, Upper Chest & Beast-Triceps',
+      focus: 'Schwerpunkt obere Brust, seitliche Schulter & langer Trizepskopf',
+      prep: [
+        'Schulter-CARs: 3 maximale Kreise pro Arm',
+        'Scapular Push-ups: 2 x 10 Wdh',
+        'Thoracic Extension (Rolle/Bank): 90 Sek'
+      ],
+      exercises: [
+        { id: 'mo_1', name: 'Multipresse Schrägbankdrücken (30°–45°)', sets: 2, reps: '6-8', tut: '3-1-1-0', rest: 120, note: 'Stopper 2 cm über Brustbein. Maximale obere Brust-Panzerung.' },
+        { id: 'mo_2', name: 'Lean-Away Cable Lateral Raises', sets: 3, reps: '10-12', tut: '3-1-1-0', rest: 45, note: 'Am Pfosten lehnen. Seitliche Schulter direkt frisch attackieren.' },
+        { id: 'mo_3', name: 'Kurzhantel-Flachbankdrücken', sets: 2, reps: '8-10', tut: '3-2-1-0', rest: 90, note: '2 Sek tiefer Stretch am Umkehrpunkt.' },
+        { id: 'mo_4', name: 'Dips (Maschine oder Barren)', sets: 2, reps: '8-10', tut: '3-1-1-0', rest: 90, note: 'Leicht vorgebeugt; Trizeps- und untere Brust-Kombination.' },
+        { id: 'mo_5', name: 'Overhead Cable Triceps Extension (Seil)', sets: 3, reps: '10-12', tut: '3-1-1-0', rest: 60, note: 'Kabel unten; voller Dehnungsreiz langer Kopf.' },
+        { id: 'mo_6', name: 'Kabel-Pushdowns (gerade Stange)', sets: 2, reps: '10-12', tut: '2-0-1-0', rest: 45, note: 'Letzter Satz Dropsatz bis Muskelversagen.' }
+      ]
+    },
+    {
+      id: 'di',
+      day: 'Dienstag',
+      tag: 'DI',
+      title: 'Pull, Traps & Gun Show',
+      focus: 'Lat-Fächer ohne Hängen, Nackendicke & Brachialis',
+      prep: [
+        'Hintere Kapsel-CARs / Handgelenke: 2 Min',
+        'Band External Rotations: 2 x 15 Wdh',
+        'Dead Hang (Schulterblattaktivierung): 2 x 30 Sek'
+      ],
+      exercises: [
+        { id: 'di_1', name: 'Kabelzug-Überzüge Schrägbank (Cable Pullover)', sets: 2, reps: '10-12', tut: '3-1-1-0', rest: 90, note: '30°-Bank vor Turm. Maximaler V-Fächer-Stretch über Kopf.' },
+        { id: 'di_2', name: 'Brustgestütztes T-Bar Rudern (breit)', sets: 3, reps: '8-10', tut: '3-1-1-0', rest: 90, note: 'Ellbogen auf 60°. Knallt in Traps, Rhomboiden und hintere Delts.' },
+        { id: 'di_3', name: 'Einarmiges Kabelrudern zur Hüfte', sets: 2, reps: '8-10', tut: '3-1-1-0', rest: 60, note: 'Iliac Lat-Fasern fokussiert ansteuern.' },
+        { id: 'di_4', name: 'Reverse Butterfly (Maschine)', sets: 3, reps: '12-15', tut: '2-1-1-0', rest: 45, note: '3D-Schulterkappe komplettieren.' },
+        { id: 'di_5', name: 'Incline Dumbbell Curls (45°-Bank)', sets: 2, reps: '8-10', tut: '3-1-1-0', rest: 60, note: 'Arme hängen lassen, maximaler Bizeps-Stretch.' },
+        { id: 'di_6', name: 'Standing Hammer Curls mit KH', sets: 2, reps: '8-10', tut: '3-0-1-0', rest: 60, note: 'Brachialis für Dicke des Ober- und Unterarms.' }
+      ]
+    },
+    {
+      id: 'mi',
+      day: 'Mittwoch',
+      tag: 'MI',
+      title: 'Legs Functional, Unilateral & Engine',
+      focus: 'Zercher Squat Mobilität, Einbein-Stabilität & Kettlebell Swings',
+      prep: [
+        'Hüft-CARs (Vierfüßlerstand): 3 maximale Kreise pro Bein',
+        '90/90 Hip Switches: 8 langsame Wechsel',
+        'Sprunggelenksmobilisation Wand: 1 Min'
+      ],
+      exercises: [
+        { id: 'mi_1', name: 'Zercher Squats (Power Rack)', sets: 2, reps: '5-6', tut: '3-1-1-0', rest: 120, note: 'Pins Bauchnabelhöhe. 1s Pause unten für Hüftöffnung & Rumpfpanzer.' },
+        { id: 'mi_2', name: 'Bulgarian Split Squats', sets: 2, reps: '8-10', tut: '3-1-1-0', rest: 60, note: 'Unilaterale Stabilität, beseitigt Dysbalancen (pro Bein).' },
+        { id: 'mi_3', name: 'Rumänisches Kreuzheben (RDL KH)', sets: 2, reps: '8-10', tut: '3-2-1-0', rest: 90, note: '2 Sek Dehnung auf den Hamstrings halten.' },
+        { id: 'mi_4', name: 'Sitzender Beinbeuger', sets: 2, reps: '10-12', tut: '3-1-1-0', rest: 60, note: 'Leicht nach vorn beugen für Dehnungs-Hypertrophie.' },
+        { id: 'mi_5', name: 'Wadenheben stehend', sets: 2, reps: '10-12', tut: '3-2-1-0', rest: 45, note: '2 Sek Dehnung am tiefsten Punkt.' },
+        { id: 'mi_6', name: 'Kettlebell Swings (EMOM - Finisher)', sets: 1, reps: '8 Min', tut: 'X-0-X-0', rest: 60, note: '8 Min lang jede Minute 15 explosive Swings. Reiner Hüftschnapp.' }
+      ]
+    },
+    {
+      id: 'do',
+      day: 'Donnerstag',
+      tag: 'DO',
+      title: 'Delt Destruction, Traps & Heavy Carry',
+      focus: 'Schulterpanzer, Trizeps Reiz Teil 2 & schwere Farmer’s Walks',
+      prep: [
+        'Schulter-CARs: 3 kontrollierte Kreise pro Arm',
+        'Band Pull-Aparts: 2 x 20 Wdh',
+        'Scapular Wall Slides: 2 x 10 Wdh'
+      ],
+      exercises: [
+        { id: 'do_1', name: 'Multipresse Stehendes Überkopfdrücken (OHP)', sets: 3, reps: '6-8', tut: '3-0-1-0', rest: 90, note: 'Stopper Kinnhöhe. Absoluter Core-Fokus.' },
+        { id: 'do_2', name: 'Dumbbell Lateral Raises (stehend, strikt)', sets: 3, reps: '12-15', tut: '2-0-1-0', rest: 60, note: 'Letzter Satz Dropsatz für Kanonenkugel-Look.' },
+        { id: 'do_3', name: 'Face Pulls (Außenrotation & Traps)', sets: 3, reps: '12-15', tut: '2-1-1-0', rest: 45, note: 'Hoch zur Stirn ziehen, 1s halten.' },
+        { id: 'do_4', name: 'Kabel-Trizepsdrücken über Kopf', sets: 3, reps: '8-10', tut: '3-1-1-0', rest: 60, note: 'Trizeps-Schwachstellen-Reiz Teil 2.' },
+        { id: 'do_5', name: 'Kabelrudern sitzend (enger Griff)', sets: 2, reps: '8-10', tut: '3-1-1-0', rest: 60, note: 'Zur Taille ziehen für unteren Lat.' },
+        { id: 'do_6', name: 'Kabel-Flys (High-to-Low)', sets: 2, reps: '12-15', tut: '3-1-1-0', rest: 45, note: 'Spitzenkontraktion untere Brust.' },
+        { id: 'do_7', name: 'Heavy Farmer’s Walks (Finisher)', sets: 1, reps: '4x50m', tut: 'X-X-X-X', rest: 60, note: 'Zughilfen erlaubt, maximales Gewicht. Nacken & Rumpf brennen.' }
+      ]
+    },
+    {
+      id: 'fr',
+      day: 'Freitag',
+      tag: 'FR',
+      title: 'Heavy Posterior, 3D-Core & Steady Engine',
+      focus: 'Trap-Bar Heben, Anti-Rotation & aerobe Regeneration',
+      prep: [
+        'World’s Greatest Stretch: 5 pro Seite',
+        'Glute Bridges einbeinig: 2 x 8 pro Seite',
+        'BWS-Rotationsstretch im Vierfüßler: 2 x 8 pro Seite'
+      ],
+      exercises: [
+        { id: 'fr_1', name: 'Trap-Bar Deadlift (Hex-Bar)', sets: 3, reps: '5-6', tut: '3-0-1-0', rest: 120, note: 'Hohe Griffe. Maximale Hebekraft, panzert Trapez & Rückenstrecker.' },
+        { id: 'fr_2', name: '45°-Beinpresse (Hypertrophie)', sets: 2, reps: '8-10', tut: '3-1-1-0', rest: 90, note: 'Füße tief-mittig. Volle Kniebeugung ohne Beckenkippen.' },
+        { id: 'fr_3', name: 'Pallof Press am Kabelzug', sets: 2, reps: '10-12', tut: '2-2-1-0', rest: 45, note: 'Lienhard Anti-Rotation: 2s vorne halten gegen Verdrehung (pro Seite).' },
+        { id: 'fr_4', name: 'Ab-Wheel Rollouts (oder Beinheben)', sets: 2, reps: '10-12', tut: '3-1-1-0', rest: 45, note: 'Strikte Rumpfspannung, kein Durchhängen.' },
+        { id: 'fr_5', name: 'Incline Walking (Laufband - Finisher)', sets: 1, reps: '15 Min', tut: 'Zone 2', rest: 0, note: '10-12% Steigung, 4.5-5.0 km/h, Puls 110-125 bpm.' }
+      ]
+    }
+  ];
+
+  let currentDay = 0;
+  let timerVal = 0;
+  let timerTimer = null;
+  let timerRunning = false;
+
+  const logs = JSON.parse(localStorage.getItem('warrior_html_logs') || '{}');
+  const checkedSets = JSON.parse(localStorage.getItem('warrior_html_checks') || '{}');
+
+  function init() {
+    renderNav();
+    renderDay();
+  }
+
+  function renderNav() {
+    const nav = document.getElementById('dayNav');
+    nav.innerHTML = WORKOUT_PLAN.map((p, idx) => `
+      <button class="tab-btn ${idx === currentDay ? 'active' : ''}" onclick="switchDay(${idx})">
+        ${p.tag}
+      </button>
+    `).join('');
+  }
+
+  function switchDay(idx) {
+    currentDay = idx;
+    renderNav();
+    renderDay();
+  }
+
+  function renderDay() {
+    const w = WORKOUT_PLAN[currentDay];
+    const main = document.getElementById('mainContent');
+
+    main.innerHTML = `
+      <div class="summary-card">
+        <div class="day-tag">${w.day}</div>
+        <div class="workout-heading">${w.title}</div>
+        <div class="workout-focus">${w.focus}</div>
+        <button class="prep-toggle" onclick="togglePrep()">
+          <span>⚡ FRC Joint Prep & Mobility (5 Min)</span>
+          <span id="prepArrow">▼</span>
+        </button>
+        <div class="prep-box" id="prepBox">
+          <ul>
+            ${w.prep.map(p => `<li>${p}</li>`).join('')}
+          </ul>
+        </div>
+      </div>
+
+      <div style="display:flex; flex-direction:column; gap:12px;">
+        ${w.exercises.map(ex => renderExercise(ex)).join('')}
+      </div>
+    `;
+  }
+
+  function renderExercise(ex) {
+    let setsHtml = '';
+    for (let s = 0; s < ex.sets; s++) {
+      const key = `${ex.id}_${s}`;
+      const isChecked = checkedSets[key] || false;
+      const setLog = (logs[ex.id] && logs[ex.id][s]) || { weight: '', reps: '' };
+
+      setsHtml += `
+        <div class="set-row ${isChecked ? 'checked' : ''}" id="row_${key}">
+          <div class="set-num">#${s + 1}</div>
+          <div class="input-wrap">
+            <input type="number" step="0.5" placeholder="kg" value="${setLog.weight}" 
+                   oninput="updateLog('${ex.id}', ${s}, 'weight', this.value)">
+            <label>KG</label>
+          </div>
+          <div class="input-wrap">
+            <input type="number" placeholder="wdh" value="${setLog.reps}" 
+                   oninput="updateLog('${ex.id}', ${s}, 'reps', this.value)">
+            <label>WDH</label>
+          </div>
+          <button class="check-btn" onclick="toggleCheck('${ex.id}', ${s}, ${ex.rest})">
+            ✓
+          </button>
+        </div>
+      `;
+    }
+
+    return `
+      <div class="exercise-card">
+        <div class="exercise-header">
+          <div class="exercise-name">${ex.name}</div>
+          <div class="meta-line">
+            <span class="hl">${ex.sets} Sätze</span>
+            <span>•</span>
+            <span>${ex.reps} Wdh</span>
+            <span>•</span>
+            <span>TUT ${ex.tut}</span>
+            <span>•</span>
+            <span>⏱️ ${ex.rest}s</span>
+          </div>
+        </div>
+        <div class="exercise-note">${ex.note}</div>
+        <div>${setsHtml}</div>
+      </div>
+    `;
+  }
+
+  function togglePrep() {
+    const box = document.getElementById('prepBox');
+    const arr = document.getElementById('prepArrow');
+    if (box.classList.contains('show')) {
+      box.classList.remove('show');
+      arr.innerText = '▼';
+    } else {
+      box.classList.add('show');
+      arr.innerText = '▲';
+    }
+  }
+
+  function updateLog(exId, setIdx, field, val) {
+    if (!logs[exId]) logs[exId] = [];
+    if (!logs[exId][setIdx]) logs[exId][setIdx] = { weight: '', reps: '' };
+    logs[exId][setIdx][field] = val;
+    localStorage.setItem('warrior_html_logs', JSON.stringify(logs));
+  }
+
+  function toggleCheck(exId, setIdx, restSeconds) {
+    const key = `${exId}_${setIdx}`;
+    checkedSets[key] = !checkedSets[key];
+    localStorage.setItem('warrior_html_checks', JSON.stringify(checkedSets));
+
+    const row = document.getElementById(`row_${key}`);
+    if (checkedSets[key]) {
+      row.classList.add('checked');
+      if (restSeconds > 0) setTimer(restSeconds);
+    } else {
+      row.classList.remove('checked');
+    }
+  }
+
+  function setTimer(seconds) {
+    clearInterval(timerTimer);
+    timerVal = seconds;
+    timerRunning = true;
+    updateTimerDisplay();
+    document.getElementById('playPauseBtn').innerText = '❚❚';
+
+    timerTimer = setInterval(() => {
+      if (timerVal <= 1) {
+        clearInterval(timerTimer);
+        timerVal = 0;
+        timerRunning = false;
+        document.getElementById('playPauseBtn').innerText = '▶';
+        updateTimerDisplay();
+        playBeep();
+      } else {
+        timerVal--;
+        updateTimerDisplay();
+      }
+    }, 1000);
+  }
+
+  function toggleTimer() {
+    if (timerRunning) {
+      clearInterval(timerTimer);
+      timerRunning = false;
+      document.getElementById('playPauseBtn').innerText = '▶';
+    } else if (timerVal > 0) {
+      setTimer(timerVal);
+    }
+  }
+
+  function updateTimerDisplay() {
+    const m = Math.floor(timerVal / 60);
+    const s = timerVal % 60;
+    document.getElementById('timerDigits').innerText = `${m}:${s < 10 ? '0' : ''}${s}`;
+  }
+
+  function playBeep() {
+    try {
+      const ctx = new (window.AudioContext || window.webkitAudioContext)();
+      const osc = ctx.createOscillator();
+      const gain = ctx.createGain();
+      osc.type = 'sine';
+      osc.frequency.setValueAtTime(800, ctx.currentTime);
+      gain.gain.setValueAtTime(0.2, ctx.currentTime);
+      osc.connect(gain);
+      gain.connect(ctx.destination);
+      osc.start();
+      osc.stop(ctx.currentTime + 0.35);
+    } catch(e) {}
+  }
+
+  window.onload = init;
+</script>
+</body>
+</html>
