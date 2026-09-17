@@ -1,0 +1,1053 @@
+<!DOCTYPE html>
+<html lang="de">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Dallas Cowboys Workout Tracker</title>
+  <style>
+    :root {
+      --cowboys-navy: #003594;
+      --cowboys-silver: #869397;
+      --cowboys-dark: #041E42;
+      --cowboys-light-silver: #C0C0C0;
+      --bg-dark: #0b111e;
+      --card-bg: #141f33;
+      --card-header: #1b2944;
+      --text-main: #f0f3f8;
+      --text-muted: #a6b4c9;
+      --accent: #0077ff;
+      --success: #28a745;
+      --white: #ffffff;
+    }
+
+    * {
+      box-sizing: border-box;
+      margin: 0;
+      padding: 0;
+      font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
+    }
+
+    body {
+      background-color: var(--bg-dark);
+      color: var(--text-main);
+      padding-bottom: 50px;
+    }
+
+    /* Header & Timer */
+    header {
+      background: linear-gradient(135deg, var(--cowboys-dark), var(--cowboys-navy));
+      border-bottom: 3px solid var(--cowboys-silver);
+      position: sticky;
+      top: 0;
+      z-index: 100;
+      box-shadow: 0 4px 15px rgba(0, 0, 0, 0.5);
+      padding: 12px 16px;
+    }
+
+    .header-content {
+      max-width: 900px;
+      margin: 0 auto;
+      display: flex;
+      flex-direction: column;
+      gap: 8px;
+    }
+
+    .title-row {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+    }
+
+    .title-row h1 {
+      font-size: 1.25rem;
+      color: var(--white);
+      display: flex;
+      align-items: center;
+      gap: 6px;
+      letter-spacing: 0.5px;
+    }
+
+    .star {
+      color: var(--cowboys-silver);
+      font-size: 1.4rem;
+    }
+
+    .timer-container {
+      display: flex;
+      align-items: center;
+      flex-wrap: wrap;
+      gap: 8px;
+      background: rgba(0, 0, 0, 0.35);
+      padding: 8px 12px;
+      border-radius: 8px;
+      border: 1px solid rgba(134, 147, 151, 0.3);
+    }
+
+    .timer-display {
+      font-size: 1.35rem;
+      font-weight: 700;
+      min-width: 65px;
+      color: var(--white);
+      font-variant-numeric: tabular-nums;
+    }
+
+    .btn-group {
+      display: flex;
+      gap: 6px;
+      flex-wrap: wrap;
+      flex: 1;
+    }
+
+    button {
+      cursor: pointer;
+      border: 1px solid var(--cowboys-silver);
+      background: var(--card-bg);
+      color: var(--text-main);
+      border-radius: 6px;
+      padding: 6px 10px;
+      font-weight: 600;
+      font-size: 0.85rem;
+      transition: all 0.2s ease;
+    }
+
+    button:hover {
+      background: var(--cowboys-silver);
+      color: var(--cowboys-dark);
+    }
+
+    .btn-preset {
+      background: rgba(255, 255, 255, 0.1);
+      border-color: rgba(255, 255, 255, 0.3);
+    }
+
+    .btn-timer-action {
+      background: var(--cowboys-navy);
+      color: var(--white);
+      border-color: var(--accent);
+    }
+
+    .btn-timer-action:hover {
+      background: var(--accent);
+      color: var(--white);
+    }
+
+    /* Tab Navigation */
+    .nav-tabs {
+      display: flex;
+      overflow-x: auto;
+      max-width: 900px;
+      margin: 16px auto 0;
+      padding: 0 12px;
+      gap: 8px;
+      scrollbar-width: none;
+    }
+
+    .nav-tabs::-webkit-scrollbar {
+      display: none;
+    }
+
+    .tab-btn {
+      white-space: nowrap;
+      padding: 10px 14px;
+      border-radius: 8px;
+      background: var(--card-header);
+      color: var(--text-muted);
+      border: 1px solid transparent;
+      font-size: 0.9rem;
+    }
+
+    .tab-btn.active {
+      background: var(--cowboys-navy);
+      color: var(--white);
+      border-color: var(--cowboys-silver);
+      box-shadow: 0 0 10px rgba(0, 53, 148, 0.5);
+    }
+
+    /* Content Area */
+    main {
+      max-width: 900px;
+      margin: 16px auto;
+      padding: 0 12px;
+    }
+
+    .tab-content {
+      display: none;
+    }
+
+    .tab-content.active {
+      display: block;
+    }
+
+    /* Cards */
+    .day-header {
+      background: linear-gradient(90deg, var(--card-header), transparent);
+      padding: 12px;
+      border-left: 4px solid var(--cowboys-silver);
+      margin-bottom: 16px;
+      border-radius: 0 8px 8px 0;
+    }
+
+    .day-header h2 {
+      font-size: 1.25rem;
+      color: var(--white);
+    }
+
+    .day-header p {
+      font-size: 0.85rem;
+      color: var(--text-muted);
+      margin-top: 4px;
+    }
+
+    .exercise-card {
+      background: var(--card-bg);
+      border: 1px solid rgba(134, 147, 151, 0.2);
+      border-radius: 10px;
+      margin-bottom: 16px;
+      overflow: hidden;
+      box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
+    }
+
+    .exercise-header {
+      background: var(--card-header);
+      padding: 12px 14px;
+      display: flex;
+      justify-content: space-between;
+      align-items: flex-start;
+      border-bottom: 1px solid rgba(134, 147, 151, 0.2);
+    }
+
+    .exercise-name {
+      font-size: 1.05rem;
+      font-weight: 700;
+      color: var(--white);
+    }
+
+    .exercise-badges {
+      display: flex;
+      gap: 6px;
+      flex-wrap: wrap;
+      margin-top: 6px;
+    }
+
+    .badge {
+      font-size: 0.75rem;
+      padding: 2px 7px;
+      border-radius: 4px;
+      background: rgba(0, 53, 148, 0.4);
+      border: 1px solid rgba(134, 147, 151, 0.3);
+      color: var(--text-main);
+      font-weight: 600;
+    }
+
+    .badge-tut {
+      background: rgba(40, 167, 69, 0.2);
+      border-color: rgba(40, 167, 69, 0.4);
+      color: #75d98d;
+    }
+
+    .badge-pause {
+      background: rgba(0, 119, 255, 0.2);
+      border-color: rgba(0, 119, 255, 0.4);
+      color: #8cc3ff;
+    }
+
+    .exercise-body {
+      padding: 12px 14px;
+    }
+
+    .exercise-notes {
+      font-size: 0.82rem;
+      color: #d1d9e6;
+      background: rgba(0, 0, 0, 0.25);
+      padding: 8px 10px;
+      border-radius: 6px;
+      margin-bottom: 12px;
+      border-left: 3px solid var(--accent);
+      line-height: 1.35;
+    }
+
+    /* Tracking Table */
+    .sets-table {
+      width: 100%;
+      border-collapse: collapse;
+      font-size: 0.85rem;
+    }
+
+    .sets-table th {
+      color: var(--text-muted);
+      font-weight: 600;
+      text-align: center;
+      padding-bottom: 6px;
+    }
+
+    .sets-table td {
+      padding: 4px 2px;
+      text-align: center;
+    }
+
+    .sets-table td.set-number {
+      font-weight: 700;
+      color: var(--cowboys-silver);
+      width: 15%;
+    }
+
+    .input-field {
+      width: 90%;
+      max-width: 90px;
+      background: rgba(0, 0, 0, 0.3);
+      border: 1px solid rgba(134, 147, 151, 0.3);
+      color: var(--white);
+      border-radius: 5px;
+      padding: 6px;
+      text-align: center;
+      font-size: 0.95rem;
+      font-weight: 600;
+    }
+
+    .input-field:focus {
+      outline: none;
+      border-color: var(--accent);
+      box-shadow: 0 0 5px rgba(0, 119, 255, 0.5);
+      background: rgba(0, 0, 0, 0.5);
+    }
+
+    .check-cell {
+      width: 15%;
+    }
+
+    .check-btn {
+      background: rgba(255, 255, 255, 0.05);
+      border: 1px solid rgba(134, 147, 151, 0.3);
+      color: var(--text-muted);
+      padding: 6px 10px;
+      border-radius: 5px;
+    }
+
+    .check-btn.completed {
+      background: var(--success);
+      color: var(--white);
+      border-color: var(--success);
+    }
+
+    /* General Notes Tab */
+    .info-card {
+      background: var(--card-bg);
+      border-radius: 8px;
+      padding: 16px;
+      margin-bottom: 14px;
+      border-left: 4px solid var(--cowboys-silver);
+      border-top: 1px solid rgba(134, 147, 151, 0.2);
+    }
+
+    .info-card h3 {
+      font-size: 1.05rem;
+      color: var(--white);
+      margin-bottom: 8px;
+    }
+
+    .info-card p, .info-card ul {
+      font-size: 0.88rem;
+      color: var(--text-muted);
+      line-height: 1.5;
+    }
+
+    .info-card ul {
+      padding-left: 20px;
+      margin-top: 6px;
+    }
+
+    .info-card li {
+      margin-bottom: 6px;
+    }
+
+    .highlight {
+      color: var(--white);
+      font-weight: 600;
+    }
+  </style>
+</head>
+<body>
+
+  <!-- Sticky Header with Cowboys Design & Pausentimer -->
+  <header>
+    <div class="header-content">
+      <div class="title-row">
+        <h1><span class="star">★</span> WORKOUT TRACKER <span class="star">★</span></h1>
+        <button id="resetStorageBtn" title="Gespeicherte Gewichte zurücksetzen" style="font-size:0.75rem; background:transparent; border-color:rgba(255,255,255,0.2);">Reset Data</button>
+      </div>
+
+      <div class="timer-container">
+        <div class="timer-display" id="timerDisplay">00:00</div>
+        <div class="btn-group">
+          <button class="btn-preset" onclick="setTimer(45)">45s</button>
+          <button class="btn-preset" onclick="setTimer(60)">60s</button>
+          <button class="btn-preset" onclick="setTimer(75)">75s</button>
+          <button class="btn-preset" onclick="setTimer(90)">90s</button>
+          <button class="btn-timer-action" id="toggleTimerBtn" onclick="toggleTimer()">Start</button>
+          <button class="btn-preset" onclick="resetTimer()">Stop</button>
+        </div>
+      </div>
+    </div>
+  </header>
+
+  <!-- Navigation Tabs -->
+  <nav class="nav-tabs">
+    <button class="tab-btn active" onclick="switchTab('tag1')">Tag 1: OK A</button>
+    <button class="tab-btn" onclick="switchTab('tag2')">Tag 2: UK A</button>
+    <button class="tab-btn" onclick="switchTab('tag3')">Tag 3: Pause</button>
+    <button class="tab-btn" onclick="switchTab('tag4')">Tag 4: OK B</button>
+    <button class="tab-btn" onclick="switchTab('tag5')">Tag 5: UK B</button>
+    <button class="tab-btn" onclick="switchTab('info')">Hinweise & TUT</button>
+  </nav>
+
+  <main>
+    <!-- TAG 1: OBERKÖRPER A -->
+    <section id="tag1" class="tab-content active">
+      <div class="day-header">
+        <h2>Tag 1: Oberkörper A</h2>
+        <p>Haltung, straffe Brust & Arme (Kein Lat-/Breiten-Fokus für eine schmale Silhouette)</p>
+      </div>
+
+      <!-- Exercise 1 -->
+      <div class="exercise-card">
+        <div class="exercise-header">
+          <div>
+            <div class="exercise-name">1. Brustgestütztes Rudern (70° Winkel)</div>
+            <div class="exercise-badges">
+              <span class="badge">3 Sätze × 10–12 Wdh.</span>
+              <span class="badge badge-tut">TUT: 3-0-1-1</span>
+              <span class="badge badge-pause">Pause: 90s</span>
+            </div>
+          </div>
+        </div>
+        <div class="exercise-body">
+          <div class="exercise-notes">
+            <strong>Bandscheibenschutz:</strong> Brustlehne entlastet den Rücken. Ellenbogen nach außen führen. 3s nach vorne nachgeben, 1s hinten die Schulterblätter zusammenziehen (baut keine Rückenbreite auf).
+          </div>
+          <table class="sets-table" data-exercise="t1_ex1" data-sets="3"></table>
+        </div>
+      </div>
+
+      <!-- Exercise 2 -->
+      <div class="exercise-card">
+        <div class="exercise-header">
+          <div>
+            <div class="exercise-name">2. Brustpresse sitzend (Maschine)</div>
+            <div class="exercise-badges">
+              <span class="badge">3 Sätze × 10–12 Wdh.</span>
+              <span class="badge badge-tut">TUT: 3-1-1-0</span>
+              <span class="badge badge-pause">Pause: 90s</span>
+            </div>
+          </div>
+        </div>
+        <div class="exercise-body">
+          <div class="exercise-notes">
+            <strong>Bandscheibenschutz:</strong> Rücken fest an das Polster drücken. 3s kontrolliert absenken, 1s spüren, gleichmäßig drücken.
+          </div>
+          <table class="sets-table" data-exercise="t1_ex2" data-sets="3"></table>
+        </div>
+      </div>
+
+      <!-- Exercise 3 -->
+      <div class="exercise-card">
+        <div class="exercise-header">
+          <div>
+            <div class="exercise-name">3. Face Pulls am Kabelzug (Seil)</div>
+            <div class="exercise-badges">
+              <span class="badge">3 Sätze × 12–15 Wdh.</span>
+              <span class="badge badge-tut">TUT: 2-0-1-2</span>
+              <span class="badge badge-pause">Pause: 60s</span>
+            </div>
+          </div>
+        </div>
+        <div class="exercise-body">
+          <div class="exercise-notes">
+            <strong>Haltung:</strong> Seil auf Augenhöhe zum Gesicht ziehen. Am Gesicht 2 Sekunden halten und Schulterblätter aktiv nach hinten-unten fixieren.
+          </div>
+          <table class="sets-table" data-exercise="t1_ex3" data-sets="3"></table>
+        </div>
+      </div>
+
+      <!-- Exercise 4 -->
+      <div class="exercise-card">
+        <div class="exercise-header">
+          <div>
+            <div class="exercise-name">4. Trizepsdrücken am Kabelzug (Seil)</div>
+            <div class="exercise-badges">
+              <span class="badge">3 Sätze × 12–15 Wdh.</span>
+              <span class="badge badge-tut">TUT: 3-0-1-1</span>
+              <span class="badge badge-pause">Pause: 60s</span>
+            </div>
+          </div>
+        </div>
+        <div class="exercise-body">
+          <div class="exercise-notes">
+            <strong>Arme:</strong> Oberarme eng am Körper fixieren. 3s langsam hochlassen, unten Seil spreizen und 1s halten.
+          </div>
+          <table class="sets-table" data-exercise="t1_ex4" data-sets="3"></table>
+        </div>
+      </div>
+
+      <!-- Exercise 5 -->
+      <div class="exercise-card">
+        <div class="exercise-header">
+          <div>
+            <div class="exercise-name">5. Bizepscurls am Kabelzug</div>
+            <div class="exercise-badges">
+              <span class="badge">3 Sätze × 12–15 Wdh.</span>
+              <span class="badge badge-tut">TUT: 3-0-1-1</span>
+              <span class="badge badge-pause">Pause: 60s</span>
+            </div>
+          </div>
+        </div>
+        <div class="exercise-body">
+          <div class="exercise-notes">
+            <strong>Fokus:</strong> Aufrechter Stand, Knie leicht gebeugt. Kein Schwung aus dem Becken/unteren Rücken!
+          </div>
+          <table class="sets-table" data-exercise="t1_ex5" data-sets="3"></table>
+        </div>
+      </div>
+    </section>
+
+    <!-- TAG 2: UNTERKÖRPER A -->
+    <section id="tag2" class="tab-content">
+      <div class="day-header">
+        <h2>Tag 2: Unterkörper A</h2>
+        <p>Fokus: Quadrizeps & Gluteus (Gezielte Entlastung der Lendenwirbelsäule)</p>
+      </div>
+
+      <!-- Exercise 1 -->
+      <div class="exercise-card">
+        <div class="exercise-header">
+          <div>
+            <div class="exercise-name">1. Bulgarian Split Squats (Kurzhanteln)</div>
+            <div class="exercise-badges">
+              <span class="badge">3 Sätze × 8–10 pro Bein</span>
+              <span class="badge badge-tut">TUT: 3-1-1-0</span>
+              <span class="badge badge-pause">Pause: 90s</span>
+            </div>
+          </div>
+        </div>
+        <div class="exercise-body">
+          <div class="exercise-notes">
+            <strong>Bandscheibenschutz:</strong> Hinteren Fuß auflegen. Oberkörper leicht nach vorn neigen, Rücken gerade wie ein Brett. 3s tief, 1s unten stoppen.
+          </div>
+          <table class="sets-table" data-exercise="t2_ex1" data-sets="3"></table>
+        </div>
+      </div>
+
+      <!-- Exercise 2 -->
+      <div class="exercise-card">
+        <div class="exercise-header">
+          <div>
+            <div class="exercise-name">2. Beinpresse 45° (moderat)</div>
+            <div class="exercise-badges">
+              <span class="badge">3 Sätze × 10–12 Wdh.</span>
+              <span class="badge badge-tut">TUT: 3-1-1-0</span>
+              <span class="badge badge-pause">Pause: 90s</span>
+            </div>
+          </div>
+        </div>
+        <div class="exercise-body">
+          <div class="exercise-notes">
+            <strong>ACHTUNG:</strong> Po und unterer Rücken bleiben fest an das Polster gepresst. Niemals am tiefsten Punkt im Becken einrunden (Butt Wink vermeiden)!
+          </div>
+          <table class="sets-table" data-exercise="t2_ex2" data-sets="3"></table>
+        </div>
+      </div>
+
+      <!-- Exercise 3 -->
+      <div class="exercise-card">
+        <div class="exercise-header">
+          <div>
+            <div class="exercise-name">3. Beinstrecker (Maschine)</div>
+            <div class="exercise-badges">
+              <span class="badge">3 Sätze × 12–15 Wdh.</span>
+              <span class="badge badge-tut">TUT: 3-0-1-1</span>
+              <span class="badge badge-pause">Pause: 60s</span>
+            </div>
+          </div>
+        </div>
+        <div class="exercise-body">
+          <div class="exercise-notes">
+            <strong>Isoliert:</strong> Null Rumpf- und Rückenbelastung. Oben 1s fest anspannen, 3s extrem kontrolliert senken.
+          </div>
+          <table class="sets-table" data-exercise="t2_ex3" data-sets="3"></table>
+        </div>
+      </div>
+
+      <!-- Exercise 4 -->
+      <div class="exercise-card">
+        <div class="exercise-header">
+          <div>
+            <div class="exercise-name">4. Liegender Beinbeuger (beidbeinig)</div>
+            <div class="exercise-badges">
+              <span class="badge">3 Sätze × 10–12 Wdh.</span>
+              <span class="badge badge-tut">TUT: 3-0-1-1</span>
+              <span class="badge badge-pause">Pause: 60s</span>
+            </div>
+          </div>
+        </div>
+        <div class="exercise-body">
+          <div class="exercise-notes">
+            <strong>Bandscheibenschutz:</strong> Becken aktiv nach unten in das Polster drücken, um ein Hohlkreuz während der Beugung zu verhindern.
+          </div>
+          <table class="sets-table" data-exercise="t2_ex4" data-sets="3"></table>
+        </div>
+      </div>
+
+      <!-- Exercise 5 -->
+      <div class="exercise-card">
+        <div class="exercise-header">
+          <div>
+            <div class="exercise-name">5. Wadenheben sitzend (Maschine)</div>
+            <div class="exercise-badges">
+              <span class="badge">3 Sätze × 12–15 Wdh.</span>
+              <span class="badge badge-tut">TUT: 2-2-1-1</span>
+              <span class="badge badge-pause">Pause: 60s</span>
+            </div>
+          </div>
+        </div>
+        <div class="exercise-body">
+          <div class="exercise-notes">
+            <strong>Entlastung:</strong> Durch die sitzende Position entsteht keinerlei Druck von oben auf die Wirbelsäule. Unten 2s Stretch halten.
+          </div>
+          <table class="sets-table" data-exercise="t2_ex5" data-sets="3"></table>
+        </div>
+      </div>
+    </section>
+
+    <!-- TAG 3: PAUSE -->
+    <section id="tag3" class="tab-content">
+      <div class="day-header">
+        <h2>Tag 3: Regeneration & Schritte</h2>
+        <p>Aktive Erholung für den Stoffwechsel und das Nervensystem</p>
+      </div>
+      <div class="info-card">
+        <h3>★ Heutiger Fokus</h3>
+        <p>Heute pausiert das Gym! Geh entspannt spazieren, sammle deine <strong>10.000 Schritte</strong> und achte auf ausreichende Flüssigkeitszufuhr.</p>
+        <ul>
+          <li>1800 kcal einhalten</li>
+          <li>Stress abbauen (senkt Cortisol und Wassereinlagerungen)</li>
+          <li>Rücken sanft mobilisieren (z. B. Spazierengehen regt die Nährstoffversorgung der Bandscheiben an)</li>
+        </ul>
+      </div>
+    </section>
+
+    <!-- TAG 4: OBERKÖRPER B -->
+    <section id="tag4" class="tab-content">
+      <div class="day-header">
+        <h2>Tag 4: Oberkörper B</h2>
+        <p>Schultern, Arme & Rumpfstabilität (Schmale Silhouette, Fokus hintere Schulter)</p>
+      </div>
+
+      <!-- Exercise 1 -->
+      <div class="exercise-card">
+        <div class="exercise-header">
+          <div>
+            <div class="exercise-name">1. Kabelzug Reverse Flyes</div>
+            <div class="exercise-badges">
+              <span class="badge">3 Sätze × 12–15 Wdh.</span>
+              <span class="badge badge-tut">TUT: 3-0-1-1</span>
+              <span class="badge badge-pause">Pause: 60s</span>
+            </div>
+          </div>
+        </div>
+        <div class="exercise-body">
+          <div class="exercise-notes">
+            <strong>Haltung:</strong> Isoliert die hintere Schulter. Hinten 1s halten, 3s langsam vorlassen. Macht die Arme von der Seite und hinten schön schlank und definiert.
+          </div>
+          <table class="sets-table" data-exercise="t4_ex1" data-sets="3"></table>
+        </div>
+      </div>
+
+      <!-- Exercise 2 -->
+      <div class="exercise-card">
+        <div class="exercise-header">
+          <div>
+            <div class="exercise-name">2. Seitheben sitzend mit KH</div>
+            <div class="exercise-badges">
+              <span class="badge">3 Sätze × 12–15 Wdh.</span>
+              <span class="badge badge-tut">TUT: 3-0-1-1</span>
+              <span class="badge badge-pause">Pause: 60s</span>
+            </div>
+          </div>
+        </div>
+        <div class="exercise-body">
+          <div class="exercise-notes">
+            <strong>Silhouette:</strong> Aufrecht auf Bank sitzen. Leichtes Gewicht wählen! 3s langsam absenken. Nacken bewusst locker lassen.
+          </div>
+          <table class="sets-table" data-exercise="t4_ex2" data-sets="3"></table>
+        </div>
+      </div>
+
+      <!-- Exercise 3 -->
+      <div class="exercise-card">
+        <div class="exercise-header">
+          <div>
+            <div class="exercise-name">3. Enges Kabelzug-Rudern (nur Retraktion)</div>
+            <div class="exercise-badges">
+              <span class="badge">3 Sätze × 10–12 Wdh.</span>
+              <span class="badge badge-tut">TUT: 3-0-1-2</span>
+              <span class="badge badge-pause">Pause: 75s</span>
+            </div>
+          </div>
+        </div>
+        <div class="exercise-body">
+          <div class="exercise-notes">
+            <strong>Fokus:</strong> Aufrechter Sitz. Fokus rein auf das Zusammenziehen der Schulterblätter hinten (2s halten). Nicht mit dem Rumpf schaukeln!
+          </div>
+          <table class="sets-table" data-exercise="t4_ex3" data-sets="3"></table>
+        </div>
+      </div>
+
+      <!-- Exercise 4 -->
+      <div class="exercise-card">
+        <div class="exercise-header">
+          <div>
+            <div class="exercise-name">4. Trizeps Überkopfdrücken am Kabel</div>
+            <div class="exercise-badges">
+              <span class="badge">3 Sätze × 12–15 Wdh.</span>
+              <span class="badge badge-tut">TUT: 3-1-1-0</span>
+              <span class="badge badge-pause">Pause: 60s</span>
+            </div>
+          </div>
+        </div>
+        <div class="exercise-body">
+          <div class="exercise-notes">
+            <strong>Langer Trizepskopf:</strong> Schrittstellung für stabilen Rumpf. 3s tief in die Dehnung gehen, 1s halten, dann strecken.
+          </div>
+          <table class="sets-table" data-exercise="t4_ex4" data-sets="3"></table>
+        </div>
+      </div>
+
+      <!-- Exercise 5 -->
+      <div class="exercise-card">
+        <div class="exercise-header">
+          <div>
+            <div class="exercise-name">5. Pallof Press am Kabelzug</div>
+            <div class="exercise-badges">
+              <span class="badge">3 Sätze × 10–12 pro Seite</span>
+              <span class="badge badge-tut">TUT: 2-2-2-0</span>
+              <span class="badge badge-pause">Pause: 45s</span>
+            </div>
+          </div>
+        </div>
+        <div class="exercise-body">
+          <div class="exercise-notes">
+            <strong>Goldstandard Bandscheibe:</strong> Seitlich zum Kabelzug stehen, Griff vor die Brust halten und gerade nach vorn schieben. 2s vorne gegen das Verdrehen halten!
+          </div>
+          <table class="sets-table" data-exercise="t4_ex5" data-sets="3"></table>
+        </div>
+      </div>
+    </section>
+
+    <!-- TAG 5: UNTERKÖRPER B -->
+    <section id="tag5" class="tab-content">
+      <div class="day-header">
+        <h2>Tag 5: Unterkörper B</h2>
+        <p>Gluteus, Beinrückseite & Rumpf-Reha (Inkl. liegender Beinbeuger einbeinig)</p>
+      </div>
+
+      <!-- Exercise 1 -->
+      <div class="exercise-card">
+        <div class="exercise-header">
+          <div>
+            <div class="exercise-name">1. Hip Thrusts (Maschine oder KH)</div>
+            <div class="exercise-badges">
+              <span class="badge">4 Sätze × 10–12 Wdh.</span>
+              <span class="badge badge-tut">TUT: 2-0-1-2</span>
+              <span class="badge badge-pause">Pause: 90s</span>
+            </div>
+          </div>
+        </div>
+        <div class="exercise-body">
+          <div class="exercise-notes">
+            <strong>Po-Fokus:</strong> Oben 2s maximale Gesäßspannung halten. Kinn leicht auf die Brust nehmen, Bewegung rein aus der Hüfte (nicht im unteren Rücken überstrecken!).
+          </div>
+          <table class="sets-table" data-exercise="t5_ex1" data-sets="4"></table>
+        </div>
+      </div>
+
+      <!-- Exercise 2 -->
+      <div class="exercise-card">
+        <div class="exercise-header">
+          <div>
+            <div class="exercise-name">2. Rumänisches Kreuzheben (mit KH)</div>
+            <div class="exercise-badges">
+              <span class="badge">3 Sätze × 10–12 Wdh.</span>
+              <span class="badge badge-tut">TUT: 3-1-1-0</span>
+              <span class="badge badge-pause">Pause: 90s</span>
+            </div>
+          </div>
+        </div>
+        <div class="exercise-body">
+          <div class="exercise-notes">
+            <strong>Bandscheibenschutz:</strong> Kurzhanteln eng an den Beinen führen. Knie nur leicht gebeugt. Hüfte weit nach hinten schieben, Rücken absolut gerade halten (nur bis knapp unter die Kniescheiben absenken!).
+          </div>
+          <table class="sets-table" data-exercise="t5_ex2" data-sets="3"></table>
+        </div>
+      </div>
+
+      <!-- Exercise 3 -->
+      <div class="exercise-card">
+        <div class="exercise-header">
+          <div>
+            <div class="exercise-name">3. Kabelzug-Kickbacks (Gluteus)</div>
+            <div class="exercise-badges">
+              <span class="badge">3 Sätze × 12–15 pro Bein</span>
+              <span class="badge badge-tut">TUT: 2-0-1-2</span>
+              <span class="badge badge-pause">Pause: 60s</span>
+            </div>
+          </div>
+        </div>
+        <div class="exercise-body">
+          <div class="exercise-notes">
+            <strong>Isoliert:</strong> Standbein leicht beugen. Becken bleibt gerade und ruhig. Oben 2s halten, Bewegung rein aus dem Gesäß.
+          </div>
+          <table class="sets-table" data-exercise="t5_ex3" data-sets="3"></table>
+        </div>
+      </div>
+
+      <!-- Exercise 4 -->
+      <div class="exercise-card">
+        <div class="exercise-header">
+          <div>
+            <div class="exercise-name">4. Liegender Beinbeuger (einbeinig)</div>
+            <div class="exercise-badges">
+              <span class="badge">3 Sätze × 10–12 pro Bein</span>
+              <span class="badge badge-tut">TUT: 3-0-1-1</span>
+              <span class="badge badge-pause">Pause: 60s</span>
+            </div>
+          </div>
+        </div>
+        <div class="exercise-body">
+          <div class="exercise-notes">
+            <strong>Einbeinig:</strong> Leichtes Gewicht wählen. 3s langsam strecken, 1s Beugung halten. Becken bleibt fest auf das Polster gepresst.
+          </div>
+          <table class="sets-table" data-exercise="t5_ex4" data-sets="3"></table>
+        </div>
+      </div>
+
+      <!-- Exercise 5 -->
+      <div class="exercise-card">
+        <div class="exercise-header">
+          <div>
+            <div class="exercise-name">5. Bird Dog (Vierfüßlerstand)</div>
+            <div class="exercise-badges">
+              <span class="badge">3 Sätze × 8–10 pro Seite</span>
+              <span class="badge badge-tut">TUT: 3-2-1-0</span>
+              <span class="badge badge-pause">Pause: 45s</span>
+            </div>
+          </div>
+        </div>
+        <div class="exercise-body">
+          <div class="exercise-notes">
+            <strong>Tiefe Stabilisation:</strong> Arm und diagonales Bein ausstrecken, Daumen nach oben. 2–3s halten, Rumpf unbeweglich wie ein Brett halten.
+          </div>
+          <table class="sets-table" data-exercise="t5_ex5" data-sets="3"></table>
+        </div>
+      </div>
+    </section>
+
+    <!-- INFO TAB -->
+    <section id="info" class="tab-content">
+      <div class="day-header">
+        <h2>Allgemeine Hinweise & TUT</h2>
+        <p>Deine goldenen Regeln für Bandscheibenschutz, schmale Muskeln und Fettabbau</p>
+      </div>
+
+      <div class="info-card">
+        <h3>★ Time Under Tension (TUT) – So funktioniert es:</h3>
+        <p>Ein Tempo-Code besteht aus 4 Ziffern, z. B. <span class="highlight">3-1-1-0</span>:</p>
+        <ul>
+          <li><span class="highlight">1. Ziffer (3):</span> 3 Sekunden kontrolliertes Absenken / Dehnen (exzentrisch).</li>
+          <li><span class="highlight">2. Ziffer (1):</span> 1 Sekunde Pause am Umkehrpunkt (stabilisieren).</li>
+          <li><span class="highlight">3. Ziffer (1):</span> 1 Sekunde kontrolliertes Drücken / Ziehen (konzentrisch).</li>
+          <li><span class="highlight">4. Ziffer (0):</span> Pause am Endpunkt (0 = direkt fließend weiter; 1–2 = Muskel fest anspannen).</li>
+        </ul>
+        <p style="margin-top:8px;"><em>Vorteil:</em> Hohe Muskelspannung ohne übermäßige Gewichte. Das schont deine operierte Bandscheibe zu 100 %!</p>
+      </div>
+
+      <div class="info-card">
+        <h3>★ Ernährung & Supplemente im Blick</h3>
+        <ul>
+          <li><span class="highlight">1800 kcal täglich:</span> Konsequent jeden Tag, auch am Samstag und Sonntag.</li>
+          <li><span class="highlight">Wochenende beim Feiern/Grillen:</span> Tagsüber Protein-First (Magerquark, Geflügel, Salat), um abends Puffer für Baguette und Nudelsalat zu haben.</li>
+          <li><span class="highlight">Kollagen:</span> Trackst du wie gewohnt mit ca. 55 kcal.</li>
+          <li><span class="highlight">Creatin:</span> Hat 0 kcal. Es zieht Wasser <em>in</em> die Muskeln (guter Tonus!), nicht unter die Haut.</li>
+          <li><span class="highlight">Omega 3 & Kapseln:</span> Nur das Algenöl hat ca. 20 kcal, Vitamine/Mineralstoffe sind kalorienfrei.</li>
+        </ul>
+      </div>
+
+      <div class="info-card">
+        <h3>★ Bandscheiben-Sicherheit</h3>
+        <ul>
+          <li>Keine Kniebeugen mit Langhantel auf dem Rücken (axialer Druck entfällt komplett).</li>
+          <li>Bei Beinpresse und Beinbeuger das Becken niemals einrollen oder überstrecken.</li>
+          <li>Bei Schmerzen oder Unwohlsein im unteren Rücken: Übung sofort beenden!</li>
+        </ul>
+      </div>
+    </section>
+  </main>
+
+  <script>
+    // Tab Switching
+    function switchTab(tabId) {
+      document.querySelectorAll('.tab-content').forEach(el => el.classList.remove('active'));
+      document.querySelectorAll('.tab-btn').forEach(el => el.classList.remove('active'));
+      document.getElementById(tabId).classList.add('active');
+      const activeBtn = Array.from(document.querySelectorAll('.tab-btn')).find(btn => btn.getAttribute('onclick').includes(tabId));
+      if (activeBtn) activeBtn.classList.add('active');
+      window.scrollTo({ top: 0, behavior: 'smooth' });
+    }
+
+    // Dynamic Set Table Generation
+    function buildTables() {
+      const tables = document.querySelectorAll('.sets-table');
+      tables.forEach(table => {
+        const exId = table.getAttribute('data-exercise');
+        const numSets = parseInt(table.getAttribute('data-sets'), 10);
+        let html = `
+          <thead>
+            <tr>
+              <th>Satz</th>
+              <th>kg</th>
+              <th>Wdh</th>
+              <th>✓</th>
+            </tr>
+          </thead>
+          <tbody>
+        `;
+
+        for (let i = 1; i <= numSets; i++) {
+          const keyKg = ⁠ ${exId}_s${i}_kg ⁠;
+          const keyReps = ⁠ ${exId}_s${i}_reps ⁠;
+          const keyDone = ⁠ ${exId}_s${i}_done ⁠;
+
+          const valKg = localStorage.getItem(keyKg) || '';
+          const valReps = localStorage.getItem(keyReps) || '';
+          const isDone = localStorage.getItem(keyDone) === 'true';
+
+          html += `
+            <tr>
+              <td class="set-number">${i}</td>
+              <td>
+                <input type="number" step="0.5" inputmode="decimal" class="input-field" 
+                       id="${keyKg}" value="${valKg}" placeholder="kg" oninput="saveValue('${keyKg}', this.value)">
+              </td>
+              <td>
+                <input type="number" inputmode="numeric" class="input-field" 
+                       id="${keyReps}" value="${valReps}" placeholder="Wdh" oninput="saveValue('${keyReps}', this.value)">
+              </td>
+              <td class="check-cell">
+                <button class="check-btn ${isDone ? 'completed' : ''}" 
+                        id="${keyDone}" onclick="toggleDone('${keyDone}')">✓</button>
+              </td>
+            </tr>
+          `;
+        }
+        html += ⁠ </tbody> ⁠;
+        table.innerHTML = html;
+      });
+    }
+
+    // Local Storage Helpers
+    function saveValue(key, val) {
+      localStorage.setItem(key, val);
+    }
+
+    function toggleDone(key) {
+      const btn = document.getElementById(key);
+      const isDone = btn.classList.toggle('completed');
+      localStorage.setItem(key, isDone);
+    }
+
+    document.getElementById('resetStorageBtn').addEventListener('click', () => {
+      if (confirm('Möchtest du wirklich alle eingetragenen Trainingswerte zurücksetzen?')) {
+        localStorage.clear();
+        buildTables();
+      }
+    });
+
+    // Audio Beep Generator (Web Audio API - Kein externes Audiofile nötig)
+    function playBeep() {
+      try {
+        const audioCtx = new (window.AudioContext || window.webkitAudioContext)();
+        const osc = audioCtx.createOscillator();
+        const gainNode = audioCtx.createGain();
+        osc.connect(gainNode);
+        gainNode.connect(audioCtx.destination);
+        osc.type = 'sine';
+        osc.frequency.setValueAtTime(880, audioCtx.currentTime); // 880 Hz
+        gainNode.gain.setValueAtTime(0.1, audioCtx.currentTime);
+        osc.start();
+        gainNode.gain.exponentialRampToValueAtTime(0.0001, audioCtx.currentTime + 0.6);
+        osc.stop(audioCtx.currentTime + 0.6);
+      } catch (e) {
+        console.log('Audio context not allowed yet');
+      }
+    }
+
+    // Header Pause Timer
+    let timerDuration = 60;
+    let timerRemaining = 60;
+    let timerInterval = null;
+    const timerDisplay = document.getElementById('timerDisplay');
+    const toggleBtn = document.getElementById('toggleTimerBtn');
+
+    function updateTimerDisplay() {
+      const min = Math.floor(timerRemaining / 60);
+      const sec = timerRemaining % 60;
+      timerDisplay.textContent = ⁠ ${String(min).padStart(2, '0')}:${String(sec).padStart(2, '0')} ⁠;
+    }
+
+    function setTimer(seconds) {
+      resetTimer();
+      timerDuration = seconds;
+      timerRemaining = seconds;
+      updateTimerDisplay();
+      startTimer();
+    }
+
+    function startTimer() {
+      if (timerInterval) return;
+      toggleBtn.textContent = 'Pause';
+      timerInterval = setInterval(() => {
+        if (timerRemaining > 0) {
+          timerRemaining--;
+          updateTimerDisplay();
+        } else {
+          resetTimer();
+          playBeep();
+        }
+      }, 1000);
+    }
+
+    function toggleTimer() {
+      if (timerInterval) {
+        clearInterval(timerInterval);
+        timerInterval = null;
+        toggleBtn.textContent = 'Start';
+      } else {
+        if (timerRemaining <= 0) timerRemaining = timerDuration;
+        startTimer();
+      }
+    }
+
+    function resetTimer() {
+      clearInterval(timerInterval);
+      timerInterval = null;
+      timerRemaining = timerDuration;
+      toggleBtn.textContent = 'Start';
+      updateTimerDisplay();
+    }
+
+    // Initialize
+    window.addEventListener('DOMContentLoaded', () => {
+      buildTables();
+      updateTimerDisplay();
+    });
+  </script>
+</body>
+</html>
