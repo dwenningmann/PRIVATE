@@ -20,13 +20,49 @@
     </div>
   </div>
 
+  <!-- TANKEN POPUP MODAL -->
+  <div id="refuelModal" class="fixed inset-0 z-50 bg-slate-950/80 backdrop-blur-sm hidden flex items-center justify-center p-4">
+    <div class="bg-slate-900 border border-slate-800 rounded-2xl p-6 w-full max-w-sm shadow-2xl space-y-4">
+      <div class="flex items-center justify-between">
+        <h3 class="text-base font-bold text-white flex items-center gap-2">
+          <span>⛽</span> Tankbeleg erfassen
+        </h3>
+        <button type="button" id="closeRefuelModalBtn" class="text-slate-400 hover:text-white text-lg">✕</button>
+      </div>
+      <p class="text-xs text-slate-400">Trage kurz ein, wie viel getankt wurde:</p>
+
+      <div class="space-y-3">
+        <div>
+          <label class="block text-xs uppercase tracking-wider text-slate-400 mb-1">Menge (Liter)</label>
+          <input type="number" step="0.01" id="modalLiters" class="w-full bg-slate-950 border border-slate-700 rounded-xl px-3 py-2.5 text-white placeholder-slate-600 focus:outline-none focus:ring-2 focus:ring-emerald-500" placeholder="z. B. 48.5" />
+        </div>
+        <div>
+          <label class="block text-xs uppercase tracking-wider text-slate-400 mb-1">Gesamtbetrag (€)</label>
+          <input type="number" step="0.01" id="modalCost" class="w-full bg-slate-950 border border-slate-700 rounded-xl px-3 py-2.5 text-white placeholder-slate-600 focus:outline-none focus:ring-2 focus:ring-emerald-500" placeholder="z. B. 85.40" />
+        </div>
+      </div>
+
+      <div class="flex items-center gap-2 pt-2">
+        <button type="button" id="cancelRefuelBtn" class="w-1/2 bg-slate-800 hover:bg-slate-700 text-slate-300 font-medium py-2.5 rounded-xl text-xs transition">
+          Abbrechen
+        </button>
+        <button type="button" id="confirmRefuelBtn" class="w-1/2 bg-emerald-600 hover:bg-emerald-500 text-white font-medium py-2.5 rounded-xl text-xs transition shadow-lg shadow-emerald-600/20">
+          Übernehmen
+        </button>
+      </div>
+    </div>
+  </div>
+
   <div class="w-full max-w-md mx-auto my-auto space-y-5 pb-8">
     
     <!-- HEADER -->
     <header class="flex items-center justify-between py-2 border-b border-slate-800">
       <div class="flex items-center gap-2">
         <span class="text-2xl">🚗</span>
-        <h1 class="text-xl font-bold tracking-tight text-white">CarShare Hub</h1>
+        <div>
+          <h1 class="text-xl font-bold tracking-tight text-white">CarShare Hub</h1>
+          <span id="userBadge" class="text-[10px] text-slate-400 block -mt-1"></span>
+        </div>
       </div>
       <button id="logoutBtn" class="hidden text-xs bg-slate-800 hover:bg-slate-700 text-slate-300 px-3 py-1.5 rounded-lg border border-slate-700 transition">
         Abmelden
@@ -165,12 +201,19 @@
             <input type="range" id="fuelInput" min="0" max="100" value="50" step="5" class="w-full accent-blue-500" />
           </div>
 
-          <!-- GETANKT CHECKBOX -->
-          <div class="bg-slate-950 p-3.5 rounded-xl border border-slate-800">
-            <label class="flex items-center gap-2.5 cursor-pointer">
-              <input type="checkbox" id="refueledCheckbox" class="w-4 h-4 rounded text-blue-600 accent-blue-600 focus:ring-blue-500 border-slate-700 bg-slate-900" />
-              <span class="text-sm font-medium text-emerald-400">Ich habe getankt ⛽</span>
-            </label>
+          <!-- GETANKT CHECKBOX MIT DETAILS -->
+          <div class="bg-slate-950 p-3.5 rounded-xl border border-slate-800 space-y-2">
+            <div class="flex items-center justify-between">
+              <label class="flex items-center gap-2.5 cursor-pointer">
+                <input type="checkbox" id="refueledCheckbox" class="w-4 h-4 rounded text-blue-600 accent-blue-600 focus:ring-blue-500 border-slate-700 bg-slate-900" />
+                <span class="text-sm font-medium text-emerald-400">Ich habe getankt ⛽</span>
+              </label>
+            </div>
+            <!-- Zusammenfassung, falls Daten eingegeben wurden -->
+            <div id="refuelBadgeSummary" class="hidden text-xs bg-emerald-950/40 border border-emerald-800/60 text-emerald-300 p-2 rounded-lg flex items-center justify-between">
+              <span id="refuelSummaryText">Erfasst: - Liter für - €</span>
+              <button type="button" id="editRefuelBtn" class="text-xs underline hover:text-white">Ändern</button>
+            </div>
           </div>
 
           <!-- KM STAND (OPTIONAL) -->
@@ -188,7 +231,10 @@
       <!-- 4. RESERVIERUNGEN MIT BESITZER-FREIGABE -->
       <div class="bg-slate-900 border border-slate-800 rounded-2xl p-5 shadow-xl space-y-4">
         <div class="flex items-center justify-between">
-          <h3 class="text-xs font-semibold text-slate-400 uppercase tracking-wider">Reservierungen</h3>
+          <div>
+            <h3 class="text-xs font-semibold text-slate-400 uppercase tracking-wider">Reservierungen</h3>
+            <span id="ownerStatusHint" class="text-[10px] text-slate-500 block"></span>
+          </div>
           <button id="toggleNewReservationBtn" class="text-xs text-blue-400 hover:text-blue-300 font-medium">
             + Neue Reservierung
           </button>
@@ -264,8 +310,11 @@
     } from "https://www.gstatic.com/firebasejs/10.12.0/firebase-firestore.js";
 
     // -------------------------------------------------------------
-    // 1. FIREBASE CONFIG
+    // 1. KONFIGURATION & BESITZER-E-MAIL
     // -------------------------------------------------------------
+    // Trage hier die E-Mail ein, die als Fahrzeugbesitzer Reservierungen freigeben darf:
+    const OWNER_EMAIL = "david@scaleiq.de";
+
     const firebaseConfig = {
       apiKey: "AIzaSyB_ZKG8t8g3Utw8aXm4cu9sUW4IUfaPDY8",
       authDomain: "carhub-c907e.firebaseapp.com",
@@ -278,6 +327,9 @@
     const app = initializeApp(firebaseConfig);
     const auth = getAuth(app);
     const db = getFirestore(app);
+
+    let currentUserEmail = "";
+    let isOwner = false;
 
     // -------------------------------------------------------------
     // RATE LIMITING & TOAST SYSTEM
@@ -329,6 +381,9 @@
     const authSection = document.getElementById("authSection");
     const appSection = document.getElementById("appSection");
     const logoutBtn = document.getElementById("logoutBtn");
+    const userBadge = document.getElementById("userBadge");
+    const ownerStatusHint = document.getElementById("ownerStatusHint");
+
     const authForm = document.getElementById("authForm");
     const authEmail = document.getElementById("authEmail");
     const authPassword = document.getElementById("authPassword");
@@ -362,6 +417,17 @@
     const geoCoords = document.getElementById("geoCoords");
     const geoBtn = document.getElementById("geoBtn");
     const refueledCheckbox = document.getElementById("refueledCheckbox");
+    const refuelBadgeSummary = document.getElementById("refuelBadgeSummary");
+    const refuelSummaryText = document.getElementById("refuelSummaryText");
+    const editRefuelBtn = document.getElementById("editRefuelBtn");
+
+    // Modal Elemente
+    const refuelModal = document.getElementById("refuelModal");
+    const closeRefuelModalBtn = document.getElementById("closeRefuelModalBtn");
+    const cancelRefuelBtn = document.getElementById("cancelRefuelBtn");
+    const confirmRefuelBtn = document.getElementById("confirmRefuelBtn");
+    const modalLiters = document.getElementById("modalLiters");
+    const modalCost = document.getElementById("modalCost");
 
     const toggleNewReservationBtn = document.getElementById("toggleNewReservationBtn");
     const reservationForm = document.getElementById("reservationForm");
@@ -375,6 +441,7 @@
 
     let currentKm = null;
     let currentCarState = {};
+    let recordedRefuelData = null; // { liters, cost }
 
     fuelInput.addEventListener("input", (e) => {
       fuelValDisplay.textContent = e.target.value;
@@ -385,15 +452,72 @@
     });
 
     // -------------------------------------------------------------
+    // MODAL-LOGIK FÜRS TANKEN
+    // -------------------------------------------------------------
+    function openRefuelModal() {
+      if (recordedRefuelData) {
+        modalLiters.value = recordedRefuelData.liters || "";
+        modalCost.value = recordedRefuelData.cost || "";
+      }
+      refuelModal.classList.remove("hidden");
+      setTimeout(() => modalLiters.focus(), 150);
+    }
+
+    function closeRefuelModal(cancel = false) {
+      refuelModal.classList.add("hidden");
+      if (cancel && !recordedRefuelData) {
+        refueledCheckbox.checked = false;
+        refuelBadgeSummary.classList.add("hidden");
+      }
+    }
+
+    refueledCheckbox.addEventListener("change", (e) => {
+      if (e.target.checked) {
+        openRefuelModal();
+      } else {
+        recordedRefuelData = null;
+        refuelBadgeSummary.classList.add("hidden");
+      }
+    });
+
+    editRefuelBtn.addEventListener("click", () => openRefuelModal());
+    closeRefuelModalBtn.addEventListener("click", () => closeRefuelModal(true));
+    cancelRefuelBtn.addEventListener("click", () => closeRefuelModal(true));
+
+    confirmRefuelBtn.addEventListener("click", () => {
+      const liters = parseFloat(modalLiters.value) || 0;
+      const cost = parseFloat(modalCost.value) || 0;
+
+      recordedRefuelData = {
+        liters: liters > 0 ? liters : null,
+        cost: cost > 0 ? cost : null
+      };
+
+      refueledCheckbox.checked = true;
+      refuelSummaryText.textContent = `Erfasst: ${liters ? liters + ' Liter' : '-'} / ${cost ? cost.toFixed(2) + ' €' : '-'}`;
+      refuelBadgeSummary.classList.remove("hidden");
+      refuelModal.classList.add("hidden");
+      showToast("Tankdaten übernommen!", "info");
+    });
+
+    // -------------------------------------------------------------
     // 2. AUTHENTIFIZIERUNG
     // -------------------------------------------------------------
     onAuthStateChanged(auth, (user) => {
       if (user) {
+        currentUserEmail = user.email || "";
+        isOwner = currentUserEmail.toLowerCase() === OWNER_EMAIL.toLowerCase();
+
+        userBadge.textContent = isOwner ? `👑 Besitzer (${currentUserEmail})` : `👤 Fahrer (${currentUserEmail})`;
+        ownerStatusHint.textContent = isOwner ? "Du bist als Besitzer eingeloggt (Freigabe aktiv)" : "Nur der Besitzer kann Anfragen freigeben";
+
         authSection.classList.add("hidden");
         appSection.classList.remove("hidden");
         logoutBtn.classList.remove("hidden");
         initFirestoreListeners();
       } else {
+        currentUserEmail = "";
+        isOwner = false;
         authSection.classList.remove("hidden");
         appSection.classList.add("hidden");
         logoutBtn.classList.add("hidden");
@@ -478,7 +602,8 @@
         if (data.lastRefuel) {
           const rDate = new Date(data.lastRefuel.date);
           const rDateStr = `${rDate.toLocaleDateString("de-DE", { day: "2-digit", month: "2-digit" })}`;
-          lastRefuelText.textContent = `${data.lastRefuel.driver} (${rDateStr})`;
+          const extraInfo = data.lastRefuel.liters ? ` (${data.lastRefuel.liters} l)` : "";
+          lastRefuelText.textContent = `${data.lastRefuel.driver} (${rDateStr})${extraInfo}`;
         }
 
         if (data.coords) {
@@ -504,26 +629,32 @@
         querySnapshot.forEach((doc) => {
           const entry = doc.data();
           const d = entry.driver || "Unbekannt";
-          if (!stats[d]) stats[d] = { trips: 0, refuels: 0 };
+          if (!stats[d]) stats[d] = { trips: 0, refuels: 0, totalCost: 0 };
           stats[d].trips += 1;
-          if (entry.refueled) stats[d].refuels += 1;
+          if (entry.refueled) {
+            stats[d].refuels += 1;
+            if (entry.refuelDetails && entry.refuelDetails.cost) {
+              stats[d].totalCost += entry.refuelDetails.cost;
+            }
+          }
         });
 
         driverStatsList.innerHTML = Object.entries(stats).map(([driver, s]) => {
           const ratioColor = s.refuels === 0 && s.trips >= 3 ? "text-rose-400 font-semibold" : "text-emerald-400 font-medium";
+          const costBadge = s.totalCost > 0 ? `<span class="text-slate-400 font-normal">(${s.totalCost.toFixed(2)} €)</span>` : "";
           return `
             <div class="flex items-center justify-between bg-slate-950 p-2.5 rounded-lg border border-slate-800/60">
               <span class="font-medium text-white">${driver}</span>
-              <div class="flex items-center gap-3">
+              <div class="flex items-center gap-2">
                 <span class="text-slate-400">${s.trips}× gefahren</span>
-                <span class="${ratioColor}">⛽ ${s.refuels}× getankt</span>
+                <span class="${ratioColor}">⛽ ${s.refuels}× ${costBadge}</span>
               </div>
             </div>
           `;
         }).join("");
       }, (error) => console.error("Firestore Logs Error:", error));
 
-      // C) Reservierungen Collection mit Besitzer-Freigabe
+      // C) Reservierungen Collection mit Besitzer-Berechtigungscheck
       const resQuery = query(collection(db, "car_reservations"), orderBy("date", "asc"));
       onSnapshot(resQuery, (querySnapshot) => {
         if (querySnapshot.empty) {
@@ -549,6 +680,18 @@
             statusBadge = `<span class="bg-rose-500/20 text-rose-300 border border-rose-500/30 px-2 py-0.5 rounded text-[10px]">❌ Abgelehnt</span>`;
           }
 
+          // Besitzer-Buttons: NUR wenn isOwner === true
+          const ownerActionButtons = isOwner ? `
+            <div class="flex items-center gap-2">
+              <button onclick="window.setReservationStatus('${r.id}', 'approved')" class="bg-emerald-950/80 hover:bg-emerald-900 text-emerald-300 border border-emerald-800 text-[11px] px-2.5 py-1 rounded-lg transition">
+                ✓ Zusagen
+              </button>
+              <button onclick="window.setReservationStatus('${r.id}', 'rejected')" class="bg-rose-950/80 hover:bg-rose-900 text-rose-300 border border-rose-800 text-[11px] px-2.5 py-1 rounded-lg transition">
+                ✕ Ablehnen
+              </button>
+            </div>
+          ` : `<span class="text-[10px] text-slate-500 italic">Entscheidung durch Besitzer ausstehend</span>`;
+
           return `
             <div class="bg-slate-950 p-3 rounded-xl border border-slate-800 space-y-2">
               <div class="flex items-start justify-between gap-2">
@@ -562,16 +705,9 @@
                 <div>${statusBadge}</div>
               </div>
 
-              <!-- Besitzer-Buttons -->
+              <!-- Aktionsleiste -->
               <div class="flex items-center justify-between pt-2 border-t border-slate-800/80">
-                <div class="flex items-center gap-2">
-                  <button onclick="window.setReservationStatus('${r.id}', 'approved')" class="bg-emerald-950/80 hover:bg-emerald-900 text-emerald-300 border border-emerald-800 text-[11px] px-2.5 py-1 rounded-lg transition">
-                    ✓ Zusagen
-                  </button>
-                  <button onclick="window.setReservationStatus('${r.id}', 'rejected')" class="bg-rose-950/80 hover:bg-rose-900 text-rose-300 border border-rose-800 text-[11px] px-2.5 py-1 rounded-lg transition">
-                    ✕ Ablehnen
-                  </button>
-                </div>
+                ${ownerActionButtons}
                 <button onclick="window.deleteReservation('${r.id}')" class="text-slate-500 hover:text-rose-400 text-xs px-2 py-1">
                   🗑 Löschen
                 </button>
@@ -582,8 +718,12 @@
       }, (error) => console.error("Firestore Res Error:", error));
     }
 
-    // Reservierungsstatus ändern
+    // Reservierungsstatus ändern (nur Besitzer)
     window.setReservationStatus = async (id, newStatus) => {
+      if (!isOwner) {
+        showToast("Nur der Besitzer kann Reservierungen freigeben!", "error");
+        return;
+      }
       if (!checkRateLimit()) return;
       try {
         await updateDoc(doc(db, "car_reservations", id), { status: newStatus });
@@ -695,6 +835,7 @@
         keyLocation: keyLocation,
         fuel: fuel,
         refueled: isRefueled,
+        refuelDetails: isRefueled ? recordedRefuelData : null,
         coords: geoCoords.value ? JSON.parse(geoCoords.value) : null,
         drivingState: "parked",
         activeDriver: null,
@@ -713,11 +854,12 @@
         if (isRefueled) {
           statusUpdate.lastRefuel = {
             driver: driver,
-            date: new Date().toISOString()
+            date: new Date().toISOString(),
+            liters: recordedRefuelData ? recordedRefuelData.liters : null,
+            cost: recordedRefuelData ? recordedRefuelData.cost : null
           };
         }
 
-        // In Firestore speichern (Status Dokument + Log Eintrag)
         await setDoc(doc(db, "car_status", "current"), statusUpdate);
         await addDoc(collection(db, "car_logs"), payload);
 
@@ -725,6 +867,8 @@
         locationInput.value = "";
         geoCoords.value = "";
         refueledCheckbox.checked = false;
+        recordedRefuelData = null;
+        refuelBadgeSummary.classList.add("hidden");
 
         showToast("✓ Fahrt beendet & Daten in Firestore gespeichert!", "success");
         window.scrollTo({ top: 0, behavior: "smooth" });
@@ -749,6 +893,7 @@
 
       const resPayload = {
         driver: resDriver.value.trim(),
+        userEmail: currentUserEmail,
         date: resDate.value,
         startTime: resStartTime.value,
         endTime: resEndTime.value,
