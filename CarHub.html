@@ -10,9 +10,17 @@
     body { -webkit-tap-highlight-color: transparent; }
   </style>
 </head>
-<body class="bg-slate-950 text-slate-100 min-h-screen flex flex-col items-center p-4 antialiased">
+<body class="bg-slate-950 text-slate-100 min-h-screen flex flex-col items-center p-4 antialiased selection:bg-blue-600 selection:text-white">
 
-  <div class="w-full max-w-md mx-auto my-auto space-y-5">
+  <!-- FLOATING TOAST NOTIFICATION -->
+  <div id="toastNotification" class="fixed top-5 left-1/2 -translate-x-1/2 z-50 transition-all duration-300 opacity-0 -translate-y-4 pointer-events-none max-w-sm w-11/12">
+    <div id="toastInner" class="bg-slate-800 text-white border border-slate-700 shadow-2xl rounded-2xl px-4 py-3 flex items-center gap-3 text-sm font-medium">
+      <span id="toastIcon">ℹ️</span>
+      <span id="toastMessage" class="flex-1 break-words">Benachrichtigung</span>
+    </div>
+  </div>
+
+  <div class="w-full max-w-md mx-auto my-auto space-y-5 pb-8">
     
     <!-- HEADER -->
     <header class="flex items-center justify-between py-2 border-b border-slate-800">
@@ -55,7 +63,7 @@
           <span id="statusIndicatorDot" class="w-3.5 h-3.5 rounded-full shrink-0"></span>
           <div>
             <div id="statusHeadline" class="text-sm font-bold text-white">Status prüfen...</div>
-            <div id="statusSubline" class="text-xs text-slate-400">Lade Daten...</div>
+            <div id="statusSubline" class="text-xs text-slate-400">Lade Daten aus Firestore...</div>
           </div>
         </div>
         <button id="toggleDriveBtn" class="shrink-0 text-xs font-semibold px-3.5 py-2 rounded-xl transition shadow-md">
@@ -171,15 +179,13 @@
             <input type="number" id="kmInput" class="w-full bg-slate-950 border border-slate-700 rounded-xl px-3 py-2 text-white placeholder-slate-500 focus:outline-none focus:ring-2 focus:ring-blue-500" placeholder="leer lassen, falls unverändert" />
           </div>
 
-          <div id="formFeedback" class="text-xs text-rose-400 hidden"></div>
-
-          <button type="submit" id="saveBtn" class="w-full bg-emerald-600 hover:bg-emerald-500 text-white font-medium py-2.5 rounded-xl transition shadow-lg shadow-emerald-600/20">
+          <button type="submit" id="saveBtn" class="w-full bg-emerald-600 hover:bg-emerald-500 text-white font-medium py-2.5 rounded-xl transition shadow-lg shadow-emerald-600/20 disabled:opacity-50 disabled:cursor-not-allowed">
             Fahrt beenden & Daten speichern
           </button>
         </form>
       </div>
 
-      <!-- 4. RESERVIERUNGEN -->
+      <!-- 4. RESERVIERUNGEN MIT BESITZER-FREIGABE -->
       <div class="bg-slate-900 border border-slate-800 rounded-2xl p-5 shadow-xl space-y-4">
         <div class="flex items-center justify-between">
           <h3 class="text-xs font-semibold text-slate-400 uppercase tracking-wider">Reservierungen</h3>
@@ -210,10 +216,10 @@
           </div>
           <div>
             <label class="block text-xs text-slate-400 mb-1">Zweck / Notiz (optional)</label>
-            <input type="text" id="resNote" class="w-full bg-slate-900 border border-slate-700 rounded-lg px-2.5 py-1.5 text-xs text-white" placeholder="z. B. Wocheneinkauf, Termin" />
+            <input type="text" id="resNote" class="w-full bg-slate-900 border border-slate-700 rounded-lg px-2.5 py-1.5 text-xs text-white" placeholder="z. B. Wocheneinkauf, Ausflug" />
           </div>
-          <button type="submit" class="w-full bg-blue-600 hover:bg-blue-500 text-white text-xs font-semibold py-2 rounded-lg transition">
-            Reservierung eintragen
+          <button type="submit" id="resSubmitBtn" class="w-full bg-blue-600 hover:bg-blue-500 text-white text-xs font-semibold py-2 rounded-lg transition disabled:opacity-50">
+            Reservierungsanfrage abschicken
           </button>
         </form>
 
@@ -234,7 +240,7 @@
     </main>
   </div>
 
-  <!-- FIREBASE MODULAR SDK -->
+  <!-- FIREBASE MODULAR SDK (FIRESTORE) -->
   <script type="module">
     import { initializeApp } from "https://www.gstatic.com/firebasejs/10.12.0/firebase-app.js";
     import { 
@@ -244,23 +250,25 @@
       onAuthStateChanged 
     } from "https://www.gstatic.com/firebasejs/10.12.0/firebase-auth.js";
     import { 
-      getDatabase, 
-      ref, 
-      set, 
-      push, 
-      remove, 
-      onValue, 
+      getFirestore, 
+      doc, 
+      setDoc, 
+      updateDoc, 
+      deleteDoc, 
+      collection, 
+      addDoc, 
       query, 
-      limitToLast 
-    } from "https://www.gstatic.com/firebasejs/10.12.0/firebase-database.js";
+      orderBy, 
+      limit, 
+      onSnapshot 
+    } from "https://www.gstatic.com/firebasejs/10.12.0/firebase-firestore.js";
 
     // -------------------------------------------------------------
-    // 1. FIREBASE CONFIG (europe-west3 / eur3)
+    // 1. FIREBASE CONFIG
     // -------------------------------------------------------------
     const firebaseConfig = {
       apiKey: "AIzaSyB_ZKG8t8g3Utw8aXm4cu9sUW4IUfaPDY8",
       authDomain: "carhub-c907e.firebaseapp.com",
-      databaseURL: "https://carhub-c907e-default-rtdb.europe-west3.firebasedatabase.app",
       projectId: "carhub-c907e",
       storageBucket: "carhub-c907e.firebasestorage.app",
       messagingSenderId: "237655379855",
@@ -269,7 +277,53 @@
 
     const app = initializeApp(firebaseConfig);
     const auth = getAuth(app);
-    const db = getDatabase(app);
+    const db = getFirestore(app);
+
+    // -------------------------------------------------------------
+    // RATE LIMITING & TOAST SYSTEM
+    // -------------------------------------------------------------
+    const RATE_LIMIT_SECONDS = 6;
+    let lastActionTime = 0;
+
+    function checkRateLimit() {
+      const now = Date.now();
+      const elapsed = (now - lastActionTime) / 1000;
+      if (elapsed < RATE_LIMIT_SECONDS) {
+        const remaining = Math.ceil(RATE_LIMIT_SECONDS - elapsed);
+        showToast(`Rate-Limit aktiv: Bitte warte noch ${remaining}s.`, "error");
+        return false;
+      }
+      lastActionTime = now;
+      return true;
+    }
+
+    function showToast(message, type = "success") {
+      const toast = document.getElementById("toastNotification");
+      const toastInner = document.getElementById("toastInner");
+      const toastIcon = document.getElementById("toastIcon");
+      const toastMessage = document.getElementById("toastMessage");
+
+      toastMessage.textContent = message;
+
+      if (type === "success") {
+        toastIcon.textContent = "✅";
+        toastInner.className = "bg-emerald-950 text-emerald-100 border border-emerald-700 shadow-2xl rounded-2xl px-4 py-3 flex items-center gap-3 text-sm font-medium";
+      } else if (type === "error") {
+        toastIcon.textContent = "⚠️";
+        toastInner.className = "bg-rose-950 text-rose-100 border border-rose-700 shadow-2xl rounded-2xl px-4 py-3 flex items-center gap-3 text-sm font-medium";
+      } else {
+        toastIcon.textContent = "ℹ️";
+        toastInner.className = "bg-slate-800 text-slate-100 border border-slate-700 shadow-2xl rounded-2xl px-4 py-3 flex items-center gap-3 text-sm font-medium";
+      }
+
+      toast.classList.remove("opacity-0", "-translate-y-4", "pointer-events-none");
+      toast.classList.add("opacity-100", "translate-y-0");
+
+      setTimeout(() => {
+        toast.classList.remove("opacity-100", "translate-y-0");
+        toast.classList.add("opacity-0", "-translate-y-4", "pointer-events-none");
+      }, 3500);
+    }
 
     // DOM-Elemente
     const authSection = document.getElementById("authSection");
@@ -298,6 +352,7 @@
     const driverStatsList = document.getElementById("driverStatsList");
 
     const updateForm = document.getElementById("updateForm");
+    const saveBtn = document.getElementById("saveBtn");
     const driverInput = document.getElementById("driverInput");
     const keyLocationInput = document.getElementById("keyLocationInput");
     const kmInput = document.getElementById("kmInput");
@@ -307,10 +362,10 @@
     const geoCoords = document.getElementById("geoCoords");
     const geoBtn = document.getElementById("geoBtn");
     const refueledCheckbox = document.getElementById("refueledCheckbox");
-    const formFeedback = document.getElementById("formFeedback");
 
     const toggleNewReservationBtn = document.getElementById("toggleNewReservationBtn");
     const reservationForm = document.getElementById("reservationForm");
+    const resSubmitBtn = document.getElementById("resSubmitBtn");
     const resDriver = document.getElementById("resDriver");
     const resDate = document.getElementById("resDate");
     const resStartTime = document.getElementById("resStartTime");
@@ -337,7 +392,7 @@
         authSection.classList.add("hidden");
         appSection.classList.remove("hidden");
         logoutBtn.classList.remove("hidden");
-        initDataListeners();
+        initFirestoreListeners();
       } else {
         authSection.classList.remove("hidden");
         appSection.classList.add("hidden");
@@ -350,21 +405,28 @@
       authError.classList.add("hidden");
       try {
         await signInWithEmailAndPassword(auth, authEmail.value.trim(), authPassword.value);
+        showToast("Erfolgreich angemeldet!", "success");
       } catch (err) {
         authError.textContent = "Fehler: " + err.message;
         authError.classList.remove("hidden");
+        showToast("Login fehlgeschlagen: " + err.message, "error");
       }
     });
 
-    logoutBtn.addEventListener("click", () => signOut(auth));
+    logoutBtn.addEventListener("click", () => {
+      signOut(auth);
+      showToast("Abgemeldet", "info");
+    });
 
     // -------------------------------------------------------------
-    // 3. ECHTZEIT-SYNC MIT REALTIME DATABASE
+    // 3. ECHTZEIT-SYNC MIT CLOUD FIRESTORE
     // -------------------------------------------------------------
-    function initDataListeners() {
-      // Auto-Status
-      onValue(ref(db, "car_status"), (snapshot) => {
-        const data = snapshot.val() || {};
+    function initFirestoreListeners() {
+      // A) Car Status Dokument
+      const statusDocRef = doc(db, "car_status", "current");
+      onSnapshot(statusDocRef, (docSnap) => {
+        if (!docSnap.exists()) return;
+        const data = docSnap.data();
         currentCarState = data;
 
         const isDriving = data.drivingState === "driving";
@@ -390,7 +452,7 @@
         }
 
         displayKeyLocation.textContent = data.keyLocation || "Nicht angegeben";
-        if (data.keyLocation) keyLocationInput.value = data.keyLocation;
+        if (data.keyLocation && !keyLocationInput.value) keyLocationInput.value = data.keyLocation;
 
         currentKm = data.km !== undefined && data.km !== null ? data.km : currentKm;
         displayKm.textContent = currentKm !== null ? `${Number(currentKm).toLocaleString("de-DE")} km` : "Keine km";
@@ -428,17 +490,19 @@
         } else {
           mapsLink.classList.add("hidden");
         }
-      });
+      }, (error) => console.error("Firestore Status Error:", error));
 
-      // Fahrten-Historie & Statistik
-      const logsRef = query(ref(db, "car_logs"), limitToLast(50));
-      onValue(logsRef, (snapshot) => {
-        const raw = snapshot.val();
-        if (!raw) return;
+      // B) Logs Collection für Fahrer-Bilanz
+      const logsQuery = query(collection(db, "car_logs"), orderBy("updatedAt", "desc"), limit(50));
+      onSnapshot(logsQuery, (querySnapshot) => {
+        if (querySnapshot.empty) {
+          driverStatsList.innerHTML = `<div class="text-slate-500 italic">Noch keine Fahrten aufgezeichnet.</div>`;
+          return;
+        }
 
-        const entries = Object.values(raw);
         const stats = {};
-        entries.forEach(entry => {
+        querySnapshot.forEach((doc) => {
+          const entry = doc.data();
           const d = entry.driver || "Unbekannt";
           if (!stats[d]) stats[d] = { trips: 0, refuels: 0 };
           stats[d].trips += 1;
@@ -446,7 +510,7 @@
         });
 
         driverStatsList.innerHTML = Object.entries(stats).map(([driver, s]) => {
-          const ratioColor = s.refuels === 0 && s.trips >= 3 ? "text-rose-400 font-semibold" : "text-slate-300";
+          const ratioColor = s.refuels === 0 && s.trips >= 3 ? "text-rose-400 font-semibold" : "text-emerald-400 font-medium";
           return `
             <div class="flex items-center justify-between bg-slate-950 p-2.5 rounded-lg border border-slate-800/60">
               <span class="font-medium text-white">${driver}</span>
@@ -457,58 +521,92 @@
             </div>
           `;
         }).join("");
-      });
+      }, (error) => console.error("Firestore Logs Error:", error));
 
-      // Reservierungen
-      onValue(ref(db, "car_reservations"), (snapshot) => {
-        const raw = snapshot.val();
-        if (!raw) {
-          reservationList.innerHTML = `<div class="text-slate-500 italic">Keine aktuellen Reservierungen.</div>`;
+      // C) Reservierungen Collection mit Besitzer-Freigabe
+      const resQuery = query(collection(db, "car_reservations"), orderBy("date", "asc"));
+      onSnapshot(resQuery, (querySnapshot) => {
+        if (querySnapshot.empty) {
+          reservationList.innerHTML = `<div class="text-slate-500 italic">Keine Reservierungen vorhanden.</div>`;
           return;
         }
 
-        const todayStr = new Date().toISOString().split("T")[0];
-        const resArray = Object.entries(raw).map(([key, val]) => ({ id: key, ...val }));
+        const resArray = [];
+        querySnapshot.forEach((docSnap) => {
+          resArray.push({ id: docSnap.id, ...docSnap.data() });
+        });
 
-        const upcoming = resArray
-          .filter(r => r.date >= todayStr)
-          .sort((a, b) => (a.date + a.startTime).localeCompare(b.date + b.startTime));
+        const sorted = resArray.sort((a, b) => (a.date + a.startTime).localeCompare(b.date + b.startTime));
 
-        if (upcoming.length === 0) {
-          reservationList.innerHTML = `<div class="text-slate-500 italic">Keine anstehenden Reservierungen.</div>`;
-          return;
-        }
-
-        reservationList.innerHTML = upcoming.map(r => {
-          const [year, month, day] = r.date.split("-");
+        reservationList.innerHTML = sorted.map(r => {
+          const [year, month, day] = r.date ? r.date.split("-") : ["--", "--", "--"];
           const formattedDate = `${day}.${month}.`;
+
+          let statusBadge = `<span class="bg-amber-500/20 text-amber-300 border border-amber-500/30 px-2 py-0.5 rounded text-[10px]">⏳ Ausstehend</span>`;
+          if (r.status === "approved") {
+            statusBadge = `<span class="bg-emerald-500/20 text-emerald-300 border border-emerald-500/30 px-2 py-0.5 rounded text-[10px]">✅ Bestätigt</span>`;
+          } else if (r.status === "rejected") {
+            statusBadge = `<span class="bg-rose-500/20 text-rose-300 border border-rose-500/30 px-2 py-0.5 rounded text-[10px]">❌ Abgelehnt</span>`;
+          }
+
           return `
-            <div class="bg-slate-950 p-2.5 rounded-lg border border-slate-800/80 flex items-center justify-between">
-              <div>
-                <div class="font-medium text-white flex items-center gap-2">
-                  <span>📅 ${formattedDate} (${r.startTime} – ${r.endTime})</span>
-                  <span class="text-blue-400 font-semibold">• ${r.driver}</span>
+            <div class="bg-slate-950 p-3 rounded-xl border border-slate-800 space-y-2">
+              <div class="flex items-start justify-between gap-2">
+                <div>
+                  <div class="font-medium text-white flex items-center gap-2">
+                    <span>📅 ${formattedDate} (${r.startTime} – ${r.endTime})</span>
+                    <span class="text-blue-400 font-semibold">• ${r.driver}</span>
+                  </div>
+                  ${r.note ? `<div class="text-[11px] text-slate-400 mt-0.5">${r.note}</div>` : ""}
                 </div>
-                ${r.note ? `<div class="text-[11px] text-slate-400 mt-0.5">${r.note}</div>` : ""}
+                <div>${statusBadge}</div>
               </div>
-              <button onclick="window.deleteReservation('${r.id}')" class="text-slate-500 hover:text-rose-400 text-xs px-2 py-1">
-                ✕
-              </button>
+
+              <!-- Besitzer-Buttons -->
+              <div class="flex items-center justify-between pt-2 border-t border-slate-800/80">
+                <div class="flex items-center gap-2">
+                  <button onclick="window.setReservationStatus('${r.id}', 'approved')" class="bg-emerald-950/80 hover:bg-emerald-900 text-emerald-300 border border-emerald-800 text-[11px] px-2.5 py-1 rounded-lg transition">
+                    ✓ Zusagen
+                  </button>
+                  <button onclick="window.setReservationStatus('${r.id}', 'rejected')" class="bg-rose-950/80 hover:bg-rose-900 text-rose-300 border border-rose-800 text-[11px] px-2.5 py-1 rounded-lg transition">
+                    ✕ Ablehnen
+                  </button>
+                </div>
+                <button onclick="window.deleteReservation('${r.id}')" class="text-slate-500 hover:text-rose-400 text-xs px-2 py-1">
+                  🗑 Löschen
+                </button>
+              </div>
             </div>
           `;
         }).join("");
-      });
+      }, (error) => console.error("Firestore Res Error:", error));
     }
 
-    // Löschfunktion für Reservierungen
+    // Reservierungsstatus ändern
+    window.setReservationStatus = async (id, newStatus) => {
+      if (!checkRateLimit()) return;
+      try {
+        await updateDoc(doc(db, "car_reservations", id), { status: newStatus });
+        showToast(newStatus === "approved" ? "Reservierung bestätigt!" : "Reservierung abgelehnt!", "info");
+      } catch (err) {
+        showToast("Fehler beim Aktualisieren: " + err.message, "error");
+      }
+    };
+
+    // Reservierung löschen
     window.deleteReservation = async (id) => {
-      if (confirm("Reservierung wirklich löschen?")) {
-        await remove(ref(db, `car_reservations/${id}`));
+      if (!confirm("Reservierung wirklich löschen?")) return;
+      if (!checkRateLimit()) return;
+      try {
+        await deleteDoc(doc(db, "car_reservations", id));
+        showToast("Reservierung gelöscht", "info");
+      } catch (err) {
+        showToast("Fehler beim Löschen: " + err.message, "error");
       }
     };
 
     // -------------------------------------------------------------
-    // 4. LIVE STATUS TOGGLE
+    // 4. LIVE STATUS TOGGLE (LOSFAHREN / FAHRT BEENDEN)
     // -------------------------------------------------------------
     toggleDriveBtn.addEventListener("click", async () => {
       const isDriving = currentCarState.drivingState === "driving";
@@ -516,16 +614,25 @@
       if (!isDriving) {
         const name = prompt("Wer fährt jetzt los?", driverInput.value || "");
         if (!name) return;
+        if (!checkRateLimit()) return;
 
-        await set(ref(db, "car_status"), {
-          ...currentCarState,
-          drivingState: "driving",
-          activeDriver: name.trim(),
-          tripStartedAt: new Date().toISOString()
-        });
-        driverInput.value = name.trim();
+        try {
+          await setDoc(doc(db, "car_status", "current"), {
+            ...currentCarState,
+            drivingState: "driving",
+            activeDriver: name.trim(),
+            tripStartedAt: new Date().toISOString()
+          }, { merge: true });
+          driverInput.value = name.trim();
+          showToast(`Gute Fahrt, ${name.trim()}! 🚗`, "success");
+        } catch (err) {
+          showToast("Fehler: " + err.message, "error");
+        }
       } else {
-        document.getElementById("parkingFormContainer").scrollIntoView({ behavior: "smooth" });
+        const formEl = document.getElementById("parkingFormContainer");
+        formEl.scrollIntoView({ behavior: "smooth" });
+        showToast("Bitte Parkort & Tankstand eintragen, um die Fahrt abzuschließen.", "info");
+        setTimeout(() => locationInput.focus(), 400);
       }
     });
 
@@ -534,7 +641,7 @@
     // -------------------------------------------------------------
     geoBtn.addEventListener("click", () => {
       if (!navigator.geolocation) {
-        alert("Geolocation wird nicht unterstützt.");
+        showToast("Geolocation wird nicht unterstützt.", "error");
         return;
       }
       geoBtn.textContent = "Ermittle...";
@@ -545,10 +652,11 @@
           geoCoords.value = JSON.stringify({ lat, lng });
           locationInput.value = `GPS: ${lat}, ${lng}`;
           geoBtn.textContent = "✓ Gefunden";
+          showToast("Standort ermittelt!", "success");
           setTimeout(() => { geoBtn.textContent = "📍 GPS ermitteln"; }, 3000);
         },
         (err) => {
-          alert("Standortabfrage fehlgeschlagen: " + err.message);
+          showToast("Standortabfrage fehlgeschlagen: " + err.message, "error");
           geoBtn.textContent = "📍 GPS ermitteln";
         },
         { enableHighAccuracy: true, timeout: 10000 }
@@ -556,11 +664,12 @@
     });
 
     // -------------------------------------------------------------
-    // 6. FORMULAR: AUTO ABSTELLEN
+    // 6. FORMULAR: AUTO ABSTELLEN & FAHRT BEENDEN
     // -------------------------------------------------------------
     updateForm.addEventListener("submit", async (e) => {
       e.preventDefault();
-      formFeedback.classList.add("hidden");
+
+      if (!checkRateLimit()) return;
 
       const driver = driverInput.value.trim();
       const location = locationInput.value.trim();
@@ -572,11 +681,13 @@
       if (kmInput.value.trim() !== "") {
         newKm = parseInt(kmInput.value, 10);
         if (currentKm !== null && newKm < currentKm) {
-          formFeedback.textContent = `Der km-Stand kann nicht kleiner sein als der vorherige (${currentKm} km).`;
-          formFeedback.classList.remove("hidden");
+          showToast(`Der km-Stand kann nicht kleiner sein als vorher (${currentKm} km).`, "error");
           return;
         }
       }
+
+      saveBtn.disabled = true;
+      saveBtn.textContent = "Speichern läuft...";
 
       const payload = {
         driver: driver,
@@ -606,22 +717,22 @@
           };
         }
 
-        await set(ref(db, "car_status"), statusUpdate);
-        await push(ref(db, "car_logs"), payload);
+        // In Firestore speichern (Status Dokument + Log Eintrag)
+        await setDoc(doc(db, "car_status", "current"), statusUpdate);
+        await addDoc(collection(db, "car_logs"), payload);
 
         kmInput.value = "";
         locationInput.value = "";
         geoCoords.value = "";
         refueledCheckbox.checked = false;
 
-        formFeedback.textContent = "Auto erfolgreich als geparkt gemeldet!";
-        formFeedback.className = "text-xs text-emerald-400";
-        formFeedback.classList.remove("hidden");
-        setTimeout(() => formFeedback.classList.add("hidden"), 3000);
+        showToast("✓ Fahrt beendet & Daten in Firestore gespeichert!", "success");
+        window.scrollTo({ top: 0, behavior: "smooth" });
       } catch (err) {
-        formFeedback.textContent = "Fehler: " + err.message;
-        formFeedback.className = "text-xs text-rose-400";
-        formFeedback.classList.remove("hidden");
+        showToast("Fehler beim Speichern: " + err.message, "error");
+      } finally {
+        saveBtn.disabled = false;
+        saveBtn.textContent = "Fahrt beenden & Daten speichern";
       }
     });
 
@@ -630,21 +741,32 @@
     // -------------------------------------------------------------
     reservationForm.addEventListener("submit", async (e) => {
       e.preventDefault();
+
+      if (!checkRateLimit()) return;
+
+      resSubmitBtn.disabled = true;
+      resSubmitBtn.textContent = "Wird gespeichert...";
+
       const resPayload = {
         driver: resDriver.value.trim(),
         date: resDate.value,
         startTime: resStartTime.value,
         endTime: resEndTime.value,
         note: resNote.value.trim(),
+        status: "pending",
         createdAt: new Date().toISOString()
       };
 
       try {
-        await push(ref(db, "car_reservations"), resPayload);
+        await addDoc(collection(db, "car_reservations"), resPayload);
         resNote.value = "";
         reservationForm.classList.add("hidden");
+        showToast("Reservierungsanfrage gespeichert!", "success");
       } catch (err) {
-        alert("Fehler beim Reservieren: " + err.message);
+        showToast("Fehler beim Reservieren: " + err.message, "error");
+      } finally {
+        resSubmitBtn.disabled = false;
+        resSubmitBtn.textContent = "Reservierungsanfrage abschicken";
       }
     });
   </script>
