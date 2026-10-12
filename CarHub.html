@@ -8,80 +8,49 @@
   <script src="https://cdn.tailwindcss.com"></script>
   <style>
     body { -webkit-tap-highlight-color: transparent; }
+    /* Schnelle Tap-Animation */
+    .tap-chip:active { transform: scale(0.96); }
   </style>
 </head>
-<body class="bg-slate-950 text-slate-100 min-h-screen flex flex-col items-center p-4 antialiased selection:bg-blue-600 selection:text-white">
+<body class="bg-slate-950 text-slate-100 min-h-screen flex flex-col items-center p-3 sm:p-4 antialiased selection:bg-blue-600 selection:text-white">
 
-  <!-- FLOATING TOAST NOTIFICATION -->
-  <div id="toastNotification" class="fixed top-5 left-1/2 -translate-x-1/2 z-50 transition-all duration-300 opacity-0 -translate-y-4 pointer-events-none max-w-sm w-11/12">
+  <!-- FLOATING TOAST -->
+  <div id="toastNotification" class="fixed top-4 left-1/2 -translate-x-1/2 z-50 transition-all duration-300 opacity-0 -translate-y-4 pointer-events-none max-w-sm w-11/12">
     <div id="toastInner" class="bg-slate-800 text-white border border-slate-700 shadow-2xl rounded-2xl px-4 py-3 flex items-center gap-3 text-sm font-medium">
       <span id="toastIcon">ℹ️</span>
       <span id="toastMessage" class="flex-1 break-words">Benachrichtigung</span>
     </div>
   </div>
 
-  <!-- TANKEN POPUP MODAL -->
-  <div id="refuelModal" class="fixed inset-0 z-50 bg-slate-950/80 backdrop-blur-sm hidden flex items-center justify-center p-4">
-    <div class="bg-slate-900 border border-slate-800 rounded-2xl p-6 w-full max-w-sm shadow-2xl space-y-4">
-      <div class="flex items-center justify-between">
-        <h3 class="text-base font-bold text-white flex items-center gap-2">
-          <span>⛽</span> Tankbeleg erfassen
-        </h3>
-        <button type="button" id="closeRefuelModalBtn" class="text-slate-400 hover:text-white text-lg">✕</button>
-      </div>
-      <p class="text-xs text-slate-400">Trage kurz ein, wie viel getankt wurde:</p>
-
-      <div class="space-y-3">
-        <div>
-          <label class="block text-xs uppercase tracking-wider text-slate-400 mb-1">Menge (Liter)</label>
-          <input type="number" step="0.01" id="modalLiters" class="w-full bg-slate-950 border border-slate-700 rounded-xl px-3 py-2.5 text-white placeholder-slate-600 focus:outline-none focus:ring-2 focus:ring-emerald-500" placeholder="z. B. 48.5" />
-        </div>
-        <div>
-          <label class="block text-xs uppercase tracking-wider text-slate-400 mb-1">Gesamtbetrag (€)</label>
-          <input type="number" step="0.01" id="modalCost" class="w-full bg-slate-950 border border-slate-700 rounded-xl px-3 py-2.5 text-white placeholder-slate-600 focus:outline-none focus:ring-2 focus:ring-emerald-500" placeholder="z. B. 85.40" />
-        </div>
-      </div>
-
-      <div class="flex items-center gap-2 pt-2">
-        <button type="button" id="cancelRefuelBtn" class="w-1/2 bg-slate-800 hover:bg-slate-700 text-slate-300 font-medium py-2.5 rounded-xl text-xs transition">
-          Abbrechen
-        </button>
-        <button type="button" id="confirmRefuelBtn" class="w-1/2 bg-emerald-600 hover:bg-emerald-500 text-white font-medium py-2.5 rounded-xl text-xs transition shadow-lg shadow-emerald-600/20">
-          Übernehmen
-        </button>
-      </div>
-    </div>
-  </div>
-
-  <div class="w-full max-w-md mx-auto my-auto space-y-5 pb-8">
+  <div class="w-full max-w-md mx-auto my-auto space-y-4 pb-10">
     
     <!-- HEADER -->
     <header class="flex items-center justify-between py-2 border-b border-slate-800">
       <div class="flex items-center gap-2">
         <span class="text-2xl">🚗</span>
         <div>
-          <h1 class="text-xl font-bold tracking-tight text-white">CarShare Hub</h1>
-          <span id="userBadge" class="text-[10px] text-slate-400 block -mt-1"></span>
+          <h1 class="text-lg font-bold tracking-tight text-white leading-tight">CarShare Hub</h1>
+          <span id="userBadge" class="text-[10px] text-slate-400 block"></span>
         </div>
       </div>
-      <button id="logoutBtn" class="hidden text-xs bg-slate-800 hover:bg-slate-700 text-slate-300 px-3 py-1.5 rounded-lg border border-slate-700 transition">
+      <button id="logoutBtn" class="hidden text-xs bg-slate-900 hover:bg-slate-800 text-slate-400 px-2.5 py-1.5 rounded-lg border border-slate-800 transition">
         Abmelden
       </button>
     </header>
 
     <!-- AUTH SECTION (Login) -->
     <section id="authSection" class="bg-slate-900 border border-slate-800 rounded-2xl p-6 shadow-xl">
-      <h2 class="text-lg font-semibold text-white mb-2">Anmelden</h2>
-      <p class="text-sm text-slate-400 mb-5">Bitte mit deinem Account einloggen.</p>
+      <h2 class="text-lg font-semibold text-white mb-1">Anmelden</h2>
+      <p class="text-xs text-slate-400 mb-4">Einmalig einloggen – bleibt auf diesem Gerät aktiv.</p>
 
-      <form id="authForm" class="space-y-4">
+      <form id="authForm" class="space-y-3">
         <div>
-          <label class="block text-xs uppercase tracking-wider text-slate-400 mb-1">E-Mail</label>
-          <input type="email" id="authEmail" required class="w-full bg-slate-950 border border-slate-700 rounded-xl px-3 py-2.5 text-white placeholder-slate-500 focus:outline-none focus:ring-2 focus:ring-blue-500" placeholder="name@beispiel.de" />
+          <label class="block text-[11px] uppercase tracking-wider text-slate-400 mb-1">E-Mail</label>
+          <input type="email" id="authEmail" required class="w-full bg-slate-950 border border-slate-700 rounded-xl px-3 py-2 text-white placeholder-slate-500 focus:outline-none focus:ring-2 focus:ring-blue-500" placeholder="name@beispiel.de" />
         </div>
         <div>
-          <label class="block text-xs uppercase tracking-wider text-slate-400 mb-1">Passwort</label>
-          <input type="password" id="authPassword" required class="w-full bg-slate-950 border border-slate-700 rounded-xl px-3 py-2.5 text-white placeholder-slate-500 focus:outline-none focus:ring-2 focus:ring-blue-500" placeholder="••••••••" />
+          <label class="block text-[11px] uppercase tracking-wider text-slate-400 mb-1">Passwort</label>
+          <input type="password" id="authPassword" required class="w-full bg-slate-950 border border-slate-700 rounded-xl px-3 py-2 text-white placeholder-slate-500 focus:outline-none focus:ring-2 focus:ring-blue-500" placeholder="••••••••" />
         </div>
         <div id="authError" class="text-xs text-rose-400 hidden"></div>
         <button type="submit" id="authSubmitBtn" class="w-full bg-blue-600 hover:bg-blue-500 text-white font-medium py-2.5 rounded-xl transition shadow-lg shadow-blue-600/20">
@@ -91,7 +60,7 @@
     </section>
 
     <!-- MAIN APP SECTION -->
-    <main id="appSection" class="hidden space-y-5">
+    <main id="appSection" class="hidden space-y-4">
       
       <!-- 1. LIVE-STATUS BANNER -->
       <div id="carStatusBanner" class="p-4 rounded-2xl border transition-all duration-300 flex items-center justify-between shadow-xl">
@@ -99,186 +68,203 @@
           <span id="statusIndicatorDot" class="w-3.5 h-3.5 rounded-full shrink-0"></span>
           <div>
             <div id="statusHeadline" class="text-sm font-bold text-white">Status prüfen...</div>
-            <div id="statusSubline" class="text-xs text-slate-400">Lade Daten aus Firestore...</div>
+            <div id="statusSubline" class="text-xs text-slate-400">Lade Daten...</div>
           </div>
         </div>
-        <button id="toggleDriveBtn" class="shrink-0 text-xs font-semibold px-3.5 py-2 rounded-xl transition shadow-md">
-          <!-- Button-Text dynamisch -->
+        <button id="toggleDriveBtn" class="shrink-0 text-xs font-semibold px-4 py-2.5 rounded-xl transition shadow-md">
+          <!-- Text dynamisch -->
         </button>
       </div>
 
-      <!-- 2. STATUS CARD (Geparkt, Tank, Schlüssel) -->
-      <div class="bg-slate-900 border border-slate-800 rounded-2xl p-5 shadow-xl relative space-y-4">
+      <!-- 2. QUICK-PARK KARTE (DER 5-SEKUNDEN-CHECKOUT) -->
+      <div id="parkingFormContainer" class="bg-slate-900 border border-slate-800 rounded-2xl p-4 shadow-xl space-y-4">
         <div class="flex items-center justify-between">
-          <span class="text-xs font-semibold uppercase tracking-wider text-slate-400">Fahrzeugdaten</span>
-          <span id="lastUpdated" class="text-xs text-slate-500">Wird geladen...</span>
-        </div>
-
-        <!-- SCHLÜSSEL-ORT -->
-        <div class="bg-slate-950 p-3 rounded-xl border border-slate-800 flex items-center justify-between">
-          <div class="flex items-center gap-2.5">
-            <span class="text-lg">🔑</span>
-            <div>
-              <div class="text-[11px] text-slate-400 uppercase tracking-wider">Schlüssel liegt:</div>
-              <div id="displayKeyLocation" class="text-sm font-semibold text-amber-400">Nicht hinterlegt</div>
-            </div>
+          <h2 class="text-sm font-bold text-white flex items-center gap-2">
+            <span>⚡</span> Auto abstellen (Schnell-Check)
+          </h2>
+          <!-- Fahrer Quick-Switch -->
+          <div class="flex items-center gap-1.5 bg-slate-950 px-2.5 py-1 rounded-lg border border-slate-800">
+            <span class="text-[10px] text-slate-400">Fahrer:</span>
+            <input type="text" id="quickDriverName" class="bg-transparent text-xs text-blue-400 font-bold focus:outline-none w-20 truncate" placeholder="Name" />
           </div>
         </div>
 
-        <!-- METRICS (Tank & km) -->
-        <div class="grid grid-cols-2 gap-3">
-          <div class="bg-slate-950 p-3.5 rounded-xl border border-slate-800">
-            <div class="text-xs text-slate-400 mb-1">Tankstand</div>
-            <div class="text-2xl font-bold text-white tracking-tight" id="displayFuel">--- %</div>
-          </div>
-          <div class="bg-slate-950 p-3.5 rounded-xl border border-slate-800">
-            <div class="text-xs text-slate-400 mb-1">Kilometerstand</div>
-            <div class="text-2xl font-bold text-white tracking-tight" id="displayKm">--- km</div>
-          </div>
-        </div>
-
-        <!-- TANK BALKEN -->
-        <div>
-          <div class="w-full bg-slate-800 h-2 rounded-full overflow-hidden">
-            <div id="fuelBar" class="bg-blue-500 h-full rounded-full transition-all duration-500" style="width: 0%"></div>
-          </div>
-        </div>
-
-        <!-- STANDORT -->
-        <div class="bg-slate-950 p-3.5 rounded-xl border border-slate-800 flex items-start justify-between gap-3">
-          <div class="min-w-0">
-            <div class="text-xs text-slate-400 mb-0.5">Parkplatz</div>
-            <div id="displayLocation" class="text-sm font-medium text-slate-200 break-words">Noch kein Standort hinterlegt</div>
-            <div id="displayDriver" class="text-xs text-slate-500 mt-1">Abgestellt von: -</div>
-          </div>
-          <a id="mapsLink" href="#" target="_blank" class="hidden shrink-0 bg-blue-600/10 hover:bg-blue-600/20 text-blue-400 border border-blue-500/20 text-xs px-3 py-2 rounded-lg font-medium transition flex items-center gap-1">
-            <span>Karte</span> ↗
-          </a>
-        </div>
-
-        <!-- ZULETZT GETANKT INFO -->
-        <div class="text-xs text-slate-400 bg-slate-950/60 p-2.5 rounded-lg border border-slate-800/50 flex items-center justify-between">
-          <span>⛽ Zuletzt getankt:</span>
-          <span id="lastRefuelText" class="font-medium text-slate-300">Keine Daten</span>
-        </div>
-      </div>
-
-      <!-- 3. FAHRT BEENDEN / PARKEN FORMULAR -->
-      <div id="parkingFormContainer" class="bg-slate-900 border border-slate-800 rounded-2xl p-5 shadow-xl">
-        <h3 class="text-sm font-semibold text-white uppercase tracking-wider mb-4">Fahrt beenden & Parken</h3>
-        
-        <form id="updateForm" class="space-y-4">
-          <!-- FAHRER -->
+        <form id="speedParkForm" class="space-y-4">
+          
+          <!-- A) SCHLÜSSELORT (CHIPS) -->
           <div>
-            <label class="block text-xs text-slate-400 mb-1">Fahrer / Name *</label>
-            <input type="text" id="driverInput" required class="w-full bg-slate-950 border border-slate-700 rounded-xl px-3 py-2 text-white focus:outline-none focus:ring-2 focus:ring-blue-500" placeholder="Dein Name" />
-          </div>
-
-          <!-- SCHLÜSSELORT -->
-          <div>
-            <label class="block text-xs text-slate-400 mb-1">Wo liegt der Schlüssel jetzt? *</label>
-            <input type="text" id="keyLocationInput" required class="w-full bg-slate-950 border border-slate-700 rounded-xl px-3 py-2 text-white placeholder-slate-500 focus:outline-none focus:ring-2 focus:ring-blue-500" placeholder="z. B. Schlüsselbrett Flur, Büro Schreibtisch" />
-          </div>
-
-          <!-- STANDORT -->
-          <div>
-            <div class="flex items-center justify-between mb-1">
-              <label class="text-xs text-slate-400">Wo steht der Wagen? *</label>
-              <button type="button" id="geoBtn" class="text-xs text-blue-400 hover:text-blue-300 flex items-center gap-1">
-                📍 GPS ermitteln
+            <label class="block text-[11px] font-semibold uppercase tracking-wider text-slate-400 mb-1.5">🔑 Wo liegt der Schlüssel?</label>
+            <div class="grid grid-cols-2 gap-2" id="keyChipsContainer">
+              <button type="button" class="key-chip tap-chip py-2 px-3 rounded-xl border border-slate-700 bg-slate-950 text-xs font-medium text-slate-300 hover:border-slate-500 text-left flex items-center justify-between" data-val="Flur / Schlüsselbrett">
+                <span>🏠 Flur / Haken</span>
+                <span class="check-mark hidden text-amber-400">✓</span>
+              </button>
+              <button type="button" class="key-chip tap-chip py-2 px-3 rounded-xl border border-slate-700 bg-slate-950 text-xs font-medium text-slate-300 hover:border-slate-500 text-left flex items-center justify-between" data-val="Bei mir (Tasche)">
+                <span>💼 Bei mir</span>
+                <span class="check-mark hidden text-amber-400">✓</span>
+              </button>
+              <button type="button" class="key-chip tap-chip py-2 px-3 rounded-xl border border-slate-700 bg-slate-950 text-xs font-medium text-slate-300 hover:border-slate-500 text-left flex items-center justify-between" data-val="Büro Schreibtisch">
+                <span>🖥️ Büro</span>
+                <span class="check-mark hidden text-amber-400">✓</span>
+              </button>
+              <button type="button" class="key-chip tap-chip py-2 px-3 rounded-xl border border-slate-700 bg-slate-950 text-xs font-medium text-slate-300 hover:border-slate-500 text-left flex items-center justify-between" data-val="Handschuhfach">
+                <span>🚗 Im Auto</span>
+                <span class="check-mark hidden text-amber-400">✓</span>
               </button>
             </div>
-            <input type="text" id="locationInput" required class="w-full bg-slate-950 border border-slate-700 rounded-xl px-3 py-2 text-white placeholder-slate-500 focus:outline-none focus:ring-2 focus:ring-blue-500" placeholder="z. B. Parkplatz P3, Lindenstraße 14" />
+            <input type="hidden" id="selectedKeyLocation" value="Flur / Schlüsselbrett" />
+          </div>
+
+          <!-- B) WO STEHT DAS AUTO? (1-TAP ORT / GPS) -->
+          <div>
+            <label class="block text-[11px] font-semibold uppercase tracking-wider text-slate-400 mb-1.5">📍 Parkort</label>
+            <div class="grid grid-cols-2 gap-2 mb-2">
+              <button type="button" id="locZuhauseBtn" class="loc-chip tap-chip py-2.5 px-3 rounded-xl border border-emerald-800 bg-emerald-950/40 text-xs font-semibold text-emerald-300 flex items-center justify-center gap-1.5">
+                <span>🏠 Zuhause / Hof</span>
+              </button>
+              <button type="button" id="locGpsBtn" class="loc-chip tap-chip py-2.5 px-3 rounded-xl border border-blue-800 bg-blue-950/40 text-xs font-semibold text-blue-300 flex items-center justify-center gap-1.5">
+                <span>📍 GPS ermitteln</span>
+              </button>
+            </div>
+            <input type="text" id="finalLocationText" required class="w-full bg-slate-950 border border-slate-800 rounded-xl px-3 py-2 text-xs text-slate-200 placeholder-slate-600 focus:outline-none focus:border-slate-600" placeholder="Oder Freitext (z. B. Parkplatz P3)" />
             <input type="hidden" id="geoCoords" value="" />
           </div>
 
-          <!-- TANKSTAND -->
+          <!-- C) TANKSTAND (4 GROSSE BUTTONS) -->
           <div>
-            <div class="flex justify-between items-center mb-1">
-              <label class="text-xs text-slate-400">Aktueller Tankstand *</label>
-              <span class="text-xs font-bold text-blue-400"><span id="fuelValDisplay">50</span> %</span>
+            <div class="flex items-center justify-between mb-1.5">
+              <label class="text-[11px] font-semibold uppercase tracking-wider text-slate-400">⛽ Tankstand</label>
+              <span id="fuelPercentDisplay" class="text-xs font-bold text-blue-400">50 %</span>
             </div>
-            <input type="range" id="fuelInput" min="0" max="100" value="50" step="5" class="w-full accent-blue-500" />
+            <div class="grid grid-cols-4 gap-2 mb-2">
+              <button type="button" class="fuel-chip tap-chip py-2 rounded-xl border border-slate-700 bg-slate-950 text-xs font-semibold text-slate-300" data-fuel="25">1/4</button>
+              <button type="button" class="fuel-chip tap-chip py-2 rounded-xl border border-slate-700 bg-slate-950 text-xs font-semibold text-slate-300" data-fuel="50">1/2</button>
+              <button type="button" class="fuel-chip tap-chip py-2 rounded-xl border border-slate-700 bg-slate-950 text-xs font-semibold text-slate-300" data-fuel="75">3/4</button>
+              <button type="button" class="fuel-chip tap-chip py-2 rounded-xl border border-slate-700 bg-slate-950 text-xs font-semibold text-slate-300" data-fuel="100">Voll</button>
+            </div>
+            <input type="range" id="fuelRange" min="5" max="100" value="50" step="5" class="w-full accent-blue-500 h-1.5 bg-slate-800 rounded-lg cursor-pointer" />
           </div>
 
-          <!-- GETANKT CHECKBOX MIT DETAILS -->
-          <div class="bg-slate-950 p-3.5 rounded-xl border border-slate-800 space-y-2">
-            <div class="flex items-center justify-between">
-              <label class="flex items-center gap-2.5 cursor-pointer">
-                <input type="checkbox" id="refueledCheckbox" class="w-4 h-4 rounded text-blue-600 accent-blue-600 focus:ring-blue-500 border-slate-700 bg-slate-900" />
-                <span class="text-sm font-medium text-emerald-400">Ich habe getankt ⛽</span>
-              </label>
-            </div>
-            <!-- Zusammenfassung, falls Daten eingegeben wurden -->
-            <div id="refuelBadgeSummary" class="hidden text-xs bg-emerald-950/40 border border-emerald-800/60 text-emerald-300 p-2 rounded-lg flex items-center justify-between">
-              <span id="refuelSummaryText">Erfasst: - Liter für - €</span>
-              <button type="button" id="editRefuelBtn" class="text-xs underline hover:text-white">Ändern</button>
+          <!-- D) GETANKT? (1-TAP CHECKBOX + OPTIONALER AUSKLAPP) -->
+          <div class="bg-slate-950 p-3 rounded-xl border border-slate-800/80">
+            <label class="flex items-center justify-between cursor-pointer">
+              <span class="text-xs font-medium text-emerald-400 flex items-center gap-2">
+                <span>⛽</span> Ich habe getankt
+              </span>
+              <input type="checkbox" id="quickRefuelCheck" class="w-5 h-5 rounded text-emerald-600 accent-emerald-500 border-slate-700 bg-slate-900 cursor-pointer" />
+            </label>
+            
+            <!-- Optional ausklappbar, falls Beleg vorhanden -->
+            <div id="optionalRefuelInputs" class="hidden mt-3 pt-3 border-t border-slate-800 grid grid-cols-2 gap-2">
+              <div>
+                <label class="block text-[10px] text-slate-400 mb-0.5">Liter (optional)</label>
+                <input type="number" step="0.1" id="speedLiters" class="w-full bg-slate-900 border border-slate-700 rounded-lg px-2.5 py-1.5 text-xs text-white" placeholder="z. B. 45" />
+              </div>
+              <div>
+                <label class="block text-[10px] text-slate-400 mb-0.5">Kosten € (optional)</label>
+                <input type="number" step="0.01" id="speedCost" class="w-full bg-slate-900 border border-slate-700 rounded-lg px-2.5 py-1.5 text-xs text-white" placeholder="z. B. 78.50" />
+              </div>
             </div>
           </div>
 
-          <!-- KM STAND (OPTIONAL) -->
-          <div>
-            <label class="block text-xs text-slate-400 mb-1">Kilometerstand (optional)</label>
-            <input type="number" id="kmInput" class="w-full bg-slate-950 border border-slate-700 rounded-xl px-3 py-2 text-white placeholder-slate-500 focus:outline-none focus:ring-2 focus:ring-blue-500" placeholder="leer lassen, falls unverändert" />
-          </div>
+          <!-- E) OPTIONALE KM (KOMPAKT) -->
+          <details class="text-xs text-slate-400 group">
+            <summary class="cursor-pointer text-[11px] hover:text-slate-200 select-none flex items-center gap-1">
+              <span>➕ Kilometerstand eintragen (optional)</span>
+            </summary>
+            <div class="mt-2 pt-2">
+              <input type="number" id="speedKmInput" class="w-full bg-slate-950 border border-slate-800 rounded-xl px-3 py-2 text-xs text-white placeholder-slate-600 focus:outline-none focus:border-slate-600" placeholder="Aktueller km-Stand" />
+            </div>
+          </details>
 
-          <button type="submit" id="saveBtn" class="w-full bg-emerald-600 hover:bg-emerald-500 text-white font-medium py-2.5 rounded-xl transition shadow-lg shadow-emerald-600/20 disabled:opacity-50 disabled:cursor-not-allowed">
-            Fahrt beenden & Daten speichern
+          <!-- DER GROSSE SPEICHERN-BUTTON -->
+          <button type="submit" id="speedSaveBtn" class="w-full bg-emerald-600 hover:bg-emerald-500 text-white font-bold py-3.5 rounded-xl transition text-sm shadow-xl shadow-emerald-600/25 flex items-center justify-center gap-2 disabled:opacity-50">
+            <span>✓</span>
+            <span>Jetzt fertig abgestellt</span>
           </button>
         </form>
       </div>
 
-      <!-- 4. RESERVIERUNGEN MIT BESITZER-FREIGABE -->
-      <div class="bg-slate-900 border border-slate-800 rounded-2xl p-5 shadow-xl space-y-4">
-        <div class="flex items-center justify-between">
-          <div>
-            <h3 class="text-xs font-semibold text-slate-400 uppercase tracking-wider">Reservierungen</h3>
-            <span id="ownerStatusHint" class="text-[10px] text-slate-500 block"></span>
+      <!-- 3. FAHRZEUG-STATUS (AUF EINEN BLICK) -->
+      <div class="bg-slate-900 border border-slate-800 rounded-2xl p-4 shadow-xl space-y-3">
+        <div class="flex items-center justify-between text-xs text-slate-400">
+          <span class="font-semibold uppercase tracking-wider">Aktueller Zustand</span>
+          <span id="lastUpdated" class="text-[11px]">Wird geladen...</span>
+        </div>
+
+        <div class="grid grid-cols-2 gap-2">
+          <!-- Schlüsselbox -->
+          <div class="bg-slate-950 p-2.5 rounded-xl border border-slate-800/80">
+            <div class="text-[10px] text-slate-400 mb-0.5">🔑 Schlüssel</div>
+            <div id="displayKeyLocation" class="text-xs font-bold text-amber-400 truncate">Flur / Haken</div>
           </div>
+          <!-- Tankbox -->
+          <div class="bg-slate-950 p-2.5 rounded-xl border border-slate-800/80">
+            <div class="text-[10px] text-slate-400 mb-0.5">⛽ Tank & km</div>
+            <div class="flex items-baseline gap-1">
+              <span id="displayFuel" class="text-xs font-bold text-white">-- %</span>
+              <span id="displayKm" class="text-[10px] text-slate-400 truncate">• -- km</span>
+            </div>
+          </div>
+        </div>
+
+        <!-- Parkplatz & Map Link -->
+        <div class="bg-slate-950 p-2.5 rounded-xl border border-slate-800/80 flex items-center justify-between gap-2">
+          <div class="min-w-0">
+            <div class="text-[10px] text-slate-400">📍 Steht hier:</div>
+            <div id="displayLocation" class="text-xs font-medium text-slate-200 truncate">Zuhause</div>
+          </div>
+          <a id="mapsLink" href="#" target="_blank" class="hidden shrink-0 bg-blue-600/10 text-blue-400 border border-blue-500/20 text-xs px-2.5 py-1.5 rounded-lg font-medium">
+            Karte ↗
+          </a>
+        </div>
+      </div>
+
+      <!-- 4. RESERVIERUNGEN -->
+      <div class="bg-slate-900 border border-slate-800 rounded-2xl p-4 shadow-xl space-y-3">
+        <div class="flex items-center justify-between">
+          <h3 class="text-xs font-semibold text-slate-400 uppercase tracking-wider">Reservierungen</h3>
           <button id="toggleNewReservationBtn" class="text-xs text-blue-400 hover:text-blue-300 font-medium">
-            + Neue Reservierung
+            + Reservieren
           </button>
         </div>
 
-        <!-- FORMULAR NEUE RESERVIERUNG -->
-        <form id="reservationForm" class="hidden bg-slate-950 p-4 rounded-xl border border-slate-800 space-y-3">
-          <div>
-            <label class="block text-xs text-slate-400 mb-1">Name</label>
-            <input type="text" id="resDriver" required class="w-full bg-slate-900 border border-slate-700 rounded-lg px-2.5 py-1.5 text-xs text-white" placeholder="Dein Name" />
-          </div>
-          <div>
-            <label class="block text-xs text-slate-400 mb-1">Datum</label>
-            <input type="date" id="resDate" required class="w-full bg-slate-900 border border-slate-700 rounded-lg px-2.5 py-1.5 text-xs text-white" />
+        <form id="reservationForm" class="hidden bg-slate-950 p-3.5 rounded-xl border border-slate-800 space-y-2.5">
+          <div class="grid grid-cols-2 gap-2">
+            <div>
+              <label class="block text-[10px] text-slate-400 mb-0.5">Datum</label>
+              <input type="date" id="resDate" required class="w-full bg-slate-900 border border-slate-700 rounded-lg px-2 py-1.5 text-xs text-white" />
+            </div>
+            <div>
+              <label class="block text-[10px] text-slate-400 mb-0.5">Wer fährt?</label>
+              <input type="text" id="resDriver" required class="w-full bg-slate-900 border border-slate-700 rounded-lg px-2 py-1.5 text-xs text-white" placeholder="Name" />
+            </div>
           </div>
           <div class="grid grid-cols-2 gap-2">
             <div>
-              <label class="block text-xs text-slate-400 mb-1">Von</label>
-              <input type="time" id="resStartTime" required class="w-full bg-slate-900 border border-slate-700 rounded-lg px-2.5 py-1.5 text-xs text-white" />
+              <label class="block text-[10px] text-slate-400 mb-0.5">Von</label>
+              <input type="time" id="resStartTime" required class="w-full bg-slate-900 border border-slate-700 rounded-lg px-2 py-1.5 text-xs text-white" />
             </div>
             <div>
-              <label class="block text-xs text-slate-400 mb-1">Bis</label>
-              <input type="time" id="resEndTime" required class="w-full bg-slate-900 border border-slate-700 rounded-lg px-2.5 py-1.5 text-xs text-white" />
+              <label class="block text-[10px] text-slate-400 mb-0.5">Bis</label>
+              <input type="time" id="resEndTime" required class="w-full bg-slate-900 border border-slate-700 rounded-lg px-2 py-1.5 text-xs text-white" />
             </div>
           </div>
-          <div>
-            <label class="block text-xs text-slate-400 mb-1">Zweck / Notiz (optional)</label>
-            <input type="text" id="resNote" class="w-full bg-slate-900 border border-slate-700 rounded-lg px-2.5 py-1.5 text-xs text-white" placeholder="z. B. Wocheneinkauf, Ausflug" />
-          </div>
-          <button type="submit" id="resSubmitBtn" class="w-full bg-blue-600 hover:bg-blue-500 text-white text-xs font-semibold py-2 rounded-lg transition disabled:opacity-50">
-            Reservierungsanfrage abschicken
+          <input type="text" id="resNote" class="w-full bg-slate-900 border border-slate-700 rounded-lg px-2 py-1.5 text-xs text-white" placeholder="Notiz (optional)" />
+          <button type="submit" id="resSubmitBtn" class="w-full bg-blue-600 hover:bg-blue-500 text-white text-xs font-semibold py-2 rounded-lg transition">
+            Anfrage senden
           </button>
         </form>
 
-        <!-- LISTE DER RESERVIERUNGEN -->
         <div id="reservationList" class="space-y-2 text-xs">
           <div class="text-slate-500 italic">Keine aktuellen Reservierungen.</div>
         </div>
       </div>
 
-      <!-- 5. FAHRER-BILANZ (WER TANKT EIGENTLICH?) -->
+      <!-- 5. FAHRER-BILANZ -->
       <div class="bg-slate-900 border border-slate-800 rounded-2xl p-4 shadow-xl">
-        <h3 class="text-xs font-semibold text-slate-400 uppercase tracking-wider mb-3">Fahrer-Bilanz (Fahrten vs. Getankt)</h3>
-        <div id="driverStatsList" class="space-y-2 text-xs text-slate-300">
+        <h3 class="text-xs font-semibold text-slate-400 uppercase tracking-wider mb-2.5">Fahrer-Bilanz (Wer tankt?)</h3>
+        <div id="driverStatsList" class="space-y-1.5 text-xs text-slate-300">
           <div class="text-slate-500 italic">Noch keine Fahrten aufgezeichnet.</div>
         </div>
       </div>
@@ -286,7 +272,7 @@
     </main>
   </div>
 
-  <!-- FIREBASE MODULAR SDK (FIRESTORE) -->
+  <!-- FIREBASE SDK -->
   <script type="module">
     import { initializeApp } from "https://www.gstatic.com/firebasejs/10.12.0/firebase-app.js";
     import { 
@@ -310,9 +296,8 @@
     } from "https://www.gstatic.com/firebasejs/10.12.0/firebase-firestore.js";
 
     // -------------------------------------------------------------
-    // 1. KONFIGURATION & BESITZER-E-MAIL
+    // 1. CONFIG & OWNER
     // -------------------------------------------------------------
-    // Trage hier die E-Mail ein, die als Fahrzeugbesitzer Reservierungen freigeben darf:
     const OWNER_EMAIL = "david@scaleiq.de";
 
     const firebaseConfig = {
@@ -330,25 +315,10 @@
 
     let currentUserEmail = "";
     let isOwner = false;
+    let currentCarState = {};
+    let currentKm = null;
 
-    // -------------------------------------------------------------
-    // RATE LIMITING & TOAST SYSTEM
-    // -------------------------------------------------------------
-    const RATE_LIMIT_SECONDS = 6;
-    let lastActionTime = 0;
-
-    function checkRateLimit() {
-      const now = Date.now();
-      const elapsed = (now - lastActionTime) / 1000;
-      if (elapsed < RATE_LIMIT_SECONDS) {
-        const remaining = Math.ceil(RATE_LIMIT_SECONDS - elapsed);
-        showToast(`Rate-Limit aktiv: Bitte warte noch ${remaining}s.`, "error");
-        return false;
-      }
-      lastActionTime = now;
-      return true;
-    }
-
+    // Toast
     function showToast(message, type = "success") {
       const toast = document.getElementById("toastNotification");
       const toastInner = document.getElementById("toastInner");
@@ -356,7 +326,6 @@
       const toastMessage = document.getElementById("toastMessage");
 
       toastMessage.textContent = message;
-
       if (type === "success") {
         toastIcon.textContent = "✅";
         toastInner.className = "bg-emerald-950 text-emerald-100 border border-emerald-700 shadow-2xl rounded-2xl px-4 py-3 flex items-center gap-3 text-sm font-medium";
@@ -370,11 +339,22 @@
 
       toast.classList.remove("opacity-0", "-translate-y-4", "pointer-events-none");
       toast.classList.add("opacity-100", "translate-y-0");
-
       setTimeout(() => {
         toast.classList.remove("opacity-100", "translate-y-0");
         toast.classList.add("opacity-0", "-translate-y-4", "pointer-events-none");
-      }, 3500);
+      }, 3000);
+    }
+
+    // Rate Limiting (4s)
+    let lastActionTime = 0;
+    function checkRateLimit() {
+      const now = Date.now();
+      if ((now - lastActionTime) / 1000 < 4) {
+        showToast("Einen Moment bitte...", "error");
+        return false;
+      }
+      lastActionTime = now;
+      return true;
     }
 
     // DOM-Elemente
@@ -382,53 +362,39 @@
     const appSection = document.getElementById("appSection");
     const logoutBtn = document.getElementById("logoutBtn");
     const userBadge = document.getElementById("userBadge");
-    const ownerStatusHint = document.getElementById("ownerStatusHint");
-
-    const authForm = document.getElementById("authForm");
-    const authEmail = document.getElementById("authEmail");
-    const authPassword = document.getElementById("authPassword");
-    const authError = document.getElementById("authError");
 
     const carStatusBanner = document.getElementById("carStatusBanner");
     const statusIndicatorDot = document.getElementById("statusIndicatorDot");
     const statusHeadline = document.getElementById("statusHeadline");
     const statusSubline = document.getElementById("statusSubline");
     const toggleDriveBtn = document.getElementById("toggleDriveBtn");
-    const displayKeyLocation = document.getElementById("displayKeyLocation");
 
+    const displayKeyLocation = document.getElementById("displayKeyLocation");
     const displayKm = document.getElementById("displayKm");
     const displayFuel = document.getElementById("displayFuel");
     const displayLocation = document.getElementById("displayLocation");
-    const displayDriver = document.getElementById("displayDriver");
     const lastUpdated = document.getElementById("lastUpdated");
-    const fuelBar = document.getElementById("fuelBar");
     const mapsLink = document.getElementById("mapsLink");
-    const lastRefuelText = document.getElementById("lastRefuelText");
     const driverStatsList = document.getElementById("driverStatsList");
 
-    const updateForm = document.getElementById("updateForm");
-    const saveBtn = document.getElementById("saveBtn");
-    const driverInput = document.getElementById("driverInput");
-    const keyLocationInput = document.getElementById("keyLocationInput");
-    const kmInput = document.getElementById("kmInput");
-    const fuelInput = document.getElementById("fuelInput");
-    const fuelValDisplay = document.getElementById("fuelValDisplay");
-    const locationInput = document.getElementById("locationInput");
+    // Schnell-Park-Elemente
+    const quickDriverName = document.getElementById("quickDriverName");
+    const speedParkForm = document.getElementById("speedParkForm");
+    const speedSaveBtn = document.getElementById("speedSaveBtn");
+    const selectedKeyLocation = document.getElementById("selectedKeyLocation");
+    const finalLocationText = document.getElementById("finalLocationText");
     const geoCoords = document.getElementById("geoCoords");
-    const geoBtn = document.getElementById("geoBtn");
-    const refueledCheckbox = document.getElementById("refueledCheckbox");
-    const refuelBadgeSummary = document.getElementById("refuelBadgeSummary");
-    const refuelSummaryText = document.getElementById("refuelSummaryText");
-    const editRefuelBtn = document.getElementById("editRefuelBtn");
+    const locZuhauseBtn = document.getElementById("locZuhauseBtn");
+    const locGpsBtn = document.getElementById("locGpsBtn");
+    const fuelPercentDisplay = document.getElementById("fuelPercentDisplay");
+    const fuelRange = document.getElementById("fuelRange");
+    const quickRefuelCheck = document.getElementById("quickRefuelCheck");
+    const optionalRefuelInputs = document.getElementById("optionalRefuelInputs");
+    const speedLiters = document.getElementById("speedLiters");
+    const speedCost = document.getElementById("speedCost");
+    const speedKmInput = document.getElementById("speedKmInput");
 
-    // Modal Elemente
-    const refuelModal = document.getElementById("refuelModal");
-    const closeRefuelModalBtn = document.getElementById("closeRefuelModalBtn");
-    const cancelRefuelBtn = document.getElementById("cancelRefuelBtn");
-    const confirmRefuelBtn = document.getElementById("confirmRefuelBtn");
-    const modalLiters = document.getElementById("modalLiters");
-    const modalCost = document.getElementById("modalCost");
-
+    // Reservierung
     const toggleNewReservationBtn = document.getElementById("toggleNewReservationBtn");
     const reservationForm = document.getElementById("reservationForm");
     const resSubmitBtn = document.getElementById("resSubmitBtn");
@@ -439,12 +405,91 @@
     const resNote = document.getElementById("resNote");
     const reservationList = document.getElementById("reservationList");
 
-    let currentKm = null;
-    let currentCarState = {};
-    let recordedRefuelData = null; // { liters, cost }
+    // -------------------------------------------------------------
+    // 2. SPEED UX LOGIK (CHIPS & DEFAULTS)
+    // -------------------------------------------------------------
+    
+    // A) Fahrer aus LocalStorage merken
+    const savedDriver = localStorage.getItem("carhub_driver") || "";
+    if (savedDriver) {
+      quickDriverName.value = savedDriver;
+      resDriver.value = savedDriver;
+    }
+    quickDriverName.addEventListener("change", () => {
+      localStorage.setItem("carhub_driver", quickDriverName.value.trim());
+    });
 
-    fuelInput.addEventListener("input", (e) => {
-      fuelValDisplay.textContent = e.target.value;
+    // B) Schlüssel-Chips Klick
+    const keyChips = document.querySelectorAll(".key-chip");
+    function selectKeyChip(chipEl) {
+      keyChips.forEach(c => {
+        c.className = "key-chip tap-chip py-2 px-3 rounded-xl border border-slate-800 bg-slate-950 text-xs font-medium text-slate-400 text-left flex items-center justify-between";
+        c.querySelector(".check-mark").classList.add("hidden");
+      });
+      chipEl.className = "key-chip tap-chip py-2 px-3 rounded-xl border border-amber-500/80 bg-amber-950/30 text-xs font-bold text-amber-300 text-left flex items-center justify-between";
+      chipEl.querySelector(".check-mark").classList.remove("hidden");
+      selectedKeyLocation.value = chipEl.dataset.val;
+    }
+    keyChips.forEach(c => c.addEventListener("click", () => selectKeyChip(c)));
+    selectKeyChip(keyChips[0]); // Default: Flur / Haken
+
+    // C) Parkort 1-Tap Buttons
+    locZuhauseBtn.addEventListener("click", () => {
+      finalLocationText.value = "Zuhause / Hof";
+      geoCoords.value = "";
+      showToast("Standort: Zuhause gesetzt", "info");
+    });
+
+    locGpsBtn.addEventListener("click", () => {
+      if (!navigator.geolocation) {
+        showToast("GPS nicht verfügbar", "error");
+        return;
+      }
+      locGpsBtn.innerHTML = `<span>⏳ Suche...</span>`;
+      navigator.geolocation.getCurrentPosition(
+        (pos) => {
+          const lat = pos.coords.latitude.toFixed(6);
+          const lng = pos.coords.longitude.toFixed(6);
+          geoCoords.value = JSON.stringify({ lat, lng });
+          finalLocationText.value = `GPS: ${lat}, ${lng}`;
+          locGpsBtn.innerHTML = `<span>✓ Gefunden</span>`;
+          showToast("GPS erfolgreich hinterlegt!", "success");
+          setTimeout(() => { locGpsBtn.innerHTML = `<span>📍 GPS ermitteln</span>`; }, 2500);
+        },
+        (err) => {
+          showToast("GPS Fehler: " + err.message, "error");
+          locGpsBtn.innerHTML = `<span>📍 GPS ermitteln</span>`;
+        },
+        { enableHighAccuracy: true, timeout: 8000 }
+      );
+    });
+
+    // D) Tank-Schnellauswahl
+    function setFuelValue(val) {
+      fuelRange.value = val;
+      fuelPercentDisplay.textContent = `${val} %`;
+      document.querySelectorAll(".fuel-chip").forEach(btn => {
+        if (parseInt(btn.dataset.fuel, 10) === parseInt(val, 10)) {
+          btn.className = "fuel-chip tap-chip py-2 rounded-xl border border-blue-500 bg-blue-600/20 text-xs font-bold text-blue-300";
+        } else {
+          btn.className = "fuel-chip tap-chip py-2 rounded-xl border border-slate-800 bg-slate-950 text-xs font-semibold text-slate-400";
+        }
+      });
+    }
+    document.querySelectorAll(".fuel-chip").forEach(btn => {
+      btn.addEventListener("click", () => setFuelValue(btn.dataset.fuel));
+    });
+    fuelRange.addEventListener("input", (e) => {
+      fuelPercentDisplay.textContent = `${e.target.value} %`;
+    });
+    setFuelValue(50); // Default
+
+    // E) Getankt Checkbox Toggle
+    quickRefuelCheck.addEventListener("change", (e) => {
+      optionalRefuelInputs.classList.toggle("hidden", !e.target.checked);
+      if (e.target.checked) {
+        setFuelValue(100); // Wenn getankt, meistens voll
+      }
     });
 
     toggleNewReservationBtn.addEventListener("click", () => {
@@ -452,72 +497,19 @@
     });
 
     // -------------------------------------------------------------
-    // MODAL-LOGIK FÜRS TANKEN
-    // -------------------------------------------------------------
-    function openRefuelModal() {
-      if (recordedRefuelData) {
-        modalLiters.value = recordedRefuelData.liters || "";
-        modalCost.value = recordedRefuelData.cost || "";
-      }
-      refuelModal.classList.remove("hidden");
-      setTimeout(() => modalLiters.focus(), 150);
-    }
-
-    function closeRefuelModal(cancel = false) {
-      refuelModal.classList.add("hidden");
-      if (cancel && !recordedRefuelData) {
-        refueledCheckbox.checked = false;
-        refuelBadgeSummary.classList.add("hidden");
-      }
-    }
-
-    refueledCheckbox.addEventListener("change", (e) => {
-      if (e.target.checked) {
-        openRefuelModal();
-      } else {
-        recordedRefuelData = null;
-        refuelBadgeSummary.classList.add("hidden");
-      }
-    });
-
-    editRefuelBtn.addEventListener("click", () => openRefuelModal());
-    closeRefuelModalBtn.addEventListener("click", () => closeRefuelModal(true));
-    cancelRefuelBtn.addEventListener("click", () => closeRefuelModal(true));
-
-    confirmRefuelBtn.addEventListener("click", () => {
-      const liters = parseFloat(modalLiters.value) || 0;
-      const cost = parseFloat(modalCost.value) || 0;
-
-      recordedRefuelData = {
-        liters: liters > 0 ? liters : null,
-        cost: cost > 0 ? cost : null
-      };
-
-      refueledCheckbox.checked = true;
-      refuelSummaryText.textContent = `Erfasst: ${liters ? liters + ' Liter' : '-'} / ${cost ? cost.toFixed(2) + ' €' : '-'}`;
-      refuelBadgeSummary.classList.remove("hidden");
-      refuelModal.classList.add("hidden");
-      showToast("Tankdaten übernommen!", "info");
-    });
-
-    // -------------------------------------------------------------
-    // 2. AUTHENTIFIZIERUNG
+    // 3. AUTH & LISTENER
     // -------------------------------------------------------------
     onAuthStateChanged(auth, (user) => {
       if (user) {
         currentUserEmail = user.email || "";
         isOwner = currentUserEmail.toLowerCase() === OWNER_EMAIL.toLowerCase();
-
-        userBadge.textContent = isOwner ? `👑 Besitzer (${currentUserEmail})` : `👤 Fahrer (${currentUserEmail})`;
-        ownerStatusHint.textContent = isOwner ? "Du bist als Besitzer eingeloggt (Freigabe aktiv)" : "Nur der Besitzer kann Anfragen freigeben";
+        userBadge.textContent = isOwner ? `👑 Besitzer` : `👤 ${currentUserEmail}`;
 
         authSection.classList.add("hidden");
         appSection.classList.remove("hidden");
         logoutBtn.classList.remove("hidden");
         initFirestoreListeners();
       } else {
-        currentUserEmail = "";
-        isOwner = false;
         authSection.classList.remove("hidden");
         appSection.classList.add("hidden");
         logoutBtn.classList.add("hidden");
@@ -526,316 +518,183 @@
 
     authForm.addEventListener("submit", async (e) => {
       e.preventDefault();
-      authError.classList.add("hidden");
       try {
         await signInWithEmailAndPassword(auth, authEmail.value.trim(), authPassword.value);
-        showToast("Erfolgreich angemeldet!", "success");
+        showToast("Eingeloggt!", "success");
       } catch (err) {
-        authError.textContent = "Fehler: " + err.message;
+        authError.textContent = err.message;
         authError.classList.remove("hidden");
-        showToast("Login fehlgeschlagen: " + err.message, "error");
       }
     });
 
-    logoutBtn.addEventListener("click", () => {
-      signOut(auth);
-      showToast("Abgemeldet", "info");
-    });
+    logoutBtn.addEventListener("click", () => signOut(auth));
 
-    // -------------------------------------------------------------
-    // 3. ECHTZEIT-SYNC MIT CLOUD FIRESTORE
-    // -------------------------------------------------------------
     function initFirestoreListeners() {
-      // A) Car Status Dokument
-      const statusDocRef = doc(db, "car_status", "current");
-      onSnapshot(statusDocRef, (docSnap) => {
-        if (!docSnap.exists()) return;
-        const data = docSnap.data();
+      // Live-Status
+      onSnapshot(doc(db, "car_status", "current"), (snap) => {
+        if (!snap.exists()) return;
+        const data = snap.data();
         currentCarState = data;
-
         const isDriving = data.drivingState === "driving";
 
         if (isDriving) {
           carStatusBanner.className = "p-4 rounded-2xl border transition-all duration-300 flex items-center justify-between shadow-xl bg-amber-950/40 border-amber-800/80";
-          statusIndicatorDot.className = "w-3.5 h-3.5 rounded-full animate-ping shrink-0 bg-amber-400";
-          statusHeadline.textContent = `Auto unterwegs mit ${data.activeDriver || "Unbekannt"}`;
-          
-          const startTimeStr = data.tripStartedAt ? new Date(data.tripStartedAt).toLocaleTimeString("de-DE", { hour: "2-digit", minute: "2-digit" }) : "";
-          statusSubline.textContent = `Unterwegs seit ${startTimeStr} Uhr`;
+          statusIndicatorDot.className = "w-3 h-3 rounded-full animate-ping bg-amber-400";
+          statusHeadline.textContent = `Unterwegs: ${data.activeDriver || "Jemand"}`;
+          const t = data.tripStartedAt ? new Date(data.tripStartedAt).toLocaleTimeString("de-DE", { hour: "2-digit", minute: "2-digit" }) : "";
+          statusSubline.textContent = `Seit ${t} Uhr`;
 
           toggleDriveBtn.textContent = "Fahrt beenden";
-          toggleDriveBtn.className = "shrink-0 text-xs font-semibold px-3.5 py-2 rounded-xl transition shadow-md bg-amber-500 hover:bg-amber-400 text-slate-950";
+          toggleDriveBtn.className = "shrink-0 text-xs font-bold px-3.5 py-2.5 rounded-xl bg-amber-500 hover:bg-amber-400 text-slate-950";
         } else {
           carStatusBanner.className = "p-4 rounded-2xl border transition-all duration-300 flex items-center justify-between shadow-xl bg-emerald-950/30 border-emerald-800/80";
-          statusIndicatorDot.className = "w-3.5 h-3.5 rounded-full shrink-0 bg-emerald-400";
-          statusHeadline.textContent = "Auto ist frei & geparkt";
-          statusSubline.textContent = data.driver ? `Zuletzt abgestellt von ${data.driver}` : "Bereit zur Fahrt";
+          statusIndicatorDot.className = "w-3 h-3 rounded-full bg-emerald-400";
+          statusHeadline.textContent = "Frei & abgestellt";
+          statusSubline.textContent = data.driver ? `${data.driver}` : "Bereit";
 
-          toggleDriveBtn.textContent = "Ich fahre jetzt los 🚗";
-          toggleDriveBtn.className = "shrink-0 text-xs font-semibold px-3.5 py-2 rounded-xl transition shadow-md bg-emerald-600 hover:bg-emerald-500 text-white";
+          toggleDriveBtn.textContent = "Ich fahre los 🚗";
+          toggleDriveBtn.className = "shrink-0 text-xs font-bold px-3.5 py-2.5 rounded-xl bg-emerald-600 hover:bg-emerald-500 text-white";
         }
 
-        displayKeyLocation.textContent = data.keyLocation || "Nicht angegeben";
-        if (data.keyLocation && !keyLocationInput.value) keyLocationInput.value = data.keyLocation;
-
-        currentKm = data.km !== undefined && data.km !== null ? data.km : currentKm;
-        displayKm.textContent = currentKm !== null ? `${Number(currentKm).toLocaleString("de-DE")} km` : "Keine km";
-        displayFuel.textContent = `${data.fuel ?? 50}%`;
-        fuelBar.style.width = `${data.fuel ?? 50}%`;
-
-        if ((data.fuel ?? 50) <= 20) {
-          fuelBar.className = "bg-rose-500 h-full rounded-full transition-all duration-500";
-        } else if ((data.fuel ?? 50) <= 40) {
-          fuelBar.className = "bg-amber-500 h-full rounded-full transition-all duration-500";
-        } else {
-          fuelBar.className = "bg-blue-500 h-full rounded-full transition-all duration-500";
-        }
-
-        displayLocation.textContent = data.location || "Keine Angabe";
-        displayDriver.textContent = `Abgestellt von: ${data.driver || "Unbekannt"}`;
+        displayKeyLocation.textContent = data.keyLocation || "Nicht hinterlegt";
+        currentKm = data.km || null;
+        displayKm.textContent = currentKm ? `• ${Number(currentKm).toLocaleString("de-DE")} km` : "";
+        displayFuel.textContent = `${data.fuel ?? 50} %`;
+        displayLocation.textContent = data.location || "Unbekannt";
 
         if (data.updatedAt) {
-          const date = new Date(data.updatedAt);
-          lastUpdated.textContent = `${date.toLocaleDateString("de-DE", { day: "2-digit", month: "2-digit" })} ${date.toLocaleTimeString("de-DE", { hour: "2-digit", minute: "2-digit" })}`;
-        }
-
-        if (data.lastRefuel) {
-          const rDate = new Date(data.lastRefuel.date);
-          const rDateStr = `${rDate.toLocaleDateString("de-DE", { day: "2-digit", month: "2-digit" })}`;
-          const extraInfo = data.lastRefuel.liters ? ` (${data.lastRefuel.liters} l)` : "";
-          lastRefuelText.textContent = `${data.lastRefuel.driver} (${rDateStr})${extraInfo}`;
+          const d = new Date(data.updatedAt);
+          lastUpdated.textContent = `${d.toLocaleDateString("de-DE", { day: "2-digit", month: "2-digit" })} ${d.toLocaleTimeString("de-DE", { hour: "2-digit", minute: "2-digit" })}`;
         }
 
         if (data.coords) {
           mapsLink.href = `https://www.google.com/maps/search/?api=1&query=${data.coords.lat},${data.coords.lng}`;
           mapsLink.classList.remove("hidden");
-        } else if (data.location) {
-          mapsLink.href = `https://www.google.com/maps/search/?api=1&query=${encodeURIComponent(data.location)}`;
-          mapsLink.classList.remove("hidden");
         } else {
           mapsLink.classList.add("hidden");
         }
-      }, (error) => console.error("Firestore Status Error:", error));
+      });
 
-      // B) Logs Collection für Fahrer-Bilanz
-      const logsQuery = query(collection(db, "car_logs"), orderBy("updatedAt", "desc"), limit(50));
-      onSnapshot(logsQuery, (querySnapshot) => {
-        if (querySnapshot.empty) {
-          driverStatsList.innerHTML = `<div class="text-slate-500 italic">Noch keine Fahrten aufgezeichnet.</div>`;
-          return;
-        }
-
+      // Logs & Bilanz
+      const logsQ = query(collection(db, "car_logs"), orderBy("updatedAt", "desc"), limit(40));
+      onSnapshot(logsQ, (snap) => {
+        if (snap.empty) return;
         const stats = {};
-        querySnapshot.forEach((doc) => {
-          const entry = doc.data();
-          const d = entry.driver || "Unbekannt";
-          if (!stats[d]) stats[d] = { trips: 0, refuels: 0, totalCost: 0 };
-          stats[d].trips += 1;
-          if (entry.refueled) {
-            stats[d].refuels += 1;
-            if (entry.refuelDetails && entry.refuelDetails.cost) {
-              stats[d].totalCost += entry.refuelDetails.cost;
-            }
-          }
+        snap.forEach(d => {
+          const e = d.data();
+          const name = e.driver || "Unbekannt";
+          if (!stats[name]) stats[name] = { trips: 0, refuels: 0 };
+          stats[name].trips += 1;
+          if (e.refueled) stats[name].refuels += 1;
         });
 
-        driverStatsList.innerHTML = Object.entries(stats).map(([driver, s]) => {
-          const ratioColor = s.refuels === 0 && s.trips >= 3 ? "text-rose-400 font-semibold" : "text-emerald-400 font-medium";
-          const costBadge = s.totalCost > 0 ? `<span class="text-slate-400 font-normal">(${s.totalCost.toFixed(2)} €)</span>` : "";
-          return `
-            <div class="flex items-center justify-between bg-slate-950 p-2.5 rounded-lg border border-slate-800/60">
-              <span class="font-medium text-white">${driver}</span>
-              <div class="flex items-center gap-2">
-                <span class="text-slate-400">${s.trips}× gefahren</span>
-                <span class="${ratioColor}">⛽ ${s.refuels}× ${costBadge}</span>
-              </div>
+        driverStatsList.innerHTML = Object.entries(stats).map(([name, s]) => `
+          <div class="flex items-center justify-between bg-slate-950 p-2 rounded-lg border border-slate-800/60">
+            <span class="font-medium text-white">${name}</span>
+            <div class="flex items-center gap-3">
+              <span class="text-slate-400">${s.trips}× gefahren</span>
+              <span class="${s.refuels === 0 && s.trips >= 2 ? 'text-rose-400 font-semibold' : 'text-emerald-400'}">⛽ ${s.refuels}× getankt</span>
             </div>
-          `;
-        }).join("");
-      }, (error) => console.error("Firestore Logs Error:", error));
+          </div>
+        `).join("");
+      });
 
-      // C) Reservierungen Collection mit Besitzer-Berechtigungscheck
-      const resQuery = query(collection(db, "car_reservations"), orderBy("date", "asc"));
-      onSnapshot(resQuery, (querySnapshot) => {
-        if (querySnapshot.empty) {
-          reservationList.innerHTML = `<div class="text-slate-500 italic">Keine Reservierungen vorhanden.</div>`;
+      // Reservierungen
+      const resQ = query(collection(db, "car_reservations"), orderBy("date", "asc"));
+      onSnapshot(resQ, (snap) => {
+        if (snap.empty) {
+          reservationList.innerHTML = `<div class="text-slate-500 italic">Keine Reservierungen.</div>`;
           return;
         }
+        const items = [];
+        snap.forEach(docSnap => items.push({ id: docSnap.id, ...docSnap.data() }));
 
-        const resArray = [];
-        querySnapshot.forEach((docSnap) => {
-          resArray.push({ id: docSnap.id, ...docSnap.data() });
-        });
+        reservationList.innerHTML = items.map(r => {
+          const [y, m, d] = r.date.split("-");
+          let badge = r.status === "approved" ? "✅ Bestätigt" : (r.status === "rejected" ? "❌ Abgelehnt" : "⏳ Ausstehend");
+          let badgeColor = r.status === "approved" ? "text-emerald-400" : (r.status === "rejected" ? "text-rose-400" : "text-amber-400");
 
-        const sorted = resArray.sort((a, b) => (a.date + a.startTime).localeCompare(b.date + b.startTime));
-
-        reservationList.innerHTML = sorted.map(r => {
-          const [year, month, day] = r.date ? r.date.split("-") : ["--", "--", "--"];
-          const formattedDate = `${day}.${month}.`;
-
-          let statusBadge = `<span class="bg-amber-500/20 text-amber-300 border border-amber-500/30 px-2 py-0.5 rounded text-[10px]">⏳ Ausstehend</span>`;
-          if (r.status === "approved") {
-            statusBadge = `<span class="bg-emerald-500/20 text-emerald-300 border border-emerald-500/30 px-2 py-0.5 rounded text-[10px]">✅ Bestätigt</span>`;
-          } else if (r.status === "rejected") {
-            statusBadge = `<span class="bg-rose-500/20 text-rose-300 border border-rose-500/30 px-2 py-0.5 rounded text-[10px]">❌ Abgelehnt</span>`;
-          }
-
-          // Besitzer-Buttons: NUR wenn isOwner === true
-          const ownerActionButtons = isOwner ? `
-            <div class="flex items-center gap-2">
-              <button onclick="window.setReservationStatus('${r.id}', 'approved')" class="bg-emerald-950/80 hover:bg-emerald-900 text-emerald-300 border border-emerald-800 text-[11px] px-2.5 py-1 rounded-lg transition">
-                ✓ Zusagen
-              </button>
-              <button onclick="window.setReservationStatus('${r.id}', 'rejected')" class="bg-rose-950/80 hover:bg-rose-900 text-rose-300 border border-rose-800 text-[11px] px-2.5 py-1 rounded-lg transition">
-                ✕ Ablehnen
-              </button>
+          const ownerActions = isOwner ? `
+            <div class="flex items-center gap-1.5 mt-1.5 pt-1.5 border-t border-slate-800">
+              <button onclick="window.resAction('${r.id}', 'approved')" class="text-[10px] bg-emerald-950 text-emerald-300 border border-emerald-800 px-2 py-0.5 rounded">✓ Zusagen</button>
+              <button onclick="window.resAction('${r.id}', 'rejected')" class="text-[10px] bg-rose-950 text-rose-300 border border-rose-800 px-2 py-0.5 rounded">✕ Ablehnen</button>
+              <button onclick="window.deleteRes('${r.id}')" class="text-[10px] text-slate-500 ml-auto">Löschen</button>
             </div>
-          ` : `<span class="text-[10px] text-slate-500 italic">Entscheidung durch Besitzer ausstehend</span>`;
+          ` : "";
 
           return `
-            <div class="bg-slate-950 p-3 rounded-xl border border-slate-800 space-y-2">
-              <div class="flex items-start justify-between gap-2">
-                <div>
-                  <div class="font-medium text-white flex items-center gap-2">
-                    <span>📅 ${formattedDate} (${r.startTime} – ${r.endTime})</span>
-                    <span class="text-blue-400 font-semibold">• ${r.driver}</span>
-                  </div>
-                  ${r.note ? `<div class="text-[11px] text-slate-400 mt-0.5">${r.note}</div>` : ""}
-                </div>
-                <div>${statusBadge}</div>
+            <div class="bg-slate-950 p-2.5 rounded-xl border border-slate-800">
+              <div class="flex justify-between items-center">
+                <span class="font-medium text-white">${d}.${m}. (${r.startTime}–${r.endTime}) • <strong class="text-blue-400">${r.driver}</strong></span>
+                <span class="text-[10px] font-bold ${badgeColor}">${badge}</span>
               </div>
-
-              <!-- Aktionsleiste -->
-              <div class="flex items-center justify-between pt-2 border-t border-slate-800/80">
-                ${ownerActionButtons}
-                <button onclick="window.deleteReservation('${r.id}')" class="text-slate-500 hover:text-rose-400 text-xs px-2 py-1">
-                  🗑 Löschen
-                </button>
-              </div>
+              ${r.note ? `<div class="text-[10px] text-slate-400 mt-0.5">${r.note}</div>` : ""}
+              ${ownerActions}
             </div>
           `;
         }).join("");
-      }, (error) => console.error("Firestore Res Error:", error));
+      });
     }
 
-    // Reservierungsstatus ändern (nur Besitzer)
-    window.setReservationStatus = async (id, newStatus) => {
-      if (!isOwner) {
-        showToast("Nur der Besitzer kann Reservierungen freigeben!", "error");
-        return;
-      }
-      if (!checkRateLimit()) return;
-      try {
-        await updateDoc(doc(db, "car_reservations", id), { status: newStatus });
-        showToast(newStatus === "approved" ? "Reservierung bestätigt!" : "Reservierung abgelehnt!", "info");
-      } catch (err) {
-        showToast("Fehler beim Aktualisieren: " + err.message, "error");
-      }
+    window.resAction = async (id, status) => {
+      if (!isOwner || !checkRateLimit()) return;
+      await updateDoc(doc(db, "car_reservations", id), { status });
+      showToast(status === "approved" ? "Bestätigt" : "Abgelehnt");
     };
 
-    // Reservierung löschen
-    window.deleteReservation = async (id) => {
-      if (!confirm("Reservierung wirklich löschen?")) return;
-      if (!checkRateLimit()) return;
-      try {
-        await deleteDoc(doc(db, "car_reservations", id));
-        showToast("Reservierung gelöscht", "info");
-      } catch (err) {
-        showToast("Fehler beim Löschen: " + err.message, "error");
-      }
+    window.deleteRes = async (id) => {
+      if (!confirm("Löschen?")) return;
+      await deleteDoc(doc(db, "car_reservations", id));
+      showToast("Gelöscht");
     };
 
     // -------------------------------------------------------------
-    // 4. LIVE STATUS TOGGLE (LOSFAHREN / FAHRT BEENDEN)
+    // 4. ACTION: FAHRT STARTEN
     // -------------------------------------------------------------
     toggleDriveBtn.addEventListener("click", async () => {
       const isDriving = currentCarState.drivingState === "driving";
-
       if (!isDriving) {
-        const name = prompt("Wer fährt jetzt los?", driverInput.value || "");
+        let name = quickDriverName.value.trim() || prompt("Wer fährt?", savedDriver || "");
         if (!name) return;
-        if (!checkRateLimit()) return;
+        localStorage.setItem("carhub_driver", name);
+        quickDriverName.value = name;
 
-        try {
-          await setDoc(doc(db, "car_status", "current"), {
-            ...currentCarState,
-            drivingState: "driving",
-            activeDriver: name.trim(),
-            tripStartedAt: new Date().toISOString()
-          }, { merge: true });
-          driverInput.value = name.trim();
-          showToast(`Gute Fahrt, ${name.trim()}! 🚗`, "success");
-        } catch (err) {
-          showToast("Fehler: " + err.message, "error");
-        }
+        await setDoc(doc(db, "car_status", "current"), {
+          ...currentCarState,
+          drivingState: "driving",
+          activeDriver: name,
+          tripStartedAt: new Date().toISOString()
+        }, { merge: true });
+        showToast(`Gute Fahrt, ${name}!`);
       } else {
-        const formEl = document.getElementById("parkingFormContainer");
-        formEl.scrollIntoView({ behavior: "smooth" });
-        showToast("Bitte Parkort & Tankstand eintragen, um die Fahrt abzuschließen.", "info");
-        setTimeout(() => locationInput.focus(), 400);
+        document.getElementById("parkingFormContainer").scrollIntoView({ behavior: "smooth" });
       }
     });
 
     // -------------------------------------------------------------
-    // 5. GPS ERMITTELN
+    // 5. ACTION: SPEED-PARKEN (FERTIGSTELLEN)
     // -------------------------------------------------------------
-    geoBtn.addEventListener("click", () => {
-      if (!navigator.geolocation) {
-        showToast("Geolocation wird nicht unterstützt.", "error");
-        return;
-      }
-      geoBtn.textContent = "Ermittle...";
-      navigator.geolocation.getCurrentPosition(
-        (pos) => {
-          const lat = pos.coords.latitude.toFixed(6);
-          const lng = pos.coords.longitude.toFixed(6);
-          geoCoords.value = JSON.stringify({ lat, lng });
-          locationInput.value = `GPS: ${lat}, ${lng}`;
-          geoBtn.textContent = "✓ Gefunden";
-          showToast("Standort ermittelt!", "success");
-          setTimeout(() => { geoBtn.textContent = "📍 GPS ermitteln"; }, 3000);
-        },
-        (err) => {
-          showToast("Standortabfrage fehlgeschlagen: " + err.message, "error");
-          geoBtn.textContent = "📍 GPS ermitteln";
-        },
-        { enableHighAccuracy: true, timeout: 10000 }
-      );
-    });
-
-    // -------------------------------------------------------------
-    // 6. FORMULAR: AUTO ABSTELLEN & FAHRT BEENDEN
-    // -------------------------------------------------------------
-    updateForm.addEventListener("submit", async (e) => {
+    speedParkForm.addEventListener("submit", async (e) => {
       e.preventDefault();
-
       if (!checkRateLimit()) return;
 
-      const driver = driverInput.value.trim();
-      const location = locationInput.value.trim();
-      const keyLocation = keyLocationInput.value.trim();
-      const fuel = parseInt(fuelInput.value, 10);
-      const isRefueled = refueledCheckbox.checked;
+      const driver = quickDriverName.value.trim() || "Unbekannt";
+      localStorage.setItem("carhub_driver", driver);
 
-      let newKm = null;
-      if (kmInput.value.trim() !== "") {
-        newKm = parseInt(kmInput.value, 10);
-        if (currentKm !== null && newKm < currentKm) {
-          showToast(`Der km-Stand kann nicht kleiner sein als vorher (${currentKm} km).`, "error");
-          return;
-        }
-      }
+      const location = finalLocationText.value.trim();
+      const keyLoc = selectedKeyLocation.value.trim();
+      const fuel = parseInt(fuelRange.value, 10);
+      const isRefueled = quickRefuelCheck.checked;
 
-      saveBtn.disabled = true;
-      saveBtn.textContent = "Speichern läuft...";
+      speedSaveBtn.disabled = true;
+      speedSaveBtn.innerHTML = `<span>⏳ Speichern...</span>`;
 
       const payload = {
         driver: driver,
         location: location,
-        keyLocation: keyLocation,
+        keyLocation: keyLoc,
         fuel: fuel,
         refueled: isRefueled,
-        refuelDetails: isRefueled ? recordedRefuelData : null,
         coords: geoCoords.value ? JSON.parse(geoCoords.value) : null,
         drivingState: "parked",
         activeDriver: null,
@@ -843,10 +702,17 @@
         updatedAt: new Date().toISOString()
       };
 
-      if (newKm !== null) {
-        payload.km = newKm;
-      } else if (currentKm !== null) {
+      if (speedKmInput.value.trim() !== "") {
+        payload.km = parseInt(speedKmInput.value, 10);
+      } else if (currentKm) {
         payload.km = currentKm;
+      }
+
+      if (isRefueled) {
+        payload.refuelDetails = {
+          liters: speedLiters.value ? parseFloat(speedLiters.value) : null,
+          cost: speedCost.value ? parseFloat(speedCost.value) : null
+        };
       }
 
       try {
@@ -855,45 +721,39 @@
           statusUpdate.lastRefuel = {
             driver: driver,
             date: new Date().toISOString(),
-            liters: recordedRefuelData ? recordedRefuelData.liters : null,
-            cost: recordedRefuelData ? recordedRefuelData.cost : null
+            liters: payload.refuelDetails.liters,
+            cost: payload.refuelDetails.cost
           };
         }
 
         await setDoc(doc(db, "car_status", "current"), statusUpdate);
         await addDoc(collection(db, "car_logs"), payload);
 
-        kmInput.value = "";
-        locationInput.value = "";
+        // Reset
+        quickRefuelCheck.checked = false;
+        optionalRefuelInputs.classList.add("hidden");
+        speedLiters.value = "";
+        speedCost.value = "";
+        speedKmInput.value = "";
         geoCoords.value = "";
-        refueledCheckbox.checked = false;
-        recordedRefuelData = null;
-        refuelBadgeSummary.classList.add("hidden");
 
-        showToast("✓ Fahrt beendet & Daten in Firestore gespeichert!", "success");
+        showToast("⚡ Auto erfolgreich abgestellt!", "success");
         window.scrollTo({ top: 0, behavior: "smooth" });
       } catch (err) {
-        showToast("Fehler beim Speichern: " + err.message, "error");
+        showToast("Fehler: " + err.message, "error");
       } finally {
-        saveBtn.disabled = false;
-        saveBtn.textContent = "Fahrt beenden & Daten speichern";
+        speedSaveBtn.disabled = false;
+        speedSaveBtn.innerHTML = `<span>✓</span><span>Jetzt fertig abgestellt</span>`;
       }
     });
 
-    // -------------------------------------------------------------
-    // 7. FORMULAR: RESERVIERUNG SPEICHERN
-    // -------------------------------------------------------------
+    // Reservierung abschicken
     reservationForm.addEventListener("submit", async (e) => {
       e.preventDefault();
-
       if (!checkRateLimit()) return;
 
-      resSubmitBtn.disabled = true;
-      resSubmitBtn.textContent = "Wird gespeichert...";
-
-      const resPayload = {
-        driver: resDriver.value.trim(),
-        userEmail: currentUserEmail,
+      const payload = {
+        driver: resDriver.value.trim() || quickDriverName.value.trim(),
         date: resDate.value,
         startTime: resStartTime.value,
         endTime: resEndTime.value,
@@ -903,15 +763,12 @@
       };
 
       try {
-        await addDoc(collection(db, "car_reservations"), resPayload);
+        await addDoc(collection(db, "car_reservations"), payload);
         resNote.value = "";
         reservationForm.classList.add("hidden");
-        showToast("Reservierungsanfrage gespeichert!", "success");
+        showToast("Reserviert!");
       } catch (err) {
-        showToast("Fehler beim Reservieren: " + err.message, "error");
-      } finally {
-        resSubmitBtn.disabled = false;
-        resSubmitBtn.textContent = "Reservierungsanfrage abschicken";
+        showToast("Fehler: " + err.message, "error");
       }
     });
   </script>
