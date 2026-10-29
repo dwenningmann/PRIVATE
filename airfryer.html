@@ -1,0 +1,1902 @@
+<!DOCTYPE html>
+<html lang="de" class="dark">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Ninja Airfryer 14-Tage Makro-Planer (210P / 400C / 100F)</title>
+  <script src="https://cdn.tailwindcss.com"></script>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
+  <script>
+    tailwind.config = {
+      darkMode: 'class',
+      theme: {
+        extend: {
+          fontFamily: {
+            sans: ['Inter', 'sans-serif'],
+          },
+          colors: {
+            brand: {
+              protein: '#38bdf8', // Cyan/Blau
+              carb: '#f59e0b',    // Orange/Gold (Airfryer Crisp)
+              fat: '#fbbf24',     // Warm Amber
+              dark: '#0f172a',
+              card: '#1e293b',
+              accent: '#f97316'
+            }
+          }
+        }
+      }
+    }
+  </script>
+  <style>
+    /* Custom scrollbar */
+    ::-webkit-scrollbar {
+      width: 6px;
+      height: 6px;
+    }
+    ::-webkit-scrollbar-track {
+      background: #0f172a;
+    }
+    ::-webkit-scrollbar-thumb {
+      background: #334155;
+      border-radius: 4px;
+    }
+    ::-webkit-scrollbar-thumb:hover {
+      background: #475569;
+    }
+    .badge-airfryer {
+      background: linear-gradient(135deg, rgba(249, 115, 22, 0.2) 0%, rgba(234, 88, 12, 0.1) 100%);
+      border: 1px solid rgba(249, 115, 22, 0.4);
+    }
+  </style>
+</head>
+<body class="bg-slate-950 text-slate-100 min-h-screen font-sans antialiased selection:bg-orange-500 selection:text-white">
+
+  <!-- Header & Navigation -->
+  <header class="border-b border-slate-800 bg-slate-900/80 backdrop-blur sticky top-0 z-40">
+    <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-3.5 flex flex-wrap items-center justify-between gap-4">
+      <div class="flex items-center space-x-3">
+        <div class="w-10 h-10 rounded-xl bg-gradient-to-tr from-orange-600 to-amber-500 flex items-center justify-center shadow-lg shadow-orange-500/20 text-white font-black text-xl">
+          N
+        </div>
+        <div>
+          <h1 class="text-lg font-bold tracking-tight text-white flex items-center gap-2">
+            Ninja 6,2L Makro-Coach
+            <span class="text-xs px-2 py-0.5 rounded-full bg-orange-500/10 text-orange-400 border border-orange-500/20 font-semibold">14 Tage Plan</span>
+          </h1>
+          <p class="text-xs text-slate-400">Target: 210g P · 400g C · 100g F · ~3.340 kcal</p>
+        </div>
+      </div>
+
+      <!-- View Switcher -->
+      <nav class="flex items-center gap-1 bg-slate-950/70 p-1 rounded-xl border border-slate-800 text-xs sm:text-sm">
+        <button id="nav-daily" onclick="switchMainTab('daily')" class="px-3.5 py-1.5 rounded-lg font-medium transition text-white bg-slate-800 shadow">Tagesplan</button>
+        <button id="nav-search" onclick="switchMainTab('search')" class="px-3.5 py-1.5 rounded-lg font-medium text-slate-400 hover:text-white transition">Rezept-Finder</button>
+        <button id="nav-shopping" onclick="switchMainTab('shopping')" class="px-3.5 py-1.5 rounded-lg font-medium text-slate-400 hover:text-white transition">Einkaufsliste</button>
+      </nav>
+    </div>
+  </header>
+
+  <!-- Main Container -->
+  <main class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-6 space-y-6">
+
+    <!-- VIEW 1: DAILY MEAL PLAN -->
+    <section id="view-daily" class="space-y-6">
+      
+      <!-- Week & Day Selector Bar -->
+      <div class="bg-slate-900 border border-slate-800 rounded-2xl p-4 shadow-xl space-y-4">
+        <div class="flex flex-wrap items-center justify-between gap-3 border-b border-slate-800/80 pb-3">
+          <div class="flex items-center gap-2">
+            <span class="text-xs uppercase tracking-wider text-slate-400 font-semibold">Zyklus:</span>
+            <div class="inline-flex rounded-lg bg-slate-950 p-1 border border-slate-800">
+              <button id="week-1-btn" onclick="selectWeek(1)" class="px-3 py-1 text-xs font-semibold rounded-md bg-orange-500 text-white transition">Woche 1 (Tag 1–7)</button>
+              <button id="week-2-btn" onclick="selectWeek(2)" class="px-3 py-1 text-xs font-semibold rounded-md text-slate-400 hover:text-white transition">Woche 2 (Tag 8–14)</button>
+            </div>
+          </div>
+          <div class="flex items-center gap-2">
+            <button onclick="resetDayCheckboxes()" class="text-xs text-slate-400 hover:text-orange-400 transition flex items-center gap-1.5 py-1 px-2.5 rounded-lg hover:bg-slate-800 border border-transparent hover:border-slate-700">
+              <svg class="w-3.5 h-3.5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 4v5h.582m15.356 2A8.001 8.001 0 004.582 9m0 0H9m11 11v-5h-.581m0 0a8.003 8.003 0 01-15.357-2m15.357 2H15"/></svg>
+              Fortschritt zurücksetzen
+            </button>
+          </div>
+        </div>
+
+        <!-- Days Horizontal List -->
+        <div class="flex gap-2 overflow-x-auto pb-1" id="days-carousel">
+          <!-- Dynamically populated -->
+        </div>
+      </div>
+
+      <!-- Live Macro Dashboard for Active Day -->
+      <div class="bg-gradient-to-br from-slate-900 via-slate-900/90 to-slate-950 border border-slate-800 rounded-2xl p-5 shadow-xl">
+        <div class="flex flex-wrap items-center justify-between gap-2 mb-4">
+          <div>
+            <h2 class="text-lg font-bold text-white flex items-center gap-2">
+              <span id="current-day-title">Tag 1 Übersicht</span>
+              <span id="active-day-badge" class="text-xs px-2.5 py-0.5 rounded-full bg-slate-800 text-slate-300 border border-slate-700">Woche 1</span>
+            </h2>
+            <p class="text-xs text-slate-400">Hake Mahlzeiten ab, um den getrackten Tagesfortschritt live mitzuverfolgen.</p>
+          </div>
+          <div class="flex items-center gap-3 bg-slate-950/80 px-4 py-2 rounded-xl border border-slate-800">
+            <div class="text-right">
+              <span class="text-xs text-slate-400 block font-medium">Berechnete Energie</span>
+              <span id="stat-kcal" class="text-lg font-black text-white">0 <span class="text-xs font-normal text-slate-400">/ 3.340 kcal</span></span>
+            </div>
+            <div id="stat-kcal-percent" class="w-11 h-11 rounded-full bg-orange-500/10 border border-orange-500/30 flex items-center justify-center font-bold text-xs text-orange-400">
+              0%
+            </div>
+          </div>
+        </div>
+
+        <!-- Macro Progress Bars Grid -->
+        <div class="grid grid-cols-1 sm:grid-cols-3 gap-3.5">
+          <!-- Protein -->
+          <div class="bg-slate-950/60 p-3.5 rounded-xl border border-slate-800/80">
+            <div class="flex justify-between items-center mb-1.5 text-xs">
+              <span class="font-semibold text-brand-protein flex items-center gap-1.5">
+                <span class="w-2 h-2 rounded-full bg-brand-protein"></span> Protein
+              </span>
+              <span class="text-slate-300 font-mono" id="stat-protein-text">0 / 210g</span>
+            </div>
+            <div class="w-full bg-slate-800/80 rounded-full h-2.5 overflow-hidden">
+              <div id="stat-protein-bar" class="bg-sky-400 h-full rounded-full transition-all duration-300" style="width: 0%"></div>
+            </div>
+          </div>
+
+          <!-- Carbs -->
+          <div class="bg-slate-950/60 p-3.5 rounded-xl border border-slate-800/80">
+            <div class="flex justify-between items-center mb-1.5 text-xs">
+              <span class="font-semibold text-amber-400 flex items-center gap-1.5">
+                <span class="w-2 h-2 rounded-full bg-amber-400"></span> Kohlenhydrate
+              </span>
+              <span class="text-slate-300 font-mono" id="stat-carbs-text">0 / 400g</span>
+            </div>
+            <div class="w-full bg-slate-800/80 rounded-full h-2.5 overflow-hidden">
+              <div id="stat-carbs-bar" class="bg-amber-400 h-full rounded-full transition-all duration-300" style="width: 0%"></div>
+            </div>
+          </div>
+
+          <!-- Fats -->
+          <div class="bg-slate-950/60 p-3.5 rounded-xl border border-slate-800/80">
+            <div class="flex justify-between items-center mb-1.5 text-xs">
+              <span class="font-semibold text-yellow-300 flex items-center gap-1.5">
+                <span class="w-2 h-2 rounded-full bg-yellow-300"></span> Gesunde Fette
+              </span>
+              <span class="text-slate-300 font-mono" id="stat-fats-text">0 / 100g</span>
+            </div>
+            <div class="w-full bg-slate-800/80 rounded-full h-2.5 overflow-hidden">
+              <div id="stat-fats-bar" class="bg-yellow-300 h-full rounded-full transition-all duration-300" style="width: 0%"></div>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- Meal Cards for Selected Day -->
+      <div id="meals-container" class="space-y-4">
+        <!-- Injected via JavaScript -->
+      </div>
+    </section>
+
+    <!-- VIEW 2: RECIPE FINDER / SEARCH -->
+    <section id="view-search" class="hidden space-y-6">
+      <div class="bg-slate-900 border border-slate-800 rounded-2xl p-5 shadow-xl space-y-4">
+        <div>
+          <h2 class="text-lg font-bold text-white">Airfryer Rezept-Datenbank (70 Mahlzeiten)</h2>
+          <p class="text-xs text-slate-400">Filtere gezielt nach Zutaten wie Zucchini, Kartoffeln, Eiweißbrot, Tofu oder Shakes.</p>
+        </div>
+
+        <div class="flex flex-col sm:flex-row gap-3">
+          <div class="relative flex-1">
+            <input type="text" id="recipe-search-input" oninput="filterRecipes()" placeholder="Suche z.B. Zucchini, Thunfisch, Haferflocken, Gnocchi..." class="w-full bg-slate-950 border border-slate-800 rounded-xl px-4 py-2.5 text-sm text-slate-200 focus:outline-none focus:border-orange-500 pl-10">
+            <svg class="w-4 h-4 text-slate-500 absolute left-3.5 top-3.5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z"/></svg>
+          </div>
+          <div class="flex flex-wrap gap-1.5 items-center" id="quick-tag-filters">
+            <button onclick="setFilterTag('')" class="tag-btn active text-xs px-3 py-1.5 rounded-lg bg-orange-500 text-white font-medium transition">Alle</button>
+            <button onclick="setFilterTag('Oats')" class="tag-btn text-xs px-3 py-1.5 rounded-lg bg-slate-800 text-slate-300 hover:bg-slate-700 transition">Oats / Frühstück</button>
+            <button onclick="setFilterTag('Airfryer')" class="tag-btn text-xs px-3 py-1.5 rounded-lg bg-slate-800 text-slate-300 hover:bg-slate-700 transition">Airfryer Only</button>
+            <button onclick="setFilterTag('Zucchini')" class="tag-btn text-xs px-3 py-1.5 rounded-lg bg-slate-800 text-slate-300 hover:bg-slate-700 transition">Zucchini</button>
+            <button onclick="setFilterTag('Eiweißbrot')" class="tag-btn text-xs px-3 py-1.5 rounded-lg bg-slate-800 text-slate-300 hover:bg-slate-700 transition">Eiweißbrot</button>
+            <button onclick="setFilterTag('Kartoffeln')" class="tag-btn text-xs px-3 py-1.5 rounded-lg bg-slate-800 text-slate-300 hover:bg-slate-700 transition">Kartoffeln</button>
+          </div>
+        </div>
+      </div>
+
+      <!-- Filtered Results Grid -->
+      <div id="recipe-search-results" class="grid grid-cols-1 md:grid-cols-2 gap-4">
+        <!-- Injected via JavaScript -->
+      </div>
+    </section>
+
+    <!-- VIEW 3: SHOPPING LIST -->
+    <section id="view-shopping" class="hidden space-y-6">
+      <div class="bg-slate-900 border border-slate-800 rounded-2xl p-5 shadow-xl space-y-4">
+        <div class="flex flex-wrap items-center justify-between gap-3">
+          <div>
+            <h2 class="text-lg font-bold text-white">Wochen-Einkaufsliste</h2>
+            <p class="text-xs text-slate-400">Automatisch zusammengefasste Mengen für deine Einkaufsplanung im Supermarkt.</p>
+          </div>
+          <div class="inline-flex rounded-lg bg-slate-950 p-1 border border-slate-800">
+            <button id="shop-week-1-btn" onclick="switchShopWeek(1)" class="px-3 py-1 text-xs font-semibold rounded-md bg-orange-500 text-white transition">Woche 1 (Tag 1–7)</button>
+            <button id="shop-week-2-btn" onclick="switchShopWeek(2)" class="px-3 py-1 text-xs font-semibold rounded-md text-slate-400 hover:text-white transition">Woche 2 (Tag 8–14)</button>
+          </div>
+        </div>
+
+        <div class="flex items-center gap-3">
+          <button onclick="resetShoppingChecks()" class="text-xs text-slate-400 hover:text-orange-400 transition flex items-center gap-1.5">
+            <svg class="w-3.5 h-3.5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 7l-.867 12.142A2 2 0 0116.138 21H7.862a2 2 0 01-1.995-1.858L5 7m5 4v6m4-6v6m1-10V4a1 1 0 00-1-1h-4a1 1 0 00-1 1v3M4 7h16"/></svg>
+            Alle Häkchen löschen
+          </button>
+          <span class="text-slate-700">|</span>
+          <span id="shop-progress-info" class="text-xs text-slate-400">0 von 0 erledigt</span>
+        </div>
+      </div>
+
+      <!-- Categories Layout -->
+      <div id="shopping-categories-container" class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
+        <!-- Dynamically rendered -->
+      </div>
+    </section>
+
+  </main>
+
+  <!-- Notification Toast -->
+  <div id="toast" class="fixed bottom-5 right-5 bg-slate-900 border border-orange-500/40 text-slate-100 px-4 py-2.5 rounded-xl shadow-2xl text-xs flex items-center gap-2 transform translate-y-20 opacity-0 transition-all duration-300 pointer-events-none z-50">
+    <span class="w-2 h-2 rounded-full bg-orange-400"></span>
+    <span id="toast-text">Gespeichert</span>
+  </div>
+
+  <!-- Application Logic & Comprehensive Recipe Database -->
+  <script>
+    // --- 14-DAYS COMPREHENSIVE NUTRITION DATA (210P / 400C / 100F Target) ---
+    const MEAL_DATA = [
+      // ================= TAG 1 =================
+      {
+        day: 1,
+        title: "Klassiker: Bananen-Erdnuss Baked Oats & Crispy Wedges",
+        meals: [
+          {
+            type: "Frühstück",
+            category: "Oats",
+            name: "Airfryer Chunky-Monkey Baked Oats",
+            airfryer: { temp: 175, time: 11, note: "Kleine Auflaufform direkt auf den Korb-Boden stellen" },
+            ingredients: [
+              "120g zarte Haferflocken",
+              "25g Mehrkomponenten-Proteinpulver (Vanille/Schoko)",
+              "1 reife Banane (zerdrückt)",
+              "25g naturbelassene Erdnussbutter",
+              "180ml Wasser oder ungesüßter Mandeldrink",
+              "1 TL Zimt & 1 Prise Meersalz"
+            ],
+            steps: "Banane in feuerfester Form zerdrücken. Haferflocken, Proteinpulver, Zimt und Flüssigkeit einrühren. Erdnussbutter als Kern in die Mitte drücken. Bei 175°C für 11 Min. im Ninja backen, bis die Kruste knusprig ist.",
+            macros: { p: 46, c: 105, f: 25, kcal: 829 }
+          },
+          {
+            type: "Snack 1",
+            category: "Shake",
+            name: "Instant-Oats Power Shake & Apfel",
+            airfryer: null,
+            ingredients: [
+              "30g Proteinpulver (Whey oder Mehrkomponenten)",
+              "70g Schmelzflocken / Instant Oats",
+              "350ml kaltes Wasser",
+              "1 großer Apfel (ca. 180g)"
+            ],
+            steps: "Instant Oats und Proteinpulver im Shaker mit Wasser 20 Sekunden kräftig schütteln. Direkt trinken und den Apfel als saftigen Snack dazu essen.",
+            macros: { p: 34, c: 70, f: 6, kcal: 470 }
+          },
+          {
+            type: "Mittagessen",
+            category: "Kartoffeln",
+            name: "Krosse Ninja-Wedges mit Thunfisch-Hüttenkäse-Creme",
+            airfryer: { temp: 200, time: 18, note: "Nach 10 Min. Korb einmal kräftig durchschütteln" },
+            ingredients: [
+              "650g festkochende Kartoffeln (in Spalten)",
+              "10ml Olivenöl, Meersalz, Paprika edelsüß",
+              "1 Dose Thunfisch im eigenen Saft (150g Abtropfgewicht)",
+              "150g körniger Frischkäse (mager)",
+              "Frischer Pfeffer & Kräuter nach Wahl"
+            ],
+            steps: "Kartoffelspalten mit 10ml Öl und Gewürzen schwenken, in die 6,2L Schublade geben. 18 Min. bei 200°C rösten. Währenddessen Thunfisch mit Hüttenkäse und Kräutern verrühren. Heiße Wedges dippen.",
+            macros: { p: 63, c: 105, f: 16, kcal: 816 }
+          },
+          {
+            type: "Snack 2",
+            category: "Eiweißbrot",
+            name: "Geröstetes Eiweißbrot mit Erdnussbutter & Knusper-Kichererbsen",
+            airfryer: { temp: 200, time: 8, note: "Kichererbsen 8 Min., Brot für die letzten 3 Min. dazulegen" },
+            ingredients: [
+              "2 Scheiben Eiweißbrot (ca. 80g)",
+              "20g Erdnussbutter",
+              "150g Kichererbsen (Dose, gut abgetupft)",
+              "1 TL Olivenöl, Meersalz, Currypulver"
+            ],
+            steps: "Kichererbsen mit 1 TL Öl & Curry würzen, 5 Min. bei 200°C anrösten. Dann 2 Scheiben Eiweißbrot daneben auf den Gitterrost legen und 3 Min. mitrösten. Brot warm mit Erdnussbutter bestreichen.",
+            macros: { p: 37, c: 40, f: 25, kcal: 533 }
+          },
+          {
+            type: "Abendessen",
+            category: "Familie",
+            name: "Mediterrane Tomaten-Pasta mit Eiern & Ninja Grillgemüse",
+            airfryer: { temp: 190, time: 8, note: "Zucchini und Kirschtomaten bekommen feine Röstaromen" },
+            ingredients: [
+              "100g Hartweizen-Pasta (z.B. Penne oder Fusilli, trocken)",
+              "2 ganze Eier (Größe L)",
+              "1 Zucchini (in Halbmonde) & 150g Kirschtomaten",
+              "15ml Olivenöl, Knoblauch, Oregano, Basilikum"
+            ],
+            steps: "Pasta im Topf al dente kochen. Zucchini & Tomaten mit 15ml Olivenöl & Gewürzen 8 Min. bei 190°C im Airfryer rösten. Eier wachsweich kochen oder pochieren. Alles zusammenmengen.",
+            macros: { p: 30, c: 80, f: 28, kcal: 692 }
+          }
+        ]
+      },
+
+      // ================= TAG 2 =================
+      {
+        day: 2,
+        title: "Knusprige Airfryer Gnocchi & Heidelbeer-Oats",
+        meals: [
+          {
+            type: "Frühstück",
+            category: "Oats",
+            name: "Blaubeer-Zimt Haferauflauf mit Mandelmus",
+            airfryer: { temp: 175, time: 12, note: "Beeren saften wunderbar ein" },
+            ingredients: [
+              "120g Haferflocken",
+              "25g Vanille-Protein",
+              "120g Heidelbeeren (frisch oder TK)",
+              "25g Mandelmus (oder Erdnussbutter)",
+              "180ml Wasser, 1 TL Zimt"
+            ],
+            steps: "Haferflocken, Protein, Zimt und Flüssigkeit mischen. Die Hälfte der Beeren unterheben, Rest obenauf verteilen. Mandelmus in Klecksen darüber. 12 Min. bei 175°C backen.",
+            macros: { p: 45, c: 102, f: 24, kcal: 804 }
+          },
+          {
+            type: "Snack 1",
+            category: "Shake",
+            name: "Protein Shake mit Schmelzflocken & Banane",
+            airfryer: null,
+            ingredients: [
+              "30g Proteinpulver",
+              "70g Schmelzflocken",
+              "1 reife Banane (ca. 120g)",
+              "350ml Wasser"
+            ],
+            steps: "Shaker befüllen, kräftig schütteln. Banane dazu genießen. Liefert saubere Carbs ohne Belastung.",
+            macros: { p: 35, c: 78, f: 5, kcal: 497 }
+          },
+          {
+            type: "Mittagessen",
+            category: "Gnocchi",
+            name: "Knusprige Airfryer-Gnocchi mit Tofu-Kräuter-Quark",
+            airfryer: { temp: 200, time: 12, note: "Gnocchi direkt aus der Packung – nicht vorkochen!" },
+            ingredients: [
+              "450g frische Gnocchi (aus dem Kühlregal)",
+              "10ml Raps- oder Olivenöl, Meersalz, Rosmarin",
+              "150g Räuchertofu (in dünne Scheiben)",
+              "200g Magerquark mit Schnittlauch & Mineralwasser cremig gerührt"
+            ],
+            steps: "Gnocchi und Tofuscheiben mit Öl und Salz vermengen. 12 Min. bei 200°C im Airfryer backen, nach 6 Min. schütteln. Außen ultracross, innen weich. In den Kräuterquark dippen.",
+            macros: { p: 62, c: 110, f: 18, kcal: 850 }
+          },
+          {
+            type: "Snack 2",
+            category: "Eiweißbrot",
+            name: "Thunfisch-Melt Eiweißbrot-Toastie",
+            airfryer: { temp: 195, time: 6, note: "Käse schmilzt und wirft goldbraune Blasen" },
+            ingredients: [
+              "2 Scheiben Eiweißbrot",
+              "1 Dose Thunfisch (abgetropft)",
+              "1 EL Magerquark, Salz & Pfeffer",
+              "2 Scheiben fettarmer Gouda (40g)",
+              "1 Snack-Gurke"
+            ],
+            steps: "Thunfisch mit Magerquark & Gewürzen mischen, auf das Eiweißbrot streichen, mit Käse belegen. 6 Min. bei 195°C in die Schublade legen.",
+            macros: { p: 44, c: 18, f: 22, kcal: 446 }
+          },
+          {
+            type: "Abendessen",
+            category: "Familie",
+            name: "Reis-Bowl mit 2 Spiegeleiern & geröstetem Paprika-Zucchini-Mix",
+            airfryer: { temp: 205, time: 9, note: "Gemüse karamellisiert intensiv" },
+            ingredients: [
+              "110g Basmatireis (Trockengewicht, gekocht)",
+              "2 ganze Eier",
+              "1 Paprika & 1 Zucchini (in grobe Stücke)",
+              "15ml Olivenöl, Sojasauce, Chiliflocken"
+            ],
+            steps: "Reis kochen. Gemüse mit 15ml Olivenöl im Airfryer 9 Min. bei 205°C rösten. Eier braten oder im Airfryer stocken lassen. Reis in Schüssel anrichten, Röstgemüse und Eier darauf verteilen.",
+            macros: { p: 25, c: 92, f: 31, kcal: 747 }
+          }
+        ]
+      },
+
+      // ================= TAG 3 =================
+      {
+        day: 3,
+        title: "Crispy BBQ Tofu & Süßkartoffel-Würfel",
+        meals: [
+          {
+            type: "Frühstück",
+            category: "Oats",
+            name: "Schoko-Karamell Proats mit Walnüssen",
+            airfryer: { temp: 175, time: 10, note: "Schokolade schmilzt cremig" },
+            ingredients: [
+              "120g Haferflocken",
+              "30g Schoko-Proteinpulver",
+              "1 TL Backkakao",
+              "150ml kochendes Wasser & 50ml Milch",
+              "25g gehackte Walnüsse oder Erdnussbutter",
+              "1 Banane (in Scheiben als Topping)"
+            ],
+            steps: "Haferflocken mit Kakao, Protein und heißer Flüssigkeit verrühren. Nüsse und Bananenscheiben oben drauflegen. 10 Min. bei 175°C backen.",
+            macros: { p: 48, c: 104, f: 26, kcal: 842 }
+          },
+          {
+            type: "Snack 1",
+            category: "Shake",
+            name: "Hafer-Frucht Smoothie mit Instant Oats",
+            airfryer: null,
+            ingredients: [
+              "30g Proteinpulver",
+              "70g Schmelzflocken",
+              "1 Birne oder Apfel",
+              "350ml Wasser"
+            ],
+            steps: "Shake mixen und das Obst dazu verzehren. Perfekter Zwischenschub.",
+            macros: { p: 33, c: 72, f: 5, kcal: 465 }
+          },
+          {
+            type: "Mittagessen",
+            category: "Süßkartoffeln",
+            name: "Crispy BBQ-Tofu mit gerösteten Süßkartoffeln",
+            airfryer: { temp: 205, time: 14, note: "Sehr hohe Hitze für Kanten-Crunch" },
+            ingredients: [
+              "500g Süßkartoffeln (gewürfelt)",
+              "200g Natur- oder Räuchertofu (ausgepresst, gewürfelt)",
+              "12ml Olivenöl, Knoblauchpulver, Salz",
+              "2 EL BBQ-Sauce",
+              "1 Protein-Shake (20g Pulver in 200ml Wasser als Begleitung)"
+            ],
+            steps: "Süßkartoffeln und Tofu mit Öl und Gewürzen mischen. Bei 205°C für 14 Min. in den Airfryer geben (nach 7 Min. schütteln). Nach dem Backen BBQ-Sauce daruntermengen.",
+            macros: { p: 64, c: 120, f: 21, kcal: 925 }
+          },
+          {
+            type: "Snack 2",
+            category: "Eiweißbrot",
+            name: "Eiweißbrot mit Hüttenkäse & gerösteten Sonnenblumenkernen",
+            airfryer: { temp: 190, time: 4, note: "Brot kurz extrem knusprig toasten" },
+            ingredients: [
+              "2 Scheiben Eiweißbrot (getoastet im Ninja)",
+              "150g körniger Frischkäse",
+              "15g geröstete Sonnenblumenkerne oder Erdnussbutter",
+              "Kräutersalz & Radieschen"
+            ],
+            steps: "Brot 4 Min. bei 190°C kross machen. Hüttenkäse dick aufstreichen, Kerne und Radieschen darübergeben.",
+            macros: { p: 36, c: 18, f: 20, kcal: 396 }
+          },
+          {
+            type: "Abendessen",
+            category: "Familie",
+            name: "Vollkorn-Pasta mit Ei & frittierten Zucchini-Chips",
+            airfryer: { temp: 200, time: 9, note: "Zucchini in Scheiben ohne Fettbad super knusprig" },
+            ingredients: [
+              "110g Vollkornnudeln (trocken)",
+              "2 Eier (hartgekocht)",
+              "1 große Zucchini (in 5mm Scheiben)",
+              "12g Olivenöl, Meersalz, Knoblauch, Oregano"
+            ],
+            steps: "Nudeln kochen. Zucchinischeiben mit 12g Öl & Oregano 9 Min. bei 200°C im Airfryer rösten. Heiße Zucchini unter die Nudeln heben und gekochte Eier dazugeben.",
+            macros: { p: 30, c: 86, f: 27, kcal: 707 }
+          }
+        ]
+      },
+
+      // ================= TAG 4 =================
+      {
+        day: 4,
+        title: "Apfel-Zimt Crumble & Hähnchen-Kartoffel-Blech",
+        meals: [
+          {
+            type: "Frühstück",
+            category: "Oats",
+            name: "Warmes Apfel-Zimt Hafer-Crumble mit Erdnussmus",
+            airfryer: { temp: 180, time: 11, note: "Streusel werden goldgelb und duften herrlich" },
+            ingredients: [
+              "120g Haferflocken",
+              "25g Vanille-Protein",
+              "1 großer säuerlicher Apfel (gewürfelt)",
+              "25g Erdnussbutter",
+              "1 TL Zimt, 150ml heißes Wasser"
+            ],
+            steps: "Apfelstücke mit Zimt in die Form legen. Haferflocken, Protein, Erdnussbutter und Wasser kurz zu feuchten Streuseln verkneten und über die Äpfel streuen. 11 Min. bei 180°C backen.",
+            macros: { p: 46, c: 106, f: 23, kcal: 815 }
+          },
+          {
+            type: "Snack 1",
+            category: "Shake",
+            name: "Carb-Loader Shake & Banane",
+            airfryer: null,
+            ingredients: [
+              "30g Proteinpulver",
+              "70g Schmelzflocken",
+              "1 Banane",
+              "350ml Wasser"
+            ],
+            steps: "Shaken und genießen. Versorgt den Körper schnell mit Glykogen und Aminosäuren.",
+            macros: { p: 34, c: 78, f: 5, kcal: 493 }
+          },
+          {
+            type: "Mittagessen",
+            category: "Hähnchen",
+            name: "Knusprige Hähnchenbrust mit Kartoffel-Wedges aus dem Airfryer",
+            airfryer: { temp: 200, time: 16, note: "Beides zusammen im 6,2L Korb nebeneinander garen" },
+            ingredients: [
+              "200g Hähnchen- oder Putenbrustfilet (in Streifen)",
+              "650g Kartoffeln (in dicken Stiften)",
+              "12ml Olivenöl, Rosmarin, Paprikapulver, Meersalz",
+              "100g fettarmer Kräuterquark zum Dippen"
+            ],
+            steps: "Kartoffeln und Fleisch mit Öl und Gewürzen marinieren. Kartoffeln links, Hähnchen rechts in den Korb legen. 16 Min. bei 200°C backen (nach 8 Min. Kartoffeln wenden).",
+            macros: { p: 68, c: 104, f: 18, kcal: 850 }
+          },
+          {
+            type: "Snack 2",
+            category: "Eiweißbrot",
+            name: "Eiweißbrot mit 2 Spiegeleiern & Röst-Tomaten",
+            airfryer: { temp: 190, time: 5, note: "Brot und Tomaten gleichzeitig anrösten" },
+            ingredients: [
+              "2 Scheiben Eiweißbrot",
+              "2 Eier",
+              "6 Kirschtomaten",
+              "10g Butter oder Pflanzenmargarine"
+            ],
+            steps: "Brot und Kirschtomaten 5 Min. bei 190°C anrösten. Eier braten oder im Korb in Silikonförmchen mitgaren. Brot bestreichen und Eier darauf legen.",
+            macros: { p: 33, c: 16, f: 27, kcal: 439 }
+          },
+          {
+            type: "Abendessen",
+            category: "Familie",
+            name: "Basmati-Pfanne mit Eiklar-Rührei & Frittierter Zucchini",
+            airfryer: { temp: 210, time: 8, note: "Zucchini bei Höchsttemperatur rösten" },
+            ingredients: [
+              "100g Basmatireis (roh gewogen)",
+              "150g flüssiges Eiklar + 1 Vollei (verquirlt)",
+              "1 Zucchini (in Halbmonde)",
+              "15ml Sesam- oder Olivenöl, Sojasauce"
+            ],
+            steps: "Reis kochen. Zucchini 8 Min. bei 210°C rösten. Eiermischung kurz in der Pfanne stocken lassen. Gekochten Reis, Rührei und Grillzucchini mit Sojasauce mischen.",
+            macros: { p: 31, c: 92, f: 27, kcal: 735 }
+          }
+        ]
+      },
+
+      // ================= TAG 5 =================
+      {
+        day: 5,
+        title: "Paniertes Zucchini-Crunch-Fest & Baked Protein-Oats",
+        meals: [
+          {
+            type: "Frühstück",
+            category: "Oats",
+            name: "Himbeer-Kokos Haferauflauf mit Erdnussmus",
+            airfryer: { temp: 175, time: 11, note: "Himbeeren sorgen für angenehme Frische" },
+            ingredients: [
+              "120g Haferflocken",
+              "25g Proteinpulver",
+              "100g Himbeeren (TK)",
+              "25g Erdnussbutter",
+              "180ml Wasser, 1 EL Kokosraspeln"
+            ],
+            steps: "Flocken, Pulver, Himbeeren und Wasser in Schale verrühren. Erdnussbutter in die Mitte, Kokosraspeln obenauf. 11 Min. bei 175°C backen.",
+            macros: { p: 46, c: 100, f: 26, kcal: 818 }
+          },
+          {
+            type: "Snack 1",
+            category: "Shake",
+            name: "Schmelzflocken-Shake & Apfel",
+            airfryer: null,
+            ingredients: [
+              "30g Proteinpulver",
+              "70g Schmelzflocken",
+              "1 Apfel",
+              "350ml Wasser"
+            ],
+            steps: "Schnell im Shaker schütteln und trinken, Apfel essen.",
+            macros: { p: 34, c: 70, f: 6, kcal: 470 }
+          },
+          {
+            type: "Mittagessen",
+            category: "Kartoffeln",
+            name: "Kichererbsen-Kartoffel-Blech mit Thunfisch-Dip",
+            airfryer: { temp: 200, time: 17, note: "Kombination aus weichen Kartoffeln und knackigen Kichererbsen" },
+            ingredients: [
+              "500g Kartoffeln (in Würfel)",
+              "150g Kichererbsen (Dose, trocken)",
+              "10ml Olivenöl, Meersalz, Paprikapulver",
+              "1 Dose Thunfisch (150g)",
+              "150g Magerquark & Kräuter"
+            ],
+            steps: "Kartoffeln und Kichererbsen mit 10ml Öl würzen und 17 Min. bei 200°C backen (nach der Hälfte rütteln). Thunfisch mit Quark cremig rühren und dazuservieren.",
+            macros: { p: 67, c: 112, f: 16, kcal: 860 }
+          },
+          {
+            type: "Snack 2",
+            category: "Zucchini",
+            name: "Panierte knusprige Zucchini-Fries mit Eiweißbrot",
+            airfryer: { temp: 200, time: 9, note: "Außen mega kross wie aus der Fritteuse" },
+            ingredients: [
+              "1 Zucchini (in Sticks geschnitten)",
+              "1 Ei (verquirlt)",
+              "30g Semmelbrösel oder zerkleinerte Haferflocken",
+              "1 Sprühstoß Olivenöl, Salz, Pfeffer",
+              "2 Scheiben getoastetes Eiweißbrot mit 15g Erdnussbutter"
+            ],
+            steps: "Zucchini durch Ei und dann Brösel ziehen. 9 Min. bei 200°C im Ninja backen. Dazu das getoastete Eiweißbrot mit Erdnussbutter genießen.",
+            macros: { p: 34, c: 42, f: 24, kcal: 520 }
+          },
+          {
+            type: "Abendessen",
+            category: "Familie",
+            name: "Couscous-Bowl mit Rührei & Airfryer Grillgemüse",
+            airfryer: { temp: 195, time: 9, note: "Paprika, Zucchini und Zwiebeln rösten" },
+            ingredients: [
+              "100g Couscous (mit kochendem Wasser gequollen)",
+              "2 Eier",
+              "1 Zucchini & 1 rote Zwiebel",
+              "15ml Olivenöl, Petersilie, Zitronensaft"
+            ],
+            steps: "Couscous 5 Min. quellen lassen. Gemüse im Airfryer 9 Min. bei 195°C mit 15ml Öl rösten. Eier braten und alles in einer großen Schüssel locker vermengen.",
+            macros: { p: 28, c: 80, f: 28, kcal: 684 }
+          }
+        ]
+      },
+
+      // ================= TAG 6 =================
+      {
+        day: 6,
+        title: "Tempeh-Crunch & Süßkartoffel-Schmaus",
+        meals: [
+          {
+            type: "Frühstück",
+            category: "Oats",
+            name: "Bananen-Zimt Proats mit Schokotropfen",
+            airfryer: { temp: 175, time: 11, note: "Perfekte Kruste dank Heißluft" },
+            ingredients: [
+              "120g Haferflocken",
+              "25g Schoko-Protein",
+              "1 reife Banane",
+              "25g Mandelmus oder Erdnussbutter",
+              "180ml Wasser, Prise Zimt"
+            ],
+            steps: "Alles in der Auflaufform verrühren, Nussmus in die Mitte geben und 11 Min. bei 175°C backen.",
+            macros: { p: 46, c: 104, f: 25, kcal: 825 }
+          },
+          {
+            type: "Snack 1",
+            category: "Shake",
+            name: "Protein Shake mit Schmelzflocken & Orange",
+            airfryer: null,
+            ingredients: [
+              "30g Proteinpulver",
+              "70g Schmelzflocken",
+              "1 große Orange oder Banane",
+              "350ml Wasser"
+            ],
+            steps: "Zubereiten und trinken, Frucht verzehren.",
+            macros: { p: 33, c: 72, f: 5, kcal: 465 }
+          },
+          {
+            type: "Mittagessen",
+            category: "Süßkartoffeln",
+            name: "Knuspriger Marinierter Tempeh mit Süßkartoffeln",
+            airfryer: { temp: 205, time: 15, note: "Tempeh wird herrlich nussig und kross" },
+            ingredients: [
+              "550g Süßkartoffeln (Spalten)",
+              "180g Tempeh (gewürfelt)",
+              "15ml Sojasauce, 10ml Sesamöl, Knoblauch",
+              "1 Shake aus 20g Proteinpulver in Wasser als Drink"
+            ],
+            steps: "Tempeh und Süßkartoffeln mit Öl, Sojasauce und Knoblauch marinieren. Bei 205°C für 15 Min. in die Schublade geben (nach 8 Min. schütteln).",
+            macros: { p: 62, c: 122, f: 20, kcal: 916 }
+          },
+          {
+            type: "Snack 2",
+            category: "Eiweißbrot",
+            name: "Eiweißbrot mit Avocado & Gekochtem Ei",
+            airfryer: { temp: 190, time: 4, note: "Brot rösten" },
+            ingredients: [
+              "2 Scheiben Eiweißbrot",
+              "50g reife Avocado (zerdrückt)",
+              "2 Eier (wachsweich)",
+              "Meersalz, Chiliflocken"
+            ],
+            steps: "Brot 4 Min. im Airfryer rösten. Avocado darauf verstreichen, mit Eiern und Salz belegen.",
+            macros: { p: 36, c: 16, f: 26, kcal: 442 }
+          },
+          {
+            type: "Abendessen",
+            category: "Familie",
+            name: "Pasta mit Eiern & gerösteten Zucchini-Halbmonden",
+            airfryer: { temp: 200, time: 8, note: "Röstaromen pur" },
+            ingredients: [
+              "105g Penne (trocken gekocht)",
+              "1 Zucchini",
+              "2 Eier",
+              "15ml Olivenöl, italienische Kräuter"
+            ],
+            steps: "Nudeln kochen. Zucchini mit Öl im Ninja 8 Min. bei 200°C bräunen. Eier untermischen.",
+            macros: { p: 31, c: 84, f: 27, kcal: 703 }
+          }
+        ]
+      },
+
+      // ================= TAG 7 =================
+      {
+        day: 7,
+        title: "Sonntags-Brunch & Loaded Airfryer Potatoes",
+        meals: [
+          {
+            type: "Frühstück",
+            category: "Oats",
+            name: "Double Chocolate Baked Oats",
+            airfryer: { temp: 175, time: 11, note: "Schokoladig wie Brownies" },
+            ingredients: [
+              "120g Haferflocken",
+              "30g Schoko-Protein",
+              "1 TL Backkakao",
+              "1 Banane (zerdrückt)",
+              "25g Erdnussbutter",
+              "180ml Wasser"
+            ],
+            steps: "Alles in der Backform verrühren, Erdnussbutter in den Kern setzen, 11 Min. bei 175°C backen.",
+            macros: { p: 48, c: 104, f: 24, kcal: 824 }
+          },
+          {
+            type: "Snack 1",
+            category: "Shake",
+            name: "Schmelzflocken-Shake & Apfel",
+            airfryer: null,
+            ingredients: [
+              "30g Proteinpulver",
+              "70g Schmelzflocken",
+              "1 Apfel",
+              "350ml Wasser"
+            ],
+            steps: "Shaken und genießen.",
+            macros: { p: 34, c: 70, f: 6, kcal: 470 }
+          },
+          {
+            type: "Mittagessen",
+            category: "Kartoffeln",
+            name: "Loaded Airfryer Wedges mit Hähnchen & Hüttenkäse",
+            airfryer: { temp: 200, time: 18, note: "Schublade optimal ausnutzen" },
+            ingredients: [
+              "650g Kartoffeln",
+              "180g Hähnchenbruststreifen",
+              "10ml Olivenöl, Rosmarin, Salz",
+              "150g körniger Frischkäse"
+            ],
+            steps: "Kartoffeln und Hähnchenstreifen nebeneinander im Airfryer 18 Min. bei 200°C backen (Hähnchen nach 12 Min. ggf. prüfen). Hüttenkäse als Dip dazu.",
+            macros: { p: 66, c: 105, f: 16, kcal: 828 }
+          },
+          {
+            type: "Snack 2",
+            category: "Eiweißbrot",
+            name: "Eiweißbrot mit Erdnussbutter & Knusper-Kichererbsen",
+            airfryer: { temp: 200, time: 8, note: "Kichererbsen knusprig backen" },
+            ingredients: [
+              "2 Scheiben Eiweißbrot",
+              "20g Erdnussbutter",
+              "150g Kichererbsen (Dose, getrocknet)",
+              "1 TL Öl, Paprika, Salz"
+            ],
+            steps: "Kichererbsen mit Öl 8 Min. bei 200°C rösten, Brot die letzten 3 Min. dazulegen. Bestreichen und snacken.",
+            macros: { p: 37, c: 40, f: 25, kcal: 533 }
+          },
+          {
+            type: "Abendessen",
+            category: "Familie",
+            name: "Reis-Pfanne mit Eiern, Zucchini & Tomaten",
+            airfryer: { temp: 195, time: 9, note: "Saftig und aromatisch" },
+            ingredients: [
+              "110g Basmatireis (roh)",
+              "2 Eier",
+              "1 Zucchini & 150g Tomaten",
+              "15ml Olivenöl, Kräuter"
+            ],
+            steps: "Reis kochen. Gemüse 9 Min. bei 195°C im Airfryer rösten. Eier braten und mit dem Reis und Röstgemüse vermengen.",
+            macros: { p: 27, c: 90, f: 29, kcal: 729 }
+          }
+        ]
+      },
+
+      // ================= TAG 8 =================
+      {
+        day: 8,
+        title: "Start Woche 2: Gnocchi Crunch & Zimt-Apfel Oats",
+        meals: [
+          {
+            type: "Frühstück",
+            category: "Oats",
+            name: "Gebackene Apfel-Zimt Oats mit Mandelmus",
+            airfryer: { temp: 175, time: 11, note: "Sehr aromatisch" },
+            ingredients: [
+              "120g Haferflocken",
+              "25g Vanille-Protein",
+              "1 geriebener Apfel",
+              "25g Mandelmus",
+              "180ml Wasser, Zimt"
+            ],
+            steps: "Zutaten verrühren, Mandelmus in die Mitte, 11 Min. bei 175°C backen.",
+            macros: { p: 45, c: 104, f: 24, kcal: 812 }
+          },
+          {
+            type: "Snack 1",
+            category: "Shake",
+            name: "Schmelzflocken-Shake & Banane",
+            airfryer: null,
+            ingredients: ["30g Proteinpulver", "70g Schmelzflocken", "1 Banane", "350ml Wasser"],
+            steps: "Shaken und Banane essen.",
+            macros: { p: 34, c: 78, f: 5, kcal: 493 }
+          },
+          {
+            type: "Mittagessen",
+            category: "Gnocchi",
+            name: "Krosse Ninja-Gnocchi mit Thunfisch & Schnittlauchquark",
+            airfryer: { temp: 200, time: 12, note: "Nach 6 Min. schütteln" },
+            ingredients: [
+              "450g Gnocchi (roh)",
+              "10ml Öl, Meersalz",
+              "1 Dose Thunfisch (150g)",
+              "180g Magerquark & Schnittlauch"
+            ],
+            steps: "Gnocchi mit Öl und Salz 12 Min. bei 200°C kross garen. Thunfisch mit Quark anrühren.",
+            macros: { p: 65, c: 110, f: 16, kcal: 844 }
+          },
+          {
+            type: "Snack 2",
+            category: "Eiweißbrot",
+            name: "Eiweißbrot mit Erdnussbutter & 2 gekochten Eiern",
+            airfryer: { temp: 190, time: 4, note: "Brot kross toasten" },
+            ingredients: [
+              "2 Scheiben Eiweißbrot",
+              "25g Erdnussbutter",
+              "2 Eier",
+              "Prise Salz"
+            ],
+            steps: "Brot 4 Min. toasten, Erdnussbutter drauf, Eier dazu genießen.",
+            macros: { p: 38, c: 16, f: 28, kcal: 468 }
+          },
+          {
+            type: "Abendessen",
+            category: "Familie",
+            name: "Mediterrane Pasta mit Eiern & Knusper-Zucchini",
+            airfryer: { temp: 200, time: 8, note: "Herrliche Röststoffe" },
+            ingredients: [
+              "110g Nudeln (trocken)",
+              "2 Eier",
+              "1 Zucchini",
+              "15ml Olivenöl, Knoblauch, Salz"
+            ],
+            steps: "Nudeln kochen. Zucchini im Airfryer 8 Min. bei 200°C rösten. Eier garen und alles mischen.",
+            macros: { p: 30, c: 88, f: 27, kcal: 715 }
+          }
+        ]
+      },
+
+      // ================= TAG 9 =================
+      {
+        day: 9,
+        title: "Tofu-Nuggets & Gebackene Beeren-Oats",
+        meals: [
+          {
+            type: "Frühstück",
+            category: "Oats",
+            name: "Berry Explosion Baked Oats",
+            airfryer: { temp: 175, time: 11, note: "Fruchtig und saftig" },
+            ingredients: [
+              "120g Haferflocken",
+              "25g Proteinpulver",
+              "120g Waldbeeren (TK)",
+              "25g Erdnussbutter",
+              "180ml Wasser"
+            ],
+            steps: "Zutaten in Auflaufform mischen, Erdnussbutter in den Kern, 11 Min. bei 175°C backen.",
+            macros: { p: 46, c: 102, f: 24, kcal: 808 }
+          },
+          {
+            type: "Snack 1",
+            category: "Shake",
+            name: "Schmelzflocken-Shake & Apfel",
+            airfryer: null,
+            ingredients: ["30g Proteinpulver", "70g Schmelzflocken", "1 Apfel", "350ml Wasser"],
+            steps: "Shaken und Apfel snacken.",
+            macros: { p: 34, c: 70, f: 6, kcal: 470 }
+          },
+          {
+            type: "Mittagessen",
+            category: "Kartoffeln",
+            name: "Knusprige Kartoffelspalten mit geröstetem Sesam-Tofu",
+            airfryer: { temp: 200, time: 18, note: "Tofu wird super kross" },
+            ingredients: [
+              "650g Kartoffeln",
+              "200g Naturtofu (gewürfelt)",
+              "12ml Sesam- oder Olivenöl, Sojasauce",
+              "150g Magerquark-Dip mit Kräutern"
+            ],
+            steps: "Kartoffeln und Tofu mit Öl und Sojasauce würzen. 18 Min. bei 200°C im Airfryer rösten (nach 10 Min. schütteln). In Quark dippen.",
+            macros: { p: 63, c: 110, f: 20, kcal: 872 }
+          },
+          {
+            type: "Snack 2",
+            category: "Eiweißbrot",
+            name: "Eiweißbrot-Toast mit Thunfisch & Hüttenkäse",
+            airfryer: { temp: 195, time: 6, note: "Als offener Toast überbacken" },
+            ingredients: [
+              "2 Scheiben Eiweißbrot",
+              "1 Dose Thunfisch",
+              "100g Hüttenkäse",
+              "Pfeffer & Gurke"
+            ],
+            steps: "Thunfisch und Hüttenkäse auf Brotscheiben streichen, 6 Min. bei 195°C überbacken.",
+            macros: { p: 46, c: 18, f: 18, kcal: 418 }
+          },
+          {
+            type: "Abendessen",
+            category: "Familie",
+            name: "Reis-Bowl mit 2 Eiern & Airfryer Grill-Zucchini",
+            airfryer: { temp: 210, time: 8, note: "Sehr schnelle Beilage" },
+            ingredients: [
+              "110g Basmatireis (roh)",
+              "2 Eier",
+              "1 Zucchini & 1 Paprika",
+              "15ml Olivenöl, Salz, Pfeffer"
+            ],
+            steps: "Reis kochen. Gemüse mit 15ml Öl 8 Min. bei 210°C rösten. Eier stocken lassen und alles vermengen.",
+            macros: { p: 26, c: 94, f: 28, kcal: 732 }
+          }
+        ]
+      },
+
+      // ================= TAG 10 =================
+      {
+        day: 10,
+        title: "Süßkartoffel-Wedges & Erdnuss-Protein-Kick",
+        meals: [
+          {
+            type: "Frühstück",
+            category: "Oats",
+            name: "Peanut-Banana Baked Oats",
+            airfryer: { temp: 175, time: 11, note: "Klassiker für maximale Energie" },
+            ingredients: [
+              "120g Haferflocken",
+              "25g Protein (Vanille)",
+              "1 Banane (zerdrückt)",
+              "25g Erdnussbutter",
+              "180ml Mandeldrink"
+            ],
+            steps: "Verrühren, Erdnussbutterkern formen, 11 Min. bei 175°C backen.",
+            macros: { p: 46, c: 105, f: 25, kcal: 829 }
+          },
+          {
+            type: "Snack 1",
+            category: "Shake",
+            name: "Instant Oats Shake & Birne",
+            airfryer: null,
+            ingredients: ["30g Proteinpulver", "70g Schmelzflocken", "1 Birne", "350ml Wasser"],
+            steps: "Shaken und Frucht essen.",
+            macros: { p: 33, c: 72, f: 5, kcal: 465 }
+          },
+          {
+            type: "Mittagessen",
+            category: "Süßkartoffeln",
+            name: "Krosse Süßkartoffel-Pommes mit Hähnchenstreifen",
+            airfryer: { temp: 200, time: 16, note: "Süßkartoffeln und Hähnchen nebeneinander" },
+            ingredients: [
+              "550g Süßkartoffeln (in Stiften)",
+              "180g Hähnchenbrust",
+              "12ml Olivenöl, Rosmarin, Paprika",
+              "150g körniger Frischkäse"
+            ],
+            steps: "Mit Öl marinieren, in den 6,2L Korb füllen. 16 Min. bei 200°C backen. Mit Hüttenkäse servieren.",
+            macros: { p: 66, c: 118, f: 18, kcal: 898 }
+          },
+          {
+            type: "Snack 2",
+            category: "Eiweißbrot",
+            name: "Eiweißbrot mit Erdnussbutter & Knusper-Kichererbsen",
+            airfryer: { temp: 200, time: 8, note: "Crunchy Topping" },
+            ingredients: [
+              "2 Scheiben Eiweißbrot",
+              "20g Erdnussbutter",
+              "150g Kichererbsen (Dose)",
+              "1 TL Öl, Salz, Chili"
+            ],
+            steps: "Kichererbsen 8 Min. bei 200°C rösten, Brot die letzten 3 Min. beilegen. Brot bestreichen.",
+            macros: { p: 37, c: 40, f: 25, kcal: 533 }
+          },
+          {
+            type: "Abendessen",
+            category: "Familie",
+            name: "Pasta-Pfanne mit Eiern & Frittierten Zucchini-Chips",
+            airfryer: { temp: 200, time: 9, note: "Knusprige Zucchinischeiben" },
+            ingredients: [
+              "100g Hartweizenpasta",
+              "2 Eier",
+              "1 Zucchini",
+              "15ml Olivenöl, Oregano, Salz"
+            ],
+            steps: "Pasta kochen. Zucchini 9 Min. bei 200°C mit Öl im Ninja backen. Eier dazugeben und vermengen.",
+            macros: { p: 30, c: 80, f: 28, kcal: 692 }
+          }
+        ]
+      },
+
+      // ================= TAG 11 =================
+      {
+        day: 11,
+        title: "Gnocchi & Gebackene Schoko-Kirsch Oats",
+        meals: [
+          {
+            type: "Frühstück",
+            category: "Oats",
+            name: "Schoko-Kirsch Hafer-Auflauf",
+            airfryer: { temp: 175, time: 11, note: "Schmeckt wie Schwarzwälder Torte" },
+            ingredients: [
+              "120g Haferflocken",
+              "25g Schoko-Protein",
+              "100g Sauerkirschen (Glas oder TK)",
+              "25g Mandelmus",
+              "180ml Wasser, 1 TL Kakao"
+            ],
+            steps: "Alles vermengen, Mandelmus hineindrücken, 11 Min. bei 175°C backen.",
+            macros: { p: 46, c: 102, f: 24, kcal: 808 }
+          },
+          {
+            type: "Snack 1",
+            category: "Shake",
+            name: "Protein Shake mit Schmelzflocken & Banane",
+            airfryer: null,
+            ingredients: ["30g Proteinpulver", "70g Schmelzflocken", "1 Banane", "350ml Wasser"],
+            steps: "Trinken und Energie tanken.",
+            macros: { p: 34, c: 78, f: 5, kcal: 493 }
+          },
+          {
+            type: "Mittagessen",
+            category: "Gnocchi",
+            name: "Airfryer Knusper-Gnocchi mit Thunfisch-Creme",
+            airfryer: { temp: 200, time: 12, note: "Perfekt goldbraun" },
+            ingredients: [
+              "450g Gnocchi",
+              "10ml Öl, Meersalz",
+              "1 Dose Thunfisch",
+              "180g Magerquark & Petersilie"
+            ],
+            steps: "Gnocchi 12 Min. bei 200°C im Korb rösten. Thunfisch-Quark anrühren und dippen.",
+            macros: { p: 65, c: 110, f: 16, kcal: 844 }
+          },
+          {
+            type: "Snack 2",
+            category: "Eiweißbrot",
+            name: "Eiweißbrot mit 2 Eiern & Schnittlauch",
+            airfryer: { temp: 190, time: 4, note: "Brot kross machen" },
+            ingredients: [
+              "2 Scheiben Eiweißbrot",
+              "2 Eier",
+              "15g Butter",
+              "Kräutersalz"
+            ],
+            steps: "Brot rösten, mit Butter bestreichen und gekochten Eiern belegen.",
+            macros: { p: 34, c: 16, f: 27, kcal: 443 }
+          },
+          {
+            type: "Abendessen",
+            category: "Familie",
+            name: "Reis-Gemüse-Pfanne mit Zucchini & Spiegelei",
+            airfryer: { temp: 205, time: 8, note: "Hohe Hitze für Röstaromen" },
+            ingredients: [
+              "110g Basmatireis",
+              "2 Eier",
+              "1 Zucchini & 1 Tomate",
+              "15ml Olivenöl, Sojasauce"
+            ],
+            steps: "Reis kochen. Gemüse 8 Min. bei 205°C rösten. Eier braten und mit Reis servieren.",
+            macros: { p: 26, c: 90, f: 29, kcal: 725 }
+          }
+        ]
+      },
+
+      // ================= TAG 12 =================
+      {
+        day: 12,
+        title: "Paniertes Zucchini-Highlight & Loaded Wedges",
+        meals: [
+          {
+            type: "Frühstück",
+            category: "Oats",
+            name: "Warme Zimt-Bananen Baked Oats",
+            airfryer: { temp: 175, time: 11, note: "Knusprig gebacken" },
+            ingredients: [
+              "120g Haferflocken",
+              "25g Protein",
+              "1 Banane",
+              "25g Erdnussbutter",
+              "180ml Wasser"
+            ],
+            steps: "Zutaten verrühren, Erdnussbutter in den Kern, 11 Min. bei 175°C backen.",
+            macros: { p: 46, c: 105, f: 25, kcal: 829 }
+          },
+          {
+            type: "Snack 1",
+            category: "Shake",
+            name: "Schmelzflocken-Shake & Apfel",
+            airfryer: null,
+            ingredients: ["30g Proteinpulver", "70g Schmelzflocken", "1 Apfel", "350ml Wasser"],
+            steps: "Shaken und Apfel essen.",
+            macros: { p: 34, c: 70, f: 6, kcal: 470 }
+          },
+          {
+            type: "Mittagessen",
+            category: "Kartoffeln",
+            name: "Krosse Ninja-Wedges mit Thunfisch-Hüttenkäse",
+            airfryer: { temp: 200, time: 18, note: "Klassiker-Rezept" },
+            ingredients: [
+              "650g Kartoffeln",
+              "10ml Olivenöl, Paprika, Salz",
+              "1 Dose Thunfisch",
+              "150g körniger Frischkäse"
+            ],
+            steps: "Kartoffeln 18 Min. bei 200°C backen. Thunfisch & Hüttenkäse vermengen und dippen.",
+            macros: { p: 63, c: 105, f: 16, kcal: 816 }
+          },
+          {
+            type: "Snack 2",
+            category: "Zucchini",
+            name: "Paniertes Zucchini-Crunch-Eiweißbrot",
+            airfryer: { temp: 200, time: 9, note: "Herrlich kross" },
+            ingredients: [
+              "1 Zucchini (in Scheiben)",
+              "1 Ei & 30g Brösel",
+              "2 Scheiben Eiweißbrot",
+              "15g Erdnussbutter"
+            ],
+            steps: "Zucchini panieren, 9 Min. bei 200°C backen. Eiweißbrot rösten und mit Erdnussbutter bestreichen.",
+            macros: { p: 35, c: 42, f: 24, kcal: 524 }
+          },
+          {
+            type: "Abendessen",
+            category: "Familie",
+            name: "Pasta mit Eiern & gerösteten Kirschtomaten",
+            airfryer: { temp: 195, time: 8, note: "Tomaten platzen saftig auf" },
+            ingredients: [
+              "100g Hartweizenpasta",
+              "2 Eier",
+              "200g Kirschtomaten",
+              "15ml Olivenöl, Basilikum, Salz"
+            ],
+            steps: "Pasta kochen. Tomaten mit Öl 8 Min. bei 195°C im Ninja rösten. Mit Eiern und Pasta vermengen.",
+            macros: { p: 29, c: 80, f: 27, kcal: 679 }
+          }
+        ]
+      },
+
+      // ================= TAG 13 =================
+      {
+        day: 13,
+        title: "Tempeh-Süßkartoffel-Bowl & Schoko-Oats",
+        meals: [
+          {
+            type: "Frühstück",
+            category: "Oats",
+            name: "Schoko-Erdnuss Baked Oats",
+            airfryer: { temp: 175, time: 11, note: "Flüssiger Schoko-Erdnuss-Kern" },
+            ingredients: [
+              "120g Haferflocken",
+              "30g Schoko-Protein",
+              "1 Banane",
+              "25g Erdnussbutter",
+              "180ml Wasser"
+            ],
+            steps: "Form befüllen, Erdnussbutter mittig platzieren, 11 Min. bei 175°C backen.",
+            macros: { p: 48, c: 104, f: 24, kcal: 824 }
+          },
+          {
+            type: "Snack 1",
+            category: "Shake",
+            name: "Schmelzflocken-Shake & Banane",
+            airfryer: null,
+            ingredients: ["30g Proteinpulver", "70g Schmelzflocken", "1 Banane", "350ml Wasser"],
+            steps: "Shaken und Banane verzehren.",
+            macros: { p: 34, c: 78, f: 5, kcal: 493 }
+          },
+          {
+            type: "Mittagessen",
+            category: "Süßkartoffeln",
+            name: "Süßkartoffel-Pommes mit Marinierte Tempeh-Bites",
+            airfryer: { temp: 205, time: 15, note: "Sehr aromatisch" },
+            ingredients: [
+              "550g Süßkartoffeln",
+              "180g Tempeh (gewürfelt)",
+              "15ml Sojasauce, 10ml Öl",
+              "1 Protein-Drink (20g Pulver in Wasser)"
+            ],
+            steps: "Süßkartoffeln und Tempeh mit Öl und Sojasauce 15 Min. bei 205°C im Korb rösten.",
+            macros: { p: 62, c: 122, f: 20, kcal: 916 }
+          },
+          {
+            type: "Snack 2",
+            category: "Eiweißbrot",
+            name: "Eiweißbrot mit Erdnussbutter & Knusper-Kichererbsen",
+            airfryer: { temp: 200, time: 8, note: "Knackiger Snack" },
+            ingredients: [
+              "2 Scheiben Eiweißbrot",
+              "20g Erdnussbutter",
+              "150g Kichererbsen",
+              "1 TL Öl, Paprika, Salz"
+            ],
+            steps: "Kichererbsen 8 Min. bei 200°C rösten, Brot die letzten 3 Min. beilegen.",
+            macros: { p: 37, c: 40, f: 25, kcal: 533 }
+          },
+          {
+            type: "Abendessen",
+            category: "Familie",
+            name: "Pasta-Pfanne mit Eiern & Grillgemüse",
+            airfryer: { temp: 200, time: 8, note: "Zucchini und Tomaten" },
+            ingredients: [
+              "105g Nudeln",
+              "2 Eier",
+              "1 Zucchini",
+              "15ml Olivenöl, Oregano, Salz"
+            ],
+            steps: "Nudeln kochen. Zucchini 8 Min. bei 200°C rösten. Eier garen und alles mischen.",
+            macros: { p: 31, c: 84, f: 27, kcal: 703 }
+          }
+        ]
+      },
+
+      // ================= TAG 14 =================
+      {
+        day: 14,
+        title: "Finale: Mega Airfryer Festmahl & High-Protein Day",
+        meals: [
+          {
+            type: "Frühstück",
+            category: "Oats",
+            name: "Chunky Monkey Deluxe Baked Oats",
+            airfryer: { temp: 175, time: 11, note: "Goldbraun und herrlich duftend" },
+            ingredients: [
+              "120g Haferflocken",
+              "25g Protein",
+              "1 Banane",
+              "25g Erdnussbutter",
+              "180ml Wasser"
+            ],
+            steps: "Mischen, Erdnussbutter in den Kern setzen, 11 Min. bei 175°C backen.",
+            macros: { p: 46, c: 105, f: 25, kcal: 829 }
+          },
+          {
+            type: "Snack 1",
+            category: "Shake",
+            name: "Schmelzflocken-Shake & Apfel",
+            airfryer: null,
+            ingredients: ["30g Proteinpulver", "70g Schmelzflocken", "1 Apfel", "350ml Wasser"],
+            steps: "Shaken und genießen.",
+            macros: { p: 34, c: 70, f: 6, kcal: 470 }
+          },
+          {
+            type: "Mittagessen",
+            category: "Hähnchen",
+            name: "Loaded Wedges & Hähnchenbrust aus dem Ninja",
+            airfryer: { temp: 200, time: 16, note: "Korb-Power voll ausnutzen" },
+            ingredients: [
+              "650g Kartoffeln",
+              "200g Hähnchenbrust",
+              "12ml Olivenöl, Gewürze",
+              "100g Kräuterquark"
+            ],
+            steps: "Kartoffeln und Fleisch nebeneinander 16 Min. bei 200°C bräunen. In Quark dippen.",
+            macros: { p: 68, c: 104, f: 18, kcal: 850 }
+          },
+          {
+            type: "Snack 2",
+            category: "Eiweißbrot",
+            name: "Thunfisch-Melt Toastie auf Eiweißbrot",
+            airfryer: { temp: 195, time: 6, note: "Käse schön überbacken" },
+            ingredients: [
+              "2 Scheiben Eiweißbrot",
+              "1 Dose Thunfisch",
+              "40g fettarmer Käse",
+              "1 EL Quark, Kräuter"
+            ],
+            steps: "Thunfisch-Mix auf Brot streichen, mit Käse 6 Min. bei 195°C im Airfryer überbacken.",
+            macros: { p: 44, c: 18, f: 22, kcal: 446 }
+          },
+          {
+            type: "Abendessen",
+            category: "Familie",
+            name: "Reis-Bowl mit 2 Eiern & Knusper-Zucchini",
+            airfryer: { temp: 210, time: 8, note: "Maximaler Röstgeschmack" },
+            ingredients: [
+              "110g Basmatireis",
+              "2 Eier",
+              "1 Zucchini",
+              "15ml Olivenöl, Sojasauce"
+            ],
+            steps: "Reis kochen. Zucchini 8 Min. bei 210°C rösten. Eier braten und mit Reis anrichten.",
+            macros: { p: 26, c: 92, f: 28, kcal: 724 }
+          }
+        ]
+      }
+    ];
+
+    // --- SHOPPING LIST INVENTORY FOR WEEK 1 & WEEK 2 ---
+    const SHOPPING_DATA = {
+      1: {
+        "Frische & Gemüse": [
+          "Kartoffeln (festkochend): ca. 3,5 kg",
+          "Süßkartoffeln: ca. 1,5 kg",
+          "Zucchini: 6–7 Stück",
+          "Bananen: 10–12 Stück (reif)",
+          "Äpfel / Birnen: 7–8 Stück",
+          "Kirschtomaten: 2 Packungen (ca. 500g)",
+          "Paprika: 3 Stück"
+        ],
+        "Proteine & Kühlregal": [
+          "Eier (Bio/Freiland): 2 Packungen (ca. 20–24 Eier)",
+          "Magerquark: 4–5 Becher (je 500g)",
+          "Körniger Frischkäse (Hüttenkäse): 4 Becher (je 200g)",
+          "Thunfisch im eigenen Saft: 5 Dosen",
+          "Tofu (Natur oder Räuchertofu): 3 Blöcke (ca. 600g)",
+          "Hähnchen- oder Putenbrust: ca. 400g",
+          "Tempeh: 1 Packung (ca. 200g)",
+          "Gouda fettreduziert (Scheiben): 1 Packung"
+        ],
+        "Kohlenhydrate & Brot": [
+          "Zarte Haferflocken: 2–3 Packungen (ca. 1,2 kg)",
+          "Instant Oats / Schmelzflocken: 1–2 Packungen (ca. 600g)",
+          "Eiweißbrot: 2 Laibe bzw. Packungen (ca. 14–16 Scheiben)",
+          "Frische Gnocchi (Kühlregal): 1 Packung (500g)",
+          "Kichererbsen (Dose): 4 Dosen (je 400g)",
+          "Hartweizen-Pasta: 1 Packung (500g)",
+          "Basmatireis: 1 Packung (500g)"
+        ],
+        "Fette, Nüsse & Vorrat": [
+          "Naturbelassene Erdnussbutter (100% Erdnuss): 1 großes Glas (ca. 500g)",
+          "Mandelmus oder Walnüsse: 1 Glas bzw. Beutel",
+          "Natives Olivenöl extra: 1 Flasche",
+          "Mehrkomponenten-Proteinpulver (Vanille & Schoko)",
+          "Gewürze: Zimt, Meersalz, Paprikapulver edelsüß, Curry, Knoblauchpulver, Oregano",
+          "Zuckerfreie BBQ-Sauce & Sojasauce"
+        ]
+      },
+      2: {
+        "Frische & Gemüse": [
+          "Kartoffeln: ca. 3,5 kg",
+          "Süßkartoffeln: ca. 1,5 kg",
+          "Zucchini: 6–7 Stück",
+          "Bananen: 10–12 Stück",
+          "Äpfel: 7 Stück",
+          "Kirschtomaten: 2 Packungen (500g)",
+          "Frischer Schnittlauch / Petersilie: 1 Bund"
+        ],
+        "Proteine & Kühlregal": [
+          "Eier: 20–24 Stück",
+          "Magerquark: 4–5 Becher (je 500g)",
+          "Körniger Frischkäse: 4 Becher (je 200g)",
+          "Thunfisch (Dose): 5 Dosen",
+          "Tofu / Tempeh: 3 Packungen",
+          "Hähnchenbrustfilet: 400g",
+          "Käsescheiben fettarm: 1 Packung"
+        ],
+        "Kohlenhydrate & Brot": [
+          "Haferflocken zart: 1,2 kg",
+          "Schmelzflocken: 600g",
+          "Eiweißbrot: 2 Packungen",
+          "Frische Gnocchi: 2 Packungen (je 450–500g)",
+          "Kichererbsen (Dose): 4 Dosen",
+          "Pasta & Basmatireis: je 500g Packung"
+        ],
+        "Fette, Nüsse & Vorrat": [
+          "Erdnussbutter (100%): 500g",
+          "Mandelmus: 250g",
+          "Olivenöl & Sesamöl",
+          "Proteinpulver Vorrat",
+          "Sauerkirschen oder Beeren (TK/Glas)"
+        ]
+      }
+    };
+
+    // --- APPLICATION STATE ---
+    let currentWeek = 1;
+    let currentDayNumber = 1;
+    let currentShoppingWeek = 1;
+    let checkedMealsState = {}; // { 'd1-m0': true, ... }
+    let shoppingCheckedState = {}; // { 'w1-c0-i1': true, ... }
+    let currentTagFilter = '';
+
+    // --- INITIALIZATION ---
+    window.addEventListener('DOMContentLoaded', () => {
+      loadStateFromStorage();
+      renderDaysCarousel();
+      renderDayMeals(currentDayNumber);
+      updateDailyMacroDashboard(currentDayNumber);
+      renderRecipeSearchResults();
+      renderShoppingList(currentShoppingWeek);
+    });
+
+    // --- STORAGE HELPERS ---
+    function loadStateFromStorage() {
+      try {
+        const storedMeals = localStorage.getItem('ninja_meal_checks');
+        if (storedMeals) checkedMealsState = JSON.parse(storedMeals);
+
+        const storedShop = localStorage.getItem('ninja_shop_checks');
+        if (storedShop) shoppingCheckedState = JSON.parse(storedShop);
+      } catch (e) {
+        console.warn('Storage error, falling back to memory', e);
+      }
+    }
+
+    function saveState() {
+      try {
+        localStorage.setItem('ninja_meal_checks', JSON.stringify(checkedMealsState));
+        localStorage.setItem('ninja_shop_checks', JSON.stringify(shoppingCheckedState));
+      } catch (e) {
+        // iframe quota safety
+      }
+    }
+
+    function showToast(message) {
+      const toast = document.getElementById('toast');
+      const text = document.getElementById('toast-text');
+      text.textContent = message;
+      toast.classList.remove('translate-y-20', 'opacity-0');
+      toast.classList.add('translate-y-0', 'opacity-100');
+      setTimeout(() => {
+        toast.classList.add('translate-y-20', 'opacity-0');
+        toast.classList.remove('translate-y-0', 'opacity-100');
+      }, 2000);
+    }
+
+    // --- TAB SWITCHER ---
+    function switchMainTab(tabId) {
+      document.getElementById('view-daily').classList.add('hidden');
+      document.getElementById('view-search').classList.add('hidden');
+      document.getElementById('view-shopping').classList.add('hidden');
+
+      document.getElementById('nav-daily').className = "px-3.5 py-1.5 rounded-lg font-medium text-slate-400 hover:text-white transition";
+      document.getElementById('nav-search').className = "px-3.5 py-1.5 rounded-lg font-medium text-slate-400 hover:text-white transition";
+      document.getElementById('nav-shopping').className = "px-3.5 py-1.5 rounded-lg font-medium text-slate-400 hover:text-white transition";
+
+      if (tabId === 'daily') {
+        document.getElementById('view-daily').classList.remove('hidden');
+        document.getElementById('nav-daily').className = "px-3.5 py-1.5 rounded-lg font-medium transition text-white bg-slate-800 shadow";
+      } else if (tabId === 'search') {
+        document.getElementById('view-search').classList.remove('hidden');
+        document.getElementById('nav-search').className = "px-3.5 py-1.5 rounded-lg font-medium transition text-white bg-slate-800 shadow";
+      } else if (tabId === 'shopping') {
+        document.getElementById('view-shopping').classList.remove('hidden');
+        document.getElementById('nav-shopping').className = "px-3.5 py-1.5 rounded-lg font-medium transition text-white bg-slate-800 shadow";
+      }
+    }
+
+    // --- WEEK & DAYS NAVIGATION ---
+    function selectWeek(weekNum) {
+      currentWeek = weekNum;
+      document.getElementById('week-1-btn').className = weekNum === 1 
+        ? "px-3 py-1 text-xs font-semibold rounded-md bg-orange-500 text-white transition"
+        : "px-3 py-1 text-xs font-semibold rounded-md text-slate-400 hover:text-white transition";
+      document.getElementById('week-2-btn').className = weekNum === 2 
+        ? "px-3 py-1 text-xs font-semibold rounded-md bg-orange-500 text-white transition"
+        : "px-3 py-1 text-xs font-semibold rounded-md text-slate-400 hover:text-white transition";
+
+      // Select first day of that week
+      const targetDay = weekNum === 1 ? 1 : 8;
+      selectDay(targetDay);
+      renderDaysCarousel();
+    }
+
+    function selectDay(dayNum) {
+      currentDayNumber = dayNum;
+      currentWeek = dayNum <= 7 ? 1 : 2;
+      
+      // Update week buttons
+      document.getElementById('week-1-btn').className = currentWeek === 1 
+        ? "px-3 py-1 text-xs font-semibold rounded-md bg-orange-500 text-white transition"
+        : "px-3 py-1 text-xs font-semibold rounded-md text-slate-400 hover:text-white transition";
+      document.getElementById('week-2-btn').className = currentWeek === 2 
+        ? "px-3 py-1 text-xs font-semibold rounded-md bg-orange-500 text-white transition"
+        : "px-3 py-1 text-xs font-semibold rounded-md text-slate-400 hover:text-white transition";
+
+      renderDaysCarousel();
+      renderDayMeals(dayNum);
+      updateDailyMacroDashboard(dayNum);
+    }
+
+    function renderDaysCarousel() {
+      const container = document.getElementById('days-carousel');
+      container.innerHTML = '';
+
+      const startDay = currentWeek === 1 ? 1 : 8;
+      const endDay = currentWeek === 1 ? 7 : 14;
+
+      const dayNames = ["Mo", "Di", "Mi", "Do", "Fr", "Sa", "So"];
+
+      for (let d = startDay; d <= endDay; d++) {
+        const dayIdx = (d - 1) % 7;
+        const isCurrent = d === currentDayNumber;
+        
+        // Count checked meals for this day
+        let completedMeals = 0;
+        for (let m = 0; m < 5; m++) {
+          if (checkedMealsState[`d${d}-m${m}`]) completedMeals++;
+        }
+
+        const btn = document.createElement('button');
+        btn.onclick = () => selectDay(d);
+        btn.className = `flex-shrink-0 px-3.5 py-2 rounded-xl border text-center transition flex flex-col items-center min-w-[70px] ${
+          isCurrent 
+            ? 'bg-orange-500/15 border-orange-500 text-orange-400 shadow-md' 
+            : 'bg-slate-950/70 border-slate-800 text-slate-400 hover:border-slate-700 hover:text-slate-200'
+        }`;
+
+        btn.innerHTML = `
+          <span class="text-[10px] font-semibold uppercase tracking-wider">${dayNames[dayIdx]}</span>
+          <span class="text-sm font-bold text-white mt-0.5">Tag ${d}</span>
+          <span class="text-[9px] mt-1 px-1.5 py-0.2 rounded-full ${completedMeals === 5 ? 'bg-emerald-500/20 text-emerald-400 font-semibold' : 'bg-slate-800 text-slate-400'}">
+            ${completedMeals}/5
+          </span>
+        `;
+        container.appendChild(btn);
+      }
+    }
+
+    // --- RENDER MEALS FOR CURRENT DAY ---
+    function renderDayMeals(dayNum) {
+      const dayData = MEAL_DATA.find(d => d.day === dayNum);
+      if (!dayData) return;
+
+      const titleEl = document.getElementById('current-day-title');
+      if (titleEl) {
+        titleEl.textContent = `Tag ${dayNum}: ${dayData.title}`;
+      }
+
+      const badgeEl = document.getElementById('active-day-badge');
+      if (badgeEl) {
+        badgeEl.textContent = `Woche ${dayNum <= 7 ? '1' : '2'} · 5 Mahlzeiten`;
+      }
+
+      const container = document.getElementById('meals-container');
+      container.innerHTML = '';
+
+      dayData.meals.forEach((meal, mealIdx) => {
+        const key = `d${dayNum}-m${mealIdx}`;
+        const isChecked = !!checkedMealsState[key];
+
+        const card = document.createElement('div');
+        card.className = `border rounded-2xl p-4 sm:p-5 transition shadow-lg ${
+          isChecked 
+            ? 'bg-slate-900/40 border-slate-800/60 opacity-80' 
+            : 'bg-slate-900 border-slate-800 hover:border-slate-700'
+        }`;
+
+        let airfryerBadge = '';
+        if (meal.airfryer) {
+          airfryerBadge = `
+            <div class="inline-flex items-center gap-1.5 badge-airfryer text-orange-400 text-xs px-2.5 py-1 rounded-lg font-medium">
+              <svg class="w-3.5 h-3.5 text-orange-400" fill="currentColor" viewBox="0 0 20 20"><path fill-rule="evenodd" d="M11.3 1.046A1 1 0 0112 2v5h4a1 1 0 01.82 1.573l-7 10A1 1 0 018 18v-5H4a1 1 0 01-.82-1.573l7-10a1 1 0 011.12-.38z" clip-rule="evenodd"/></svg>
+              Ninja: <span class="font-bold text-white">${meal.airfryer.temp}°C</span> · <span class="font-bold text-white">${meal.airfryer.time} Min.</span>
+            </div>
+          `;
+        }
+
+        let ingredientsList = meal.ingredients.map(ing => `
+          <li class="flex items-start gap-2 text-xs text-slate-300">
+            <span class="text-orange-500 font-bold">•</span>
+            <span>${ing}</span>
+          </li>
+        `).join('');
+
+        card.innerHTML = `
+          <div class="flex flex-col sm:flex-row sm:items-center justify-between gap-3 border-b border-slate-800 pb-3">
+            <div class="flex items-center gap-3">
+              <input type="checkbox" id="${key}" onchange="toggleMealCheck('${key}', ${dayNum})" ${isChecked ? 'checked' : ''} class="w-5 h-5 rounded-lg border-slate-700 text-orange-500 bg-slate-950 focus:ring-orange-500/20 cursor-pointer">
+              <div>
+                <div class="flex items-center gap-2">
+                  <span class="text-xs uppercase tracking-wider font-bold text-orange-400">${meal.type}</span>
+                  <span class="text-slate-600">·</span>
+                  <span class="text-xs text-slate-400">${meal.category}</span>
+                </div>
+                <h3 class="text-base font-bold text-white mt-0.5 ${isChecked ? 'line-through text-slate-400' : ''}">${meal.name}</h3>
+              </div>
+            </div>
+            <div class="flex flex-wrap items-center gap-2">
+              ${airfryerBadge}
+              <div class="flex items-center gap-1.5 text-xs font-mono bg-slate-950 px-3 py-1 rounded-lg border border-slate-800">
+                <span class="text-brand-protein font-semibold">${meal.macros.p}g P</span>
+                <span class="text-slate-600">/</span>
+                <span class="text-amber-400 font-semibold">${meal.macros.c}g C</span>
+                <span class="text-slate-600">/</span>
+                <span class="text-yellow-300 font-semibold">${meal.macros.f}g F</span>
+                <span class="text-slate-600">·</span>
+                <span class="text-slate-200 font-bold">${meal.macros.kcal} kcal</span>
+              </div>
+            </div>
+          </div>
+
+          <div class="grid grid-cols-1 md:grid-cols-12 gap-4 mt-3.5 pt-1">
+            <!-- Ingredients -->
+            <div class="md:col-span-5 bg-slate-950/50 p-3 rounded-xl border border-slate-800/60">
+              <span class="text-[11px] font-semibold uppercase tracking-wider text-slate-400 block mb-2">Zutaten:</span>
+              <ul class="space-y-1">
+                ${ingredientsList}
+              </ul>
+            </div>
+
+            <!-- Preparation & Airfryer Tip -->
+            <div class="md:col-span-7 flex flex-col justify-between">
+              <div>
+                <span class="text-[11px] font-semibold uppercase tracking-wider text-slate-400 block mb-1">Zubereitung:</span>
+                <p class="text-xs text-slate-300 leading-relaxed">${meal.steps}</p>
+              </div>
+
+              ${meal.airfryer && meal.airfryer.note ? `
+                <div class="mt-3 text-[11px] bg-orange-500/10 border border-orange-500/20 text-orange-300 rounded-lg p-2 flex items-center gap-2">
+                  <svg class="w-4 h-4 flex-shrink-0 text-orange-400" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13 16h-1v-4h-1m1-4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z"/></svg>
+                  <span><strong>Ninja-Tipp:</strong> ${meal.airfryer.note}</span>
+                </div>
+              ` : ''}
+            </div>
+          </div>
+        `;
+
+        container.appendChild(card);
+      });
+    }
+
+    function toggleMealCheck(key, dayNum) {
+      const checkbox = document.getElementById(key);
+      checkedMealsState[key] = checkbox.checked;
+      saveState();
+      renderDaysCarousel();
+      updateDailyMacroDashboard(dayNum);
+      
+      // Update styling without full rebuild
+      const card = checkbox.closest('.border');
+      if (checkbox.checked) {
+        card.classList.add('bg-slate-900/40', 'border-slate-800/60', 'opacity-80');
+        showToast("Mahlzeit abgehakt! Fortschritt aktualisiert.");
+      } else {
+        card.classList.remove('bg-slate-900/40', 'border-slate-800/60', 'opacity-80');
+      }
+    }
+
+    function resetDayCheckboxes() {
+      for (let m = 0; m < 5; m++) {
+        delete checkedMealsState[`d${currentDayNumber}-m${m}`];
+      }
+      saveState();
+      renderDaysCarousel();
+      renderDayMeals(currentDayNumber);
+      updateDailyMacroDashboard(currentDayNumber);
+      showToast(`Tag ${currentDayNumber} zurückgesetzt.`);
+    }
+
+    // --- MACRO DASHBOARD RECALCULATION ---
+    function updateDailyMacroDashboard(dayNum) {
+      const dayData = MEAL_DATA.find(d => d.day === dayNum);
+      if (!dayData) return;
+
+      let currentP = 0, currentC = 0, currentF = 0, currentKcal = 0;
+      let totalP = 0, totalC = 0, totalF = 0, totalKcal = 0;
+
+      dayData.meals.forEach((m, idx) => {
+        totalP += m.macros.p;
+        totalC += m.macros.c;
+        totalF += m.macros.f;
+        totalKcal += m.macros.kcal;
+
+        if (checkedMealsState[`d${dayNum}-m${idx}`]) {
+          currentP += m.macros.p;
+          currentC += m.macros.c;
+          currentF += m.macros.f;
+          currentKcal += m.macros.kcal;
+        }
+      });
+
+      // Target bounds
+      const targetP = 210;
+      const targetC = 400;
+      const targetF = 100;
+      const targetKcal = 3340;
+
+      // Update text
+      document.getElementById('stat-protein-text').textContent = `${currentP} / ${targetP}g`;
+      document.getElementById('stat-carbs-text').textContent = `${currentC} / ${targetC}g`;
+      document.getElementById('stat-fats-text').textContent = `${currentF} / ${targetF}g`;
+      document.getElementById('stat-kcal').innerHTML = `${currentKcal} <span class="text-xs font-normal text-slate-400">/ ${targetKcal} kcal</span>`;
+
+      // Update bars
+      const pctP = Math.min(100, Math.round((currentP / targetP) * 100));
+      const pctC = Math.min(100, Math.round((currentC / targetC) * 100));
+      const pctF = Math.min(100, Math.round((currentF / targetF) * 100));
+      const pctKcal = Math.min(100, Math.round((currentKcal / targetKcal) * 100));
+
+      document.getElementById('stat-protein-bar').style.width = `${pctP}%`;
+      document.getElementById('stat-carbs-bar').style.width = `${pctC}%`;
+      document.getElementById('stat-fats-bar').style.width = `${pctF}%`;
+      document.getElementById('stat-kcal-percent').textContent = `${pctKcal}%`;
+    }
+
+    // --- RECIPE FINDER / SEARCH LOGIC ---
+    function setFilterTag(tag) {
+      currentTagFilter = tag;
+      document.querySelectorAll('#quick-tag-filters .tag-btn').forEach(b => {
+        b.className = "tag-btn text-xs px-3 py-1.5 rounded-lg bg-slate-800 text-slate-300 hover:bg-slate-700 transition";
+      });
+      event.target.className = "tag-btn active text-xs px-3 py-1.5 rounded-lg bg-orange-500 text-white font-medium transition";
+      filterRecipes();
+    }
+
+    function filterRecipes() {
+      const query = document.getElementById('recipe-search-input').value.toLowerCase().trim();
+      renderRecipeSearchResults(query, currentTagFilter);
+    }
+
+    function renderRecipeSearchResults(query = '', tag = '') {
+      const resultsContainer = document.getElementById('recipe-search-results');
+      resultsContainer.innerHTML = '';
+
+      let matched = [];
+
+      MEAL_DATA.forEach(day => {
+        day.meals.forEach(meal => {
+          const textCorpus = (meal.name + " " + meal.category + " " + meal.type + " " + meal.ingredients.join(" ") + " " + meal.steps).toLowerCase();
+          
+          let matchesQuery = true;
+          if (query) {
+            matchesQuery = textCorpus.includes(query);
+          }
+
+          let matchesTag = true;
+          if (tag) {
+            if (tag === 'Airfryer') matchesTag = !!meal.airfryer;
+            else if (tag === 'Oats') matchesTag = meal.category.toLowerCase().includes('oat') || meal.name.toLowerCase().includes('oat');
+            else matchesTag = textCorpus.includes(tag.toLowerCase());
+          }
+
+          if (matchesQuery && matchesTag) {
+            matched.push({ dayNum: day.day, meal });
+          }
+        });
+      });
+
+      if (matched.length === 0) {
+        resultsContainer.innerHTML = `
+          <div class="col-span-full py-12 text-center text-slate-500 text-sm">
+            Keine Rezepte für diesen Suchbegriff gefunden.
+          </div>
+        `;
+        return;
+      }
+
+      matched.forEach(item => {
+        const { dayNum, meal } = item;
+        const card = document.createElement('div');
+        card.className = "bg-slate-900 border border-slate-800 rounded-2xl p-4 shadow-lg hover:border-slate-700 flex flex-col justify-between";
+
+        let airfryerInfo = meal.airfryer 
+          ? `<span class="badge-airfryer text-orange-400 text-xs px-2 py-0.5 rounded font-medium">Ninja: ${meal.airfryer.temp}°C · ${meal.airfryer.time} Min.</span>`
+          : `<span class="text-xs text-slate-500 px-2 py-0.5 rounded bg-slate-950">Kein Ofen nötig</span>`;
+
+        card.innerHTML = `
+          <div>
+            <div class="flex items-center justify-between text-xs text-slate-400 mb-1.5">
+              <span class="font-bold text-orange-400">Tag ${dayNum} · ${meal.type}</span>
+              ${airfryerInfo}
+            </div>
+            <h4 class="text-sm font-bold text-white mb-2">${meal.name}</h4>
+            <p class="text-xs text-slate-300 line-clamp-3 mb-3">${meal.steps}</p>
+          </div>
+          <div class="pt-3 border-t border-slate-800/80 flex items-center justify-between">
+            <span class="text-xs font-mono text-slate-400">
+              <strong class="text-sky-400">${meal.macros.p}g P</strong> · <strong class="text-amber-400">${meal.macros.c}g C</strong> · <strong class="text-yellow-300">${meal.macros.f}g F</strong>
+            </span>
+            <button onclick="selectDay(${dayNum}); switchMainTab('daily');" class="text-xs font-medium text-orange-400 hover:text-orange-300 flex items-center gap-1">
+              Im Tag ansehen &rarr;
+            </button>
+          </div>
+        `;
+        resultsContainer.appendChild(card);
+      });
+    }
+
+    // --- SHOPPING LIST LOGIC ---
+    function switchShopWeek(weekNum) {
+      currentShoppingWeek = weekNum;
+      document.getElementById('shop-week-1-btn').className = weekNum === 1 
+        ? "px-3 py-1 text-xs font-semibold rounded-md bg-orange-500 text-white transition"
+        : "px-3 py-1 text-xs font-semibold rounded-md text-slate-400 hover:text-white transition";
+      document.getElementById('shop-week-2-btn').className = weekNum === 2 
+        ? "px-3 py-1 text-xs font-semibold rounded-md bg-orange-500 text-white transition"
+        : "px-3 py-1 text-xs font-semibold rounded-md text-slate-400 hover:text-white transition";
+      renderShoppingList(weekNum);
+    }
+
+    function renderShoppingList(weekNum) {
+      const container = document.getElementById('shopping-categories-container');
+      container.innerHTML = '';
+
+      const categories = SHOPPING_DATA[weekNum];
+      let totalItems = 0;
+      let checkedItems = 0;
+
+      Object.keys(categories).forEach((catName, catIdx) => {
+        const items = categories[catName];
+        totalItems += items.length;
+
+        const catCard = document.createElement('div');
+        catCard.className = "bg-slate-900 border border-slate-800 rounded-2xl p-4 shadow-xl";
+
+        let itemsHtml = items.map((item, itemIdx) => {
+          const key = `w${weekNum}-c${catIdx}-i${itemIdx}`;
+          const isChecked = !!shoppingCheckedState[key];
+          if (isChecked) checkedItems++;
+
+          return `
+            <li class="flex items-center gap-2.5 text-xs">
+              <input type="checkbox" id="${key}" onchange="toggleShopItem('${key}')" ${isChecked ? 'checked' : ''} class="w-4 h-4 rounded border-slate-700 text-orange-500 bg-slate-950 focus:ring-orange-500/20 cursor-pointer">
+              <label for="${key}" class="cursor-pointer ${isChecked ? 'line-through text-slate-500' : 'text-slate-300'}">${item}</label>
+            </li>
+          `;
+        }).join('');
+
+        catCard.innerHTML = `
+          <h3 class="text-sm font-bold text-white border-b border-slate-800 pb-2 mb-3 flex items-center gap-2">
+            <span class="w-2 h-2 rounded-full bg-orange-500"></span>
+            ${catName}
+          </h3>
+          <ul class="space-y-2.5">
+            ${itemsHtml}
+          </ul>
+        `;
+
+        container.appendChild(catCard);
+      });
+
+      document.getElementById('shop-progress-info').textContent = `${checkedItems} von ${totalItems} Artikeln erledigt`;
+    }
+
+    function toggleShopItem(key) {
+      const cb = document.getElementById(key);
+      shoppingCheckedState[key] = cb.checked;
+      saveState();
+      
+      const label = cb.nextElementSibling;
+      if (cb.checked) {
+        label.classList.add('line-through', 'text-slate-500');
+        label.classList.remove('text-slate-300');
+      } else {
+        label.classList.remove('line-through', 'text-slate-500');
+        label.classList.add('text-slate-300');
+      }
+
+      // Update counters
+      renderShoppingList(currentShoppingWeek);
+    }
+
+    function resetShoppingChecks() {
+      Object.keys(shoppingCheckedState).forEach(k => {
+        if (k.startsWith(`w${currentShoppingWeek}-`)) {
+          delete shoppingCheckedState[k];
+        }
+      });
+      saveState();
+      renderShoppingList(currentShoppingWeek);
+      showToast(`Einkaufsliste Woche ${currentShoppingWeek} zurückgesetzt.`);
+    }
+  </script>
+</body>
+</html>
